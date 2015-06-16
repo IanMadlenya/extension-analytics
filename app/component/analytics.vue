@@ -58,14 +58,15 @@
         props: ['widget', 'editing'],
 
         data: function () {
-            return  {
+            return {
                 widget: {config: {}},
-                globals: window.$analytics};
+                globals: window.$analytics
+            };
         },
 
         components: {
             authentication: require('./authentication.vue'),
-            'chart-options': require('./chartOptions.vue'),
+            'chart-options': require('./chart-options.vue'),
 
             // Views:
             area: require('../view/area.vue'),

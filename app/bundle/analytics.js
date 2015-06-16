@@ -82,14 +82,15 @@
 	        props: ['widget', 'editing'],
 
 	        data: function () {
-	            return  {
+	            return {
 	                widget: {config: {}},
-	                globals: window.$analytics};
+	                globals: window.$analytics
+	            };
 	        },
 
 	        components: {
 	            authentication: __webpack_require__(5),
-	            'chart-options': __webpack_require__(6),
+	            'chart-options': __webpack_require__(16),
 
 	            // Views:
 	            area: __webpack_require__(7),
@@ -5937,87 +5938,7 @@
 
 
 /***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __vue_template__ = "<hr>\n\n    <div class=\"uk-grid\">\n        <div v-if=\"presetOptions.dimensions.length > 1\">\n            <label class=\"uk-form-label\">Dimension</label>\n\n            <div class=\"uk-form-controls\">\n                <select v-model=\"config.dimensions\" options=\"presetOptions.dimensions\"></select>\n            </div>\n        </div>\n\n        <div v-if=\"presetOptions.metrics.length > 1\">\n            <label class=\"uk-form-label\">Metric</label>\n\n            <div class=\"uk-form-controls\">\n                <select v-model=\"config.metrics\" options=\"presetOptions.metrics\"></select>\n            </div>\n        </div>\n\n        <div>\n            <label class=\"uk-form-label\">Period</label>\n\n            <div class=\"uk-form-controls\">\n                <select v-model=\"config.startDate\">\n                    <option value=\"7daysAgo\">Week</option>\n                    <option value=\"30daysAgo\">Month</option>\n                    <option value=\"365daysAgo\">Year</option>\n                </select>\n            </div>\n        </div>\n\n        <div v-if=\"presetOptions.views.length > 1\">\n            <label class=\"uk-form-label\">{{ 'Chart' | trans }}</label>\n\n            <div class=\"uk-form-controls\">\n                <select v-model=\"config.views\" options=\"presetOptions.views\"></select>\n            </div>\n        </div>\n    </div>";
-	var _ = __webpack_require__(2);
-	    var utils = __webpack_require__(3);
-
-	    module.exports = {
-	        props: ['config', 'preset'],
-
-	        created: function () {
-	            console.log('Test')
-	        },
-
-	        compiled: function () {
-	            if (this.config.dimensions == undefined ||
-	                this.config.metrics == undefined ||
-	                this.config.startDate == undefined ||
-	                this.config.views == undefined) {
-	                this.setDefaults();
-	            }
-
-	            this.$watch('preset', function () {
-	                this.setDefaults();
-	            })
-	        },
-
-	        computed: {
-
-	            presetOptions: function () {
-	                var currentPreset = _.find(this.$parent.globals.presets, {id: this.preset});
-	                var presetOptions = {};
-	                var vm = this;
-
-	                ['dimensions', 'metrics', 'views'].forEach(function (key) {
-	                    if (currentPreset && _.isArray(currentPreset[key]) && currentPreset[key].length > 0) {
-	                        presetOptions[key] = currentPreset[key].map(function (el) {
-	                            var text;
-
-	                            if (key == 'views') {
-	                                text = _.result(_.find(vm.$parent.getViews(), {id: el}), 'label');
-	                            } else {
-	                                text = utils.transCol(el);
-	                            }
-
-	                            return {
-	                                value: el,
-	                                text: text
-	                            }
-	                        });
-	                    } else {
-	                        presetOptions[key] = [];
-	                    }
-	                });
-
-	                return presetOptions;
-	            }
-	        },
-
-	        methods: {
-	            setDefaults: function () {
-	                var vm = this;
-
-	                this.$set('config', {});
-
-	                ['dimensions', 'metrics', 'views'].forEach(function (key) {
-	                    if (_.isArray(vm.presetOptions[key]) && vm.presetOptions[key].length > 0) {
-	                        vm.config.$set(key, vm.presetOptions[key][0].value);
-	                    }
-	                });
-
-	                if (!this.config.startDate) {
-	                    this.config.$set('startDate', '7daysAgo');
-	                }
-	            }
-	        }
-	    };
-	;(typeof module.exports === "function"? module.exports.options: module.exports).template = __vue_template__;
-
-
-/***/ },
+/* 6 */,
 /* 7 */
 /***/ function(module, exports) {
 
@@ -6553,6 +6474,83 @@
 	                this.$add('chart', new google.visualization.Table(this.$$.chart));
 
 	                this.chart.draw(this.dataTable, this.options);
+	            }
+	        }
+	    };
+	;(typeof module.exports === "function"? module.exports.options: module.exports).template = __vue_template__;
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_template__ = "<hr>\n\n    <div class=\"uk-grid\">\n        <div v-if=\"presetOptions.dimensions.length > 1\">\n            <label class=\"uk-form-label\">Dimension</label>\n\n            <div class=\"uk-form-controls\">\n                <select v-model=\"config.dimensions\" options=\"presetOptions.dimensions\"></select>\n            </div>\n        </div>\n\n        <div v-if=\"presetOptions.metrics.length > 1\">\n            <label class=\"uk-form-label\">Metric</label>\n\n            <div class=\"uk-form-controls\">\n                <select v-model=\"config.metrics\" options=\"presetOptions.metrics\"></select>\n            </div>\n        </div>\n\n        <div>\n            <label class=\"uk-form-label\">Period</label>\n\n            <div class=\"uk-form-controls\">\n                <select v-model=\"config.startDate\">\n                    <option value=\"7daysAgo\">Week</option>\n                    <option value=\"30daysAgo\">Month</option>\n                    <option value=\"365daysAgo\">Year</option>\n                </select>\n            </div>\n        </div>\n\n        <div v-if=\"presetOptions.views.length > 1\">\n            <label class=\"uk-form-label\">{{ 'Chart' | trans }}</label>\n\n            <div class=\"uk-form-controls\">\n                <select v-model=\"config.views\" options=\"presetOptions.views\"></select>\n            </div>\n        </div>\n    </div>";
+	var _ = __webpack_require__(2);
+	    var utils = __webpack_require__(3);
+
+	    module.exports = {
+	        props: ['config', 'preset'],
+
+	        compiled: function () {
+	            if (this.config.dimensions == undefined ||
+	                this.config.metrics == undefined ||
+	                this.config.startDate == undefined ||
+	                this.config.views == undefined) {
+	                this.setDefaults();
+	            }
+
+	            this.$watch('preset', function () {
+	                this.setDefaults();
+	            })
+	        },
+
+	        computed: {
+
+	            presetOptions: function () {
+	                var currentPreset = _.find(this.$parent.globals.presets, {id: this.preset});
+	                var presetOptions = {};
+	                var vm = this;
+
+	                ['dimensions', 'metrics', 'views'].forEach(function (key) {
+	                    if (currentPreset && _.isArray(currentPreset[key]) && currentPreset[key].length > 0) {
+	                        presetOptions[key] = currentPreset[key].map(function (el) {
+	                            var text;
+
+	                            if (key == 'views') {
+	                                text = _.result(_.find(vm.$parent.getViews(), {id: el}), 'label');
+	                            } else {
+	                                text = utils.transCol(el);
+	                            }
+
+	                            return {
+	                                value: el,
+	                                text: text
+	                            }
+	                        });
+	                    } else {
+	                        presetOptions[key] = [];
+	                    }
+	                });
+
+	                return presetOptions;
+	            }
+	        },
+
+	        methods: {
+	            setDefaults: function () {
+	                var vm = this;
+
+	                this.$set('config', {});
+
+	                ['dimensions', 'metrics', 'views'].forEach(function (key) {
+	                    if (_.isArray(vm.presetOptions[key]) && vm.presetOptions[key].length > 0) {
+	                        vm.config.$set(key, vm.presetOptions[key][0].value);
+	                    }
+	                });
+
+	                if (!this.config.startDate) {
+	                    this.config.$set('startDate', '7daysAgo');
+	                }
 	            }
 	        }
 	    };

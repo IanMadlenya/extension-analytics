@@ -12,7 +12,7 @@ class AnalyticsExtension extends Extension
      */
     public function main(App $app)
     {
-        App::set('analytics/oauth', function () {
+        $app->set('analytics/oauth', function () {
             return new OAuthHelper();
         });
 

@@ -47,10 +47,6 @@
     module.exports = {
         props: ['config', 'preset'],
 
-        created: function () {
-            console.log('Test')
-        },
-
         compiled: function () {
             if (this.config.dimensions == undefined ||
                 this.config.metrics == undefined ||
