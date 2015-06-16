@@ -1,6 +1,10 @@
 <template>
 
-    <div v-el="chart"></div>
+    <h3>{{ config.metrics | transGaCol }} - {{ config.dimensions | transGaCol }}</h3>
+
+    <div v-el="view"></div>
+
+    <p>{{ config.startDate }}</p>
 
 </template>
 
@@ -48,7 +52,7 @@
                 var vm = this;
 
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.GeoChart(this.$$.chart));
+                this.$add('chart', new google.visualization.GeoChart(this.$$.view));
 
                 switch (this.config.dimensions) {
                     case 'ga:city':

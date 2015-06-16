@@ -1,13 +1,12 @@
 <template>
 
-    <p v-repeat="result.totalsForAllResults">{{ $key | transMetric }}: {{ $value }}</p>
+    <p v-repeat="result.totalsForAllResults">{{ $key | transGaCol }}: {{ $value }}</p>
 
     <p>{{ config.startDate }}</p>
 
 </template>
 
 <script>
-    var utils = require('../utils.js');
 
     module.exports = {
 
@@ -31,12 +30,6 @@
         methods: {
             render: function (result) {
                 this.$set('result', result);
-            }
-        },
-
-        filters: {
-            transMetric: function (metric) {
-                return utils.transCol(metric);
             }
         }
     };

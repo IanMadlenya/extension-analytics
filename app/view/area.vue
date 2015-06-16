@@ -1,6 +1,8 @@
 <template>
 
-    <div v-el="chart"></div>
+    <h3>{{ config.metrics | transGaCol }} - {{ config.dimensions | transGaCol }}</h3>
+
+    <div v-el="view"></div>
 
 </template>
 
@@ -71,7 +73,7 @@
             render: function (result) {
 
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.AreaChart(this.$$.chart));
+                this.$add('chart', new google.visualization.AreaChart(this.$$.view));
 
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';

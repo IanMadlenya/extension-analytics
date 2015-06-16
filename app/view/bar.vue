@@ -1,6 +1,10 @@
 <template>
 
-    <div v-el="chart"></div>
+    <h3>{{ config.metrics | transGaCol }} - {{ config.dimensions | transGaCol }}</h3>
+
+    <div v-el="view"></div>
+
+    <p>{{ config.startDate }}</p>
 
 </template>
 
@@ -37,7 +41,7 @@
             render: function (result) {
 
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.BarChart(this.$$.chart));
+                this.$add('chart', new google.visualization.BarChart(this.$$.view));
 
                 this.chart.draw(this.dataTable, this.options);
             }
