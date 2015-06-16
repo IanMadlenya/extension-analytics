@@ -41,6 +41,7 @@
 
         data: function () {
             return {
+                loading: false,
                 code: '',
                 profile: ''
             }

@@ -56,6 +56,8 @@
 
         data: function () {
             return {
+                child: null,
+                loading: false,
                 widget: {config: {}},
                 globals: window.$analytics
             };
