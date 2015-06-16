@@ -1,0 +1,54 @@
+{
+  "id": "acquisition",
+  "label": "Acquisition",
+  "presets": [
+    {
+      "id": "allChannels",
+      "label": "All Channels",
+      "metrics": [
+        "ga:sessions",
+        "ga:pageviews",
+        "ga:pageviewsPerSession",
+        "ga:avgSessionDuration",
+        "ga:bounceRate",
+        "ga:percentNewSessions"
+      ],
+      "dimensions": [
+        "ga:channelGrouping",
+        "ga:source",
+        "ga:sourceMedium",
+        "ga:medium"
+      ],
+      "views": [
+        "area",
+        "pie"
+      ]
+    },
+    {
+      "id": "allTraffic",
+      "label": "All Traffic",
+      "metrics": [
+        "ga:sessions",
+        "ga:pageviews",
+        "ga:pageviewsPerSession",
+        "ga:avgSessionDuration",
+        "ga:bounceRate",
+        "ga:percentNewSessions"
+      ],
+      "dimensions": [
+        "ga:source",
+        "ga:sourceMedium",
+        "ga:medium",
+        "ga:keyword"
+      ],
+      "views": [
+        "area",
+        "pie"
+      ],
+      "options": {
+        "pie": {
+        }
+      }
+    }
+  ]
+}
