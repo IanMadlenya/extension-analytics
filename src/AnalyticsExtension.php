@@ -55,16 +55,6 @@ class AnalyticsExtension extends Extension
         });
     }
 
-    public function enable()
-    {
-
-    }
-
-    public function disable()
-    {
-        // do nothing
-    }
-
     public function uninstall()
     {
         // remove the config

@@ -89,13 +89,13 @@
                 vm.$broadcast('resize');
             }, 50));
 
-            this.$watch('widget.config', Vue.util.debounce(this.updateChart, 500), {
+            this.$watch('widget.config', Vue.util.debounce(this.refreshView, 500), {
                 deep: true
             });
 
-            this.$watch('globals.configured', this.updateChart);
+            this.$watch('globals.configured', this.refreshView);
 
-            this.updateChart();
+            this.refreshView();
         },
 
         computed: {
@@ -131,7 +131,7 @@
                     .value();
             },
 
-            updateChart: function () {
+            refreshView: function () {
                 var request;
                 var child;
                 var vm = this;
@@ -147,7 +147,7 @@
                 }
 
                 if (!view) {
-                    console.log('Chart not found');
+                    console.log('View not found');
                     return;
                 }
 
@@ -173,7 +173,7 @@
                     this.$set('loading', false);
 
                     if (_.has(child, 'render')) {
-                        Vue.nextTick(function () {
+                        this.$nextTick(function () {
                             child.render(result);
                         });
                     }

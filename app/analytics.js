@@ -4,4 +4,3 @@ var Analytics = require('./component/analytics.vue');
 google.load('visualization', '1.0', {'packages': ['corechart', 'table', 'geochart']});
 
 window.Dashboard.component('analytics', Analytics);
-
