@@ -54,9 +54,6 @@
                 this.$set('state', 'link');
             }
 
-            this.$set('loading', false);
-            this.$set('profile', '');
-
             this.$watch('code', Vue.util.debounce(this.checkCode, 500));
         },
 
