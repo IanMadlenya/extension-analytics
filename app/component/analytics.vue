@@ -15,10 +15,7 @@
     </form>
 
     <div class="uk-text-center" v-if="!globals.configured">
-
-
         <authentication globals="{{@ globals }}"></authentication>
-
     </div>
 
     <div class="uk-text-center" v-if="globals.configured">

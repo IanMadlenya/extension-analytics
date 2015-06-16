@@ -7,10 +7,10 @@ use Pagekit\Application as App;
 
 use OAuth\Common\Consumer\Credentials;
 use OAuth\Common\Storage\Memory;
+use OAuth\Common\Token\TokenInterface;
 use OAuth\OAuth1\Token\StdOAuth1Token;
 use OAuth\OAuth2\Token\StdOAuth2Token;
 use OAuth\ServiceFactory;
-
 
 
 class OAuthHelper
@@ -26,17 +26,17 @@ class OAuthHelper
      * Open OAuth session and get new token
      *
      * @param  string $provider
-     * @param  array $scope
      * @param $credentials
      * @param bool $token
      * @param string $redirectUri
+     * @param  array $scope
      * @return false|Service
      * @throws \Exception
      */
-    public function create($provider, $scope, $credentials, $token = false, $redirectUri = '')
+    public function create($provider, $credentials, $token = false, $redirectUri = '', $scope = array())
     {
         $provider = ucfirst(strtolower($provider));
-        $storage =  new Memory;
+        $storage = new Memory;
 
         if (!isset($credentials['client_id']) || !isset($credentials['client_secret'])) {
             throw new \Exception('Credentials not valid');
@@ -52,7 +52,7 @@ class OAuthHelper
             throw new \Exception('Could not create Service');
         }
 
-        if ($token && $token = $this->loadToken($token)) {
+        if ($token && $token = $this->arrayToToken($token)) {
             $storage->storeAccessToken($provider, $token);
 
             if ($token->getEndOfLife() < time()) {
@@ -72,14 +72,12 @@ class OAuthHelper
     }
 
     /**
-     * Get token from storage
+     * Create token object from array.
      *
-     * @param $data
-     * @return Token
-     * @internal param string $provider
-     * @internal param int $key
+     * @param array $data
+     * @return TokenInterface
      */
-    public function loadToken($data)
+    public function arrayToToken(array $data)
     {
         if ($data &&
             array_key_exists('accessToken', $data) &&
@@ -112,14 +110,13 @@ class OAuthHelper
         return $token;
     }
 
-
     /**
-     * Save token to storage
+     * Convert token object into array.
      *
-     * @param  Token $token
+     * @param TokenInterface $token
      * @return array
      */
-    public function parseToken($token)
+    public function tokenToArray(TokenInterface $token)
     {
         $data = array();
 
@@ -138,6 +135,40 @@ class OAuthHelper
         }
 
         return $data;
+    }
+
+    public function requestToken($provider, $code, $credentials, $redirectUri, $token = false)
+    {
+        $service = $this->create($provider, $credentials, $token, $redirectUri);
+
+        switch ($service::OAUTH_VERSION) {
+            case 1:
+
+                //TODO: Implement authorization flow for OAuth 1
+
+//                if ($oauth_token && $oauth_verifier) {
+//                    $token = $service->storage->retrieveAccessToken($service->getClass());
+//
+//                    $token = $service->requestAccessToken(
+//                        $oauth_token,
+//                        $oauth_verifier,
+//                        $token->getRequestTokenSecret()
+//                    );
+//
+//                    if (!$token->getAccessToken()) {
+//                        throw new \Exception("Couldn't retrieve token.");
+//                    }
+//                }
+
+                break;
+
+            case 2:
+                $token = $service->requestAccessToken($code);
+
+                break;
+        }
+
+        return $token;
     }
 
 

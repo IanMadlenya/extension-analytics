@@ -11,6 +11,7 @@ use Pagekit\Application as App;
 class AnalyticsController
 {
     const API = 'https://www.googleapis.com/analytics/v3';
+    const REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob';
 
     protected $extension, $oauth;
 
@@ -19,9 +20,9 @@ class AnalyticsController
      */
     public function authRedirectAction()
     {
-        $config = $this['config']->get('analytics');
+        $config = App::module('analytics')->config();
 
-        $service = App::get('analytics/oauth')->create('google', array('ANALYTICS'), $config['credentials'], false, 'urn:ietf:wg:oauth:2.0:oob');
+        $service = App::get('analytics/oauth')->create('google', $config['credentials'], false, self::REDIRECT_URI, array('ANALYTICS'));
 
         $service->setAccessType('offline');
         $authorizationUri = $service->getAuthorizationUri(array('approval_prompt' => 'force'));
@@ -35,20 +36,16 @@ class AnalyticsController
      */
     public function dashboardAction($metrics, $dimensions, $startDate, $maxResults = false)
     {
+        $config = App::module('analytics')->config();
 
-        // $options = $this['option']->get('analytics');
-
-        // Interim Workaround:
-        $options = ['profile' => 89499433];
-
-        if (!isset($options['profile'])) {
+        if (!isset($config['profile'])) {
             return $this['response']->json(array('message' => 'Not configured'), 400);
         }
 
         $data = array('metrics' => $metrics,
             'dimensions' => $dimensions,
             'start-date' => $startDate,
-            'ids' => 'ga:' . $options['profile'],
+            'ids' => 'ga:' . $config['profile'],
             'end-date' => 'today',
             'output' => 'dataTable');
 
@@ -64,6 +61,8 @@ class AnalyticsController
 
         return App::response($this->request($url));
 
+        // TODO: Implement cache
+
 //        if (true || !$result = $this['cache']->fetch(md5($url))) {
 //            try {
 //                $result = json_decode($this->oauth->request($url), true);
@@ -75,6 +74,7 @@ class AnalyticsController
 //        }
 //
 //        return $result;
+
     }
 
     /**
@@ -86,16 +86,28 @@ class AnalyticsController
     }
 
     /**
+     * @Route("/code", methods="POST")
+     * @Request({"code": "string"})
+     */
+    public function authCodeAction($code)
+    {
+        $oauth = App::get('analytics/oauth');
+        $config = App::module('analytics')->config();
+
+        $token = $oauth->requestToken('google', $code, $config['credentials'], self::REDIRECT_URI);
+
+        App::config('analytics')->set('token', $oauth->tokenToArray($token));
+
+        return App::response()->json(['success' => true]);
+    }
+
+    /**
      * @Route("/profile", methods="POST")
      * @Request({"profile": "string"})
      */
     public function saveProfileAction($profile)
     {
-        $options = $this['option']->get('analytics');
-
-        $options['profile'] = $profile;
-
-        $this['option']->set('analytics', $options);
+        App::config('analytics')->set('profile', $profile);
 
         return App::response()->json(array());
     }
@@ -105,9 +117,7 @@ class AnalyticsController
      */
     public function disconnectAction()
     {
-        $options = $this['option']->get('analytics');
-
-        unset($options['profile']);
+        unset(App::config('analytics')['profile']);
 
         return App::response()->json(array());
     }
@@ -116,18 +126,8 @@ class AnalyticsController
     {
         try {
             $config = App::module('analytics')->config();
-            // $options = $this['option']->get('analytics');
 
-            // Interim Workaround:
-            $options = ['token' => [
-                'accessToken' => 'ya29.kwHU-3WSxA0rLUPUfEtR_I0G9ACA_BKVEcVlNSzpyDoP7RY8_P3k-Y4cMzn50xqco2A8O707KHEZRQ',
-                'refreshToken' => '1/AnXb0aeFGvMulITB8O0bG8ZvdJWJT6f6X4WAQG47hZpIgOrJDtdun6zK6XiATCKT',
-                'endOfLife' => 1434357631,
-                'extraParams' =>
-                    ['token_type' => 'Bearer']
-            ]];
-
-            $service = App::get('analytics/oauth')->create('google', array('ANALYTICS'), $config['credentials'], $options['token']);
+            $service = App::get('analytics/oauth')->create('google', $config['credentials'], $config['token']);
 
             return $service->request($url);
 

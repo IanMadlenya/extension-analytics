@@ -17,6 +17,8 @@ class AnalyticsExtension extends Extension
         });
 
         $app->on('app.request', function () use ($app) {
+            $config = App::module('analytics')->config();
+
 
             $presetList = array();
             $groupList = array();
@@ -46,7 +48,7 @@ class AnalyticsExtension extends Extension
                 array(
                     'groups' => $groupList,
                     'presets' => $presetList,
-                    'configured' =>  true || isset($options['token']) && isset($options['profile'])
+                    'configured' => isset($config['token']) && isset($config['profile'])
                 )
             )), array(), 'string');
 

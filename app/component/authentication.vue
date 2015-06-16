@@ -1,10 +1,16 @@
 <template>
-    <h3>Global API Settings</h3>
+
     <p v-if="state == 'link'">Not configured!</p>
 
     <a v-on="click: openAuthWindow" v-if="state == 'link'">Authenticate</a>
 
-    <a v-on="click: checkAuth" v-if="state == 'waiting'">Get Profiles</a>
+
+    <div v-if="state == 'waiting'">
+        <label>
+            {{ 'Authorization code' | trans }}:
+            <input v-model="code" type="text">
+        </label>
+    </div>
 
     <div v-if="state == 'profiles'">
         <label class="uk-form-label">Profile</label>
@@ -33,35 +39,43 @@
 
         props: ['globals', 'state'],
 
+        data: function () {
+            return {
+                code: '',
+                profile: ''
+            }
+        },
+
         compiled: function () {
             if (this.globals.configured) {
                 this.$set('state', 'configured');
             } else {
                 this.$set('state', 'link');
             }
+
             this.$set('loading', false);
             this.$set('profile', '');
 
+            this.$watch('code', Vue.util.debounce(this.checkCode, 500));
         },
 
         methods: {
             openAuthWindow: function () {
-                var url = this.$url.route('analytics/auth');
+                var url = 'analytics/auth';
 
                 this.state = 'waiting';
                 this.popup = window.open(url, '', 'width=800,height=500');
             },
 
-            checkAuth: function () {
+            checkCode: function () {
                 this.popup.close();
                 this.loading = true;
 
-                var request = this.$http.get('analytics/profile');
+                var request = this.$http.post('admin/analytics/code', {code: this.code});
 
                 request.success(function (res) {
                     this.loading = false;
-                    this.$set('profileOptions', this.getProfileOptions(res.items));
-                    this.state = 'profiles';
+                    this.loadProfiles();
                 });
 
                 request.error(function () {
@@ -69,8 +83,20 @@
                 });
             },
 
+            loadProfiles: function () {
+                var request = this.$http.get('admin/analytics/profile');
+
+                this.loading = true;
+
+                request.success(function (res) {
+                    this.loading = false;
+                    this.$set('profileOptions', this.getProfileOptions(res.items));
+                    this.state = 'profiles';
+                });
+            },
+
             saveProfile: function () {
-                var request = this.$http.post('analytics/profile', {profile: this.profile});
+                var request = this.$http.post('admin/analytics/profile', {profile: this.profile});
 
                 this.loading = true;
 
@@ -95,7 +121,7 @@
             },
 
             disconnect: function () {
-                var request = this.$http.delete('analytics/disconnect');
+                var request = this.$http.delete('admin/analytics/disconnect');
 
                 this.$parent.loading = true;
 
