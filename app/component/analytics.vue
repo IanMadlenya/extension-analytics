@@ -24,7 +24,7 @@
 
         <div class="uk-text-center" v-show="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
 
-        <div v-el="viewComponent" v-show="!loading"></div>
+        <div v-el="view" v-show="!loading"></div>
 
     </div>
 
@@ -132,36 +132,29 @@
 
             refreshView: function () {
                 var request;
-                var child;
+                var view;
                 var vm = this;
                 var params = _.clone({
                         metrics: this.widget.config.metrics,
                         dimensions: this.widget.config.dimensions,
                         startDate: this.widget.config.startDate
                     }),
-                    view = _.find(this.getViews(), {id: this.widget.config.views});
+                    View = _.find(this.getViews(), {id: this.widget.config.views});
 
                 if (!this.globals.configured) {
                     return;
                 }
 
-                if (!view) {
+                if (!View) {
                     console.log('View not found');
                     return;
                 }
 
                 this.$set('loading', true);
 
-                child = this.$addChild({
-                    el: this.$$.viewComponent,
-                    data: function () {
-                        return {
-                            config: _.clone(vm.widget.config)
-                        }
-                    }
-                }, this.$options.components[view.component]);
+                view = this.initView(View);
 
-                child.$emit('request', params);
+                view.$emit('request', params);
 
                 request = this.$http.post('admin/analytics/api', params);
 
@@ -171,14 +164,31 @@
 
                     this.$set('loading', false);
 
-                    if (_.has(child, 'render')) {
+                    if (_.has(view, 'render')) {
                         this.$nextTick(function () {
-                            child.render(result);
+                            view.render(result);
                         });
                     }
                 });
 
-                this.$set('child', child);
+                this.$set('child', view);
+            },
+
+            refreashRealtime: function () {
+
+            },
+
+            initView: function (View) {
+                var vm = this;
+
+                return this.$addChild({
+                    el: this.$$.view,
+                    data: function () {
+                        return {
+                            config: _.clone(vm.widget.config)
+                        }
+                    }
+                }, this.$options.components[View.component]);
             }
         }
     }

@@ -78,6 +78,50 @@ class AnalyticsController
     }
 
     /**
+     * @Route("/realtime", methods="POST")
+     * @Request({"metrics": "string", "dimensions":"string"})
+     */
+    public function realtimeAction($metrics, $dimensions)
+    {
+        $config = App::module('analytics')->config();
+
+        if (!isset($config['profile'])) {
+            return $this['response']->json(array('message' => 'Not configured'), 400);
+        }
+
+        $data = array('metrics' => $metrics,
+            'dimensions' => $dimensions,
+            'ids' => 'ga:' . $config['profile'],
+            'output' => 'dataTable');
+
+        $url = self::API . '/data/realtime?';
+
+        foreach ($data as $key => $value) {
+            $url .= $key . '=' . $value . '&';
+        }
+
+        return App::response($this->request($url));
+
+        // TODO: Implement cache
+
+//        if (true || !$result = $this['cache']->fetch(md5($url))) {
+//            try {
+//                $result = json_decode($this->oauth->request($url), true);
+//                $this['cache']->save(md5($url), $result, 0);
+//            } catch (\Exception $e) {
+//                var_dump($e);
+//                return false;
+//            }
+//        }
+//
+//        return $result;
+
+    }
+
+
+
+
+    /**
      * @Route("/profile", methods="GET")
      */
     public function profileAction()
