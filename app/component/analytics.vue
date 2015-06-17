@@ -25,9 +25,8 @@
         <div class="uk-text-center" v-show="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
         <div v-show="!loading">
             <div v-el="view"></div>
-            <small v-if="result.time">{{'Report gernerated at' | trans}}: {{ result.time | toDateString }}
-                <button v-on="click: invalidCache">Refresh</button>
-            </small>
+            <small v-if="result.time">{{'Report gernerated at' | trans}}: {{ result.time | toDateString }} <a
+                    class="uk-icon-refresh" v-on="click: invalidCache"></a></small>
         </div>
     </div>
 

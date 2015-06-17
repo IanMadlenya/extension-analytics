@@ -1,9 +1,26 @@
 <template>
 
-    <p v-if="state == 'link'">Not configured!</p>
-
-    <a v-on="click: openAuthWindow" v-if="state == 'link'">Authenticate</a>
-
+    <div v-if="state == 'link'">
+        <p>Not configured!</p>
+        <div>
+            <label>
+                <input type="checkbox" v-model="ownCredentials">
+                Use own credentials
+            </label>
+        </div>
+        <div v-show="ownCredentials">
+            <label>
+                Client ID:
+                <input type="text" v-model="client_id">
+            </label>
+            <br/>
+            <label>
+                Client secret:
+                <input type="text" v-model="client_secret">
+            </label>
+        </div>
+        <a v-on="click: openAuthWindow">Authenticate</a>
+    </div>
 
     <div v-if="state == 'waiting'">
         <label>
@@ -14,7 +31,6 @@
 
     <div v-if="state == 'profiles'">
         <label class="uk-form-label">Profile</label>
-
         <div class="uk-form-controls">
             <select v-model="profile" options="profileOptions"></select>
         </div>
@@ -28,7 +44,6 @@
     <div class="uk-text-center" v-if="loading">
         <i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i>
     </div>
-
 
 </template>
 
@@ -64,6 +79,7 @@
 
                 this.state = 'waiting';
                 this.popup = window.open(url, '', 'width=800,height=500');
+                window.popup =  this.popup
             },
 
             checkCode: function () {
@@ -134,5 +150,4 @@
             }
         }
     };
-
 </script>
