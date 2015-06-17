@@ -163,7 +163,7 @@
 
                 child.$emit('request', params);
 
-                request = this.$http.post('admin/analytics/dashboard', params);
+                request = this.$http.post('admin/analytics/api', params);
 
                 request.success(function (result) {
                     utils.parseRows(result.dataTable, params);

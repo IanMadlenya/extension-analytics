@@ -1,0 +1,17 @@
+{
+  "id": "realtime",
+  "label": "Real-time",
+  "presets": [
+    {
+      "id": "visitors",
+      "label": "Visitors",
+      "metrics": [
+        "ga:activeVisitors"
+      ],
+      "dimensions": ["ga:date"],
+      "views": [
+        "realtimeCounter"
+      ]
+    }
+  ]
+}

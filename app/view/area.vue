@@ -66,7 +66,6 @@
                     this.chart.draw(this.dataTable, this.options);
                 }
             });
-
         },
 
         methods: {
@@ -78,12 +77,10 @@
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';
                     this.options.hAxis.showTextEvery = 1;
-                }
-                else if (this.config.startDate == '30daysAgo') {
+                } else if (this.config.startDate == '30daysAgo') {
                     this.options.hAxis.format = 'MMM d';
                     this.options.hAxis.showTextEvery = 1;
-                }
-                else if (this.config.startDate == '365daysAgo') {
+                } else if (this.config.startDate == '365daysAgo') {
                     this.options.hAxis.showTextEvery = 1;
                     this.options.hAxis.format = 'MMM yy';
 

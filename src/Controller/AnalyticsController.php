@@ -31,10 +31,10 @@ class AnalyticsController
     }
 
     /**
-     * @Route("/dashboard", methods="POST")
+     * @Route("/api", methods="POST")
      * @Request({"metrics": "string", "dimensions":"string", "startDate":"string", "maxResults": "int"})
      */
-    public function dashboardAction($metrics, $dimensions, $startDate, $maxResults = false)
+    public function apiAction($metrics, $dimensions, $startDate, $maxResults = false)
     {
         $config = App::module('analytics')->config();
 
