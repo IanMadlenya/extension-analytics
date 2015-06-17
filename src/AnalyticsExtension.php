@@ -19,7 +19,6 @@ class AnalyticsExtension extends Extension
         $app->on('app.request', function () use ($app) {
             $config = App::module('analytics')->config();
 
-
             $presetList = array();
             $groupList = array();
 

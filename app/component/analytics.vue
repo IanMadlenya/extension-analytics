@@ -23,9 +23,10 @@
         <br/><br/>
 
         <div class="uk-text-center" v-show="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
-
-        <div v-el="view" v-show="!loading"></div>
-
+        <div v-show="!loading">
+            <div v-el="view"></div>
+            <small v-if="result.time">{{'Report gernerated at' | trans}}: {{ result.time | toDateString }} <button v-on="click: invalidCache">Refresh</button></small>
+        </div>
     </div>
 
 </template>
@@ -57,6 +58,7 @@
         data: function () {
             return {
                 loading: false,
+                result: {},
                 widget: {config: {}},
                 globals: window.$analytics
             };
@@ -120,6 +122,12 @@
             }
         },
 
+        filters: {
+          toDateString: function (timestamp) {
+              return new Date(timestamp * 1000).toLocaleString();
+          }
+        },
+
         methods: {
 
             getViews: function () {
@@ -133,25 +141,30 @@
                     .value();
             },
 
-            configChanged: function () {
+            invalidCache: function () {
+                this.configChanged(true);
+            },
+
+            configChanged: function (invalidCache) {
                 if (this.refreshIntervall) {
                     clearInterval(this.refreshIntervall);
                     this.refreshIntervall = null;
                 }
 
                 if (this.currentPreset.realtime) {
-                    this.newRealtime();
+                    this.newRealtime(invalidCache);
                 } else {
-                    this.refreshView();
+                    this.refreshView(invalidCache);
                 }
             },
 
-            refreshView: function () {
+            refreshView: function (invalidCache) {
                 var View = _.find(this.getViews(), {id: this.widget.config.views});
                 var params = _.clone({
                     metrics: this.widget.config.metrics,
                     dimensions: this.widget.config.dimensions,
-                    startDate: this.widget.config.startDate
+                    startDate: this.widget.config.startDate,
+                    invalidCache: invalidCache
                 });
 
                 if (!this.globals.configured || !View) {
@@ -168,6 +181,8 @@
                     utils.parseCols(result.dataTable);
 
                     this.$set('loading', false);
+                    this.$set('result', result);
+
                     if (_.has(view, 'render')) {
                         this.$nextTick(function () {
                             view.render(result);
@@ -178,7 +193,7 @@
                 this.view = view;
             },
 
-            newRealtime: function () {
+            newRealtime: function (invalidCache) {
                 var View = _.find(this.getViews(), {id: this.widget.config.views});
 
                 if (!this.globals.configured || !View) {
@@ -188,14 +203,15 @@
                 this.$set('loading', true);
 
                 this.view = this.initView(View);
-                this.refreshRealtime();
+                this.refreshRealtime(invalidCache);
                 this.refreshIntervall = setInterval(this.refreshRealtime, 1000 * 30);
             },
 
-            refreshRealtime: function () {
+            refreshRealtime: function (invalidCache) {
                 var params = _.clone({
                     metrics: this.widget.config.metrics,
-                    dimensions: this.widget.config.dimensions
+                    dimensions: this.widget.config.dimensions,
+                    invalidCache: invalidCache
                 });
 
                 this.view.$emit('request', params);
@@ -208,6 +224,8 @@
                     }
 
                     this.$set('loading', false);
+                    this.$set('result', result);
+
                     if (_.has(this.view, 'render')) {
                         this.$nextTick(function () {
                             this.view.render(result);
