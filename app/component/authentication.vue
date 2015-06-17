@@ -43,7 +43,8 @@
             return {
                 loading: false,
                 code: '',
-                profile: ''
+                profile: '',
+                profileOptions: []
             }
         },
 

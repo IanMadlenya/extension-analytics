@@ -111,7 +111,7 @@ class AnalyticsController
      */
     public function profileAction()
     {
-        return App::response($this->request(self::API . '/management/accounts/~all/webproperties/~all/profiles'));
+        return App::response()->json($this->request(self::API . '/management/accounts/~all/webproperties/~all/profiles'));
     }
 
     /**
@@ -158,7 +158,7 @@ class AnalyticsController
         $result = json_decode($service->request($url), true);
 
         $return = [];
-        foreach (['columnHeaders', 'totalsForAllResults', 'dataTable'] as $key) {
+        foreach (['columnHeaders', 'totalsForAllResults', 'dataTable', 'items'] as $key) {
             if (isset($result[$key])) {
                 $return[$key] = $result[$key];
             }
