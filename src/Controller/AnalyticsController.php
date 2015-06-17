@@ -106,7 +106,11 @@ class AnalyticsController
      */
     public function profileAction()
     {
-        return App::response()->json($this->request(self::API . '/management/accounts/~all/webproperties/~all/profiles'));
+        try {
+            return App::response()->json($this->request(self::API . '/management/accounts/~all/webproperties/~all/profiles'));
+        } catch (\Exception $e) {
+            return App::response()->json(array('message' => $e->getMessage()), 400);
+        }
     }
 
     /**
@@ -115,14 +119,18 @@ class AnalyticsController
      */
     public function authCodeAction($code)
     {
-        $oauth = App::get('analytics/oauth');
-        $config = App::module('analytics')->config();
+        try {
+            $oauth = App::get('analytics/oauth');
+            $config = App::module('analytics')->config();
 
-        $token = $oauth->requestToken('google', $code, $config['credentials'], self::REDIRECT_URI);
+            $token = $oauth->requestToken('google', $code, $config['credentials'], self::REDIRECT_URI);
 
-        App::config('analytics')->set('token', $oauth->tokenToArray($token));
+            App::config('analytics')->set('token', $oauth->tokenToArray($token));
 
-        return App::response()->json(['success' => true]);
+            return App::response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return App::response()->json(array('message' => $e->getMessage()), 400);
+        }
     }
 
     /**
