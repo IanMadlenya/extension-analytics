@@ -6,12 +6,13 @@
       "id": "visitors",
       "label": "Visitors",
       "metrics": [
-        "ga:activeVisitors"
+        "rt:activeUsers"
       ],
-      "dimensions": ["ga:date"],
+      "dimensions": ["rt:userType"],
       "views": [
-        "realtimeCounter"
-      ]
+        "counter"
+      ],
+      "realtime": true
     }
   ]
 }

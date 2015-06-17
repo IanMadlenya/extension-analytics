@@ -56,7 +56,6 @@
 
         data: function () {
             return {
-                child: null,
                 loading: false,
                 widget: {config: {}},
                 globals: window.$analytics
@@ -88,13 +87,13 @@
                 vm.$broadcast('resize');
             }, 50));
 
-            this.$watch('widget.config', Vue.util.debounce(this.refreshView, 500), {
+            this.$watch('widget.config', Vue.util.debounce(this.configChanged, 500), {
                 deep: true
             });
 
-            this.$watch('globals.configured', this.refreshView);
+            this.$watch('globals.configured', this.configChanged);
 
-            this.refreshView();
+            this.configChanged();
         },
 
         computed: {
@@ -130,40 +129,43 @@
                     .value();
             },
 
-            refreshView: function () {
-                var request;
-                var view;
-                var vm = this;
-                var params = _.clone({
-                        metrics: this.widget.config.metrics,
-                        dimensions: this.widget.config.dimensions,
-                        startDate: this.widget.config.startDate
-                    }),
-                    View = _.find(this.getViews(), {id: this.widget.config.views});
+            configChanged: function () {
+                var preset = _.find(this.globals.presets, {id: this.widget.preset});
 
-                if (!this.globals.configured) {
-                    return;
+                if (this.refreshIntervall) {
+                    clearInterval(this.refreshIntervall);
+                    this.refreshIntervall = null;
                 }
 
-                if (!View) {
-                    console.log('View not found');
+                if (preset.realtime) {
+                    this.newRealtime();
+                } else {
+                    this.refreshView();
+                }
+            },
+
+            refreshView: function () {
+                var View = _.find(this.getViews(), {id: this.widget.config.views});
+                var params = _.clone({
+                    metrics: this.widget.config.metrics,
+                    dimensions: this.widget.config.dimensions,
+                    startDate: this.widget.config.startDate
+                });
+
+                if (!this.globals.configured || !View) {
                     return;
                 }
 
                 this.$set('loading', true);
-
-                view = this.initView(View);
-
+                var view = this.initView(View);
                 view.$emit('request', params);
 
-                request = this.$http.post('admin/analytics/api', params);
-
+                var request = this.$http.post('admin/analytics/api', params);
                 request.success(function (result) {
                     utils.parseRows(result.dataTable, params);
                     utils.parseCols(result.dataTable);
 
                     this.$set('loading', false);
-
                     if (_.has(view, 'render')) {
                         this.$nextTick(function () {
                             view.render(result);
@@ -171,11 +173,49 @@
                     }
                 });
 
-                this.$set('child', view);
+                this.view = view;
+            },
+
+            newRealtime: function () {
+                var View = _.find(this.getViews(), {id: this.widget.config.views});
+
+                if (!this.globals.configured || !View) {
+                    return;
+                }
+
+                this.$set('loading', true);
+
+                this.view = this.initView(View);
+
+                this.refreashRealtime();
+
+                this.refreshIntervall = setInterval(this.refreashRealtime, 1000 * 30);
             },
 
             refreashRealtime: function () {
+                console.log('refresh');
 
+                var params = _.clone({
+                    metrics: this.widget.config.metrics,
+                    dimensions: this.widget.config.dimensions
+                });
+
+                this.view.$emit('request', params);
+                var request = this.$http.post('admin/analytics/realtime', params);
+
+                request.success(function (result) {
+                    if (result.dataTable) {
+                        utils.parseRows(result.dataTable, params);
+                        utils.parseCols(result.dataTable);
+                    }
+
+                    this.$set('loading', false);
+                    if (_.has(this.view, 'render')) {
+                        this.$nextTick(function () {
+                            this.view.render(result);
+                        });
+                    }
+                });
             },
 
             initView: function (View) {

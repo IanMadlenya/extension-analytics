@@ -24,7 +24,6 @@ module.exports = {
     },
 
     parseLabel: function (value, params) {
-
         if (params.metrics == 'ga:avgSessionDuration') {
             return this.secToTime(value);
         }
