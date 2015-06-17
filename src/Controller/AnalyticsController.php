@@ -13,6 +13,7 @@ class AnalyticsController
     const API = 'https://www.googleapis.com/analytics/v3';
     const REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob';
     const CACHE_TIME = 3600;
+    const REALTIME_CACHE_TIME = 20;
 
     protected $extension, $oauth;
 
@@ -70,9 +71,9 @@ class AnalyticsController
 
     /**
      * @Route("/realtime", methods="POST")
-     * @Request({"metrics": "string", "dimensions":"string"})
+     * @Request({"metrics": "string", "dimensions":"string", "invalidCache": "boolean"})
      */
-    public function realtimeAction($metrics, $dimensions)
+    public function realtimeAction($metrics, $dimensions, $invalidCache = false)
     {
         $config = App::module('analytics')->config();
 
@@ -87,22 +88,16 @@ class AnalyticsController
 
         $url = self::API . '/data/realtime?' . http_build_query($data);
 
-        return App::response()->json($this->request($url));
+        if ($invalidCache || !$result = App::get('cache')->fetch(md5($url))) {
+            try {
+                $result = $this->request($url);
+                App::get('cache')->save(md5($url), $result, self::REALTIME_CACHE_TIME);
+            } catch (\Exception $e) {
+                return App::response()->json(array('message' => $e->getMessage()), 400);
+            }
+        }
 
-        // TODO: Implement cache
-
-//        if (true || !$result = $this['cache']->fetch(md5($url))) {
-//            try {
-//                $result = json_decode($this->oauth->request($url), true);
-//                $this['cache']->save(md5($url), $result, 0);
-//            } catch (\Exception $e) {
-//                var_dump($e);
-//                return false;
-//            }
-//        }
-//
-//        return $result;
-
+        return App::response()->json($result);
     }
 
 
