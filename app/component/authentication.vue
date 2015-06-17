@@ -79,7 +79,6 @@
 
                 this.state = 'waiting';
                 this.popup = window.open(url, '', 'width=800,height=500');
-                window.popup =  this.popup
             },
 
             checkCode: function () {
