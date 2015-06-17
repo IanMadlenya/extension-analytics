@@ -27,7 +27,7 @@
                 options: {
                     "theme": "maximized",
                     "height": 282,
-                   // "pieHole": 0.5,
+                    // "pieHole": 0.5,
                     "legend": {
                         "alignment": "center",
                         "position": "top"
@@ -36,7 +36,7 @@
                         "top": 40,
                         "height": "82%"
                     },
-                    "sliceVisibilityThreshold": 1/120
+                    "sliceVisibilityThreshold": 1 / 120
                 }
             }
         },

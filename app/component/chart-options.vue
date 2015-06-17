@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div>
+        <div v-if="presetOptions.startDate">
             <label class="uk-form-label">Period</label>
 
             <div class="uk-form-controls">
@@ -63,7 +63,7 @@
         computed: {
 
             presetOptions: function () {
-                var currentPreset = _.find(this.$parent.globals.presets, {id: this.preset});
+                var currentPreset = this.$parent.currentPreset;
                 var presetOptions = {};
                 var vm = this;
 
@@ -88,6 +88,8 @@
                     }
                 });
 
+                presetOptions['startDate'] = !this.$parent.currentPreset.realtime;
+
                 return presetOptions;
             }
         },
@@ -104,7 +106,7 @@
                     }
                 });
 
-                if (!this.config.startDate) {
+                if (!this.$parent.currentPreset.realtime) {
                     this.config.$set('startDate', '7daysAgo');
                 }
             }

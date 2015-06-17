@@ -27,7 +27,7 @@ class OAuthHelper
      *
      * @param  string $provider
      * @param $credentials
-     * @param bool $token
+     * @param TokenInterface|bool $token
      * @param string $redirectUri
      * @param  array $scope
      * @return false|Service
@@ -169,18 +169,5 @@ class OAuthHelper
         }
 
         return $token;
-    }
-
-
-    /**
-     * Get redirect url
-     *
-     * @return string
-     */
-    public function getRedirectUrl($provider)
-    {
-        return 'urn:ietf:wg:oauth:2.0:oob';
-        // $provider = strtolower($provider);
-        // return $this['url']->route('connect', array('provider' => $provider), UrlGenerator::ABSOLUTE_URL);
     }
 }

@@ -71,7 +71,7 @@
 
                 var request = this.$http.post('admin/analytics/code', {code: this.code});
 
-                request.success(function (res) {
+                request.success(function () {
                     this.loading = false;
                     this.loadProfiles();
                 });

@@ -53,11 +53,7 @@ class AnalyticsController
             $data['max-results'] = $maxResults;
         }
 
-        $url = self::API . '/data/ga?';
-
-        foreach ($data as $key => $value) {
-            $url .= $key . '=' . $value . '&';
-        }
+        $url = self::API . '/data/ga?' . http_build_query($data);
 
         return App::response($this->request($url));
 
@@ -94,11 +90,7 @@ class AnalyticsController
             'ids' => 'ga:' . $config['profile'],
             'output' => 'dataTable');
 
-        $url = self::API . '/data/realtime?';
-
-        foreach ($data as $key => $value) {
-            $url .= $key . '=' . $value . '&';
-        }
+        $url = self::API . '/data/realtime?' . http_build_query($data);
 
         return App::response($this->request($url));
 

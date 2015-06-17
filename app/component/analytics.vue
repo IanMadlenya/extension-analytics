@@ -79,7 +79,7 @@
         compiled: function () {
 
             if (this.widget.preset == undefined) {
-                this.widget.$set('preset', this.globals.presets[0].id)
+                this.widget.$set('preset', this.globals.presets[0].id);
             }
 
             var vm = this;
@@ -113,6 +113,10 @@
                             })
                         };
                     }).value();
+            },
+
+            currentPreset: function () {
+                return _.find(this.globals.presets, {id: this.widget.preset});
             }
         },
 
@@ -121,23 +125,21 @@
             getViews: function () {
                 return _(this.$options.components.__proto__)
                     .filter(function (component) {
-                        return _.has(component, 'options.view')
+                        return _.has(component, 'options.view');
                     })
                     .map(function (component) {
-                        return _.merge(component.options.view, {component: component.options.name})
+                        return _.merge(component.options.view, {component: component.options.name});
                     })
                     .value();
             },
 
             configChanged: function () {
-                var preset = _.find(this.globals.presets, {id: this.widget.preset});
-
                 if (this.refreshIntervall) {
                     clearInterval(this.refreshIntervall);
                     this.refreshIntervall = null;
                 }
 
-                if (preset.realtime) {
+                if (this.currentPreset.realtime) {
                     this.newRealtime();
                 } else {
                     this.refreshView();
@@ -186,15 +188,11 @@
                 this.$set('loading', true);
 
                 this.view = this.initView(View);
-
-                this.refreashRealtime();
-
-                this.refreshIntervall = setInterval(this.refreashRealtime, 1000 * 30);
+                this.refreshRealtime();
+                this.refreshIntervall = setInterval(this.refreshRealtime, 1000 * 30);
             },
 
-            refreashRealtime: function () {
-                console.log('refresh');
-
+            refreshRealtime: function () {
                 var params = _.clone({
                     metrics: this.widget.config.metrics,
                     dimensions: this.widget.config.dimensions
