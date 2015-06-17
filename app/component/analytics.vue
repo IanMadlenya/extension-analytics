@@ -25,7 +25,9 @@
         <div class="uk-text-center" v-show="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
         <div v-show="!loading">
             <div v-el="view"></div>
-            <small v-if="result.time">{{'Report gernerated at' | trans}}: {{ result.time | toDateString }} <button v-on="click: invalidCache">Refresh</button></small>
+            <small v-if="result.time">{{'Report gernerated at' | trans}}: {{ result.time | toDateString }}
+                <button v-on="click: invalidCache">Refresh</button>
+            </small>
         </div>
     </div>
 
@@ -79,21 +81,24 @@
         },
 
         compiled: function () {
+            var vm = this;
+
+            window.addEventListener('resize', Vue.util.debounce(function () {
+                vm.$broadcast('resize');
+            }, 50));
 
             if (this.widget.preset == undefined) {
                 this.widget.$set('preset', this.globals.presets[0].id);
             }
 
-            var vm = this;
-            window.addEventListener('resize', Vue.util.debounce(function () {
-                vm.$broadcast('resize');
-            }, 50));
-
-            this.$watch('widget.config', Vue.util.debounce(this.configChanged, 500), {
+            this.$watch('globals.configured', function () {
+                this.configChanged();
+            });
+            this.$watch('widget.config', Vue.util.debounce(function () {
+                this.configChanged();
+            }, 500), {
                 deep: true
             });
-
-            this.$watch('globals.configured', this.configChanged);
 
             this.configChanged();
         },
@@ -123,9 +128,9 @@
         },
 
         filters: {
-          toDateString: function (timestamp) {
-              return new Date(timestamp * 1000).toLocaleString();
-          }
+            toDateString: function (timestamp) {
+                return new Date(timestamp * 1000).toLocaleString();
+            }
         },
 
         methods: {
