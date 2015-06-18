@@ -23,13 +23,32 @@ class AnalyticsController
     public function authRedirectAction()
     {
         $config = App::module('analytics')->config();
-
         $service = App::get('analytics/oauth')->create('google', $config['credentials'], false, self::REDIRECT_URI, array('ANALYTICS'));
 
         $service->setAccessType('offline');
         $authorizationUri = $service->getAuthorizationUri(array('approval_prompt' => 'force'));
 
         return App::response()->redirect($authorizationUri);
+    }
+
+    /**
+     * @Route("/code", methods="POST")
+     * @Request({"code": "string"})
+     */
+    public function authCodeAction($code)
+    {
+        try {
+            $oauth = App::get('analytics/oauth');
+            $config = App::module('analytics')->config();
+
+            $token = $oauth->requestToken('google', $code, $config['credentials'], self::REDIRECT_URI);
+
+            App::config('analytics')->set('token', $oauth->tokenToArray($token));
+
+            return App::response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return App::response()->json(array('message' => $e->getMessage()), 400);
+        }
     }
 
     /**
@@ -100,7 +119,6 @@ class AnalyticsController
         return App::response()->json($result);
     }
 
-
     /**
      * @Route("/profile", methods="GET")
      */
@@ -108,26 +126,6 @@ class AnalyticsController
     {
         try {
             return App::response()->json($this->request(self::API . '/management/accounts/~all/webproperties/~all/profiles'));
-        } catch (\Exception $e) {
-            return App::response()->json(array('message' => $e->getMessage()), 400);
-        }
-    }
-
-    /**
-     * @Route("/code", methods="POST")
-     * @Request({"code": "string"})
-     */
-    public function authCodeAction($code)
-    {
-        try {
-            $oauth = App::get('analytics/oauth');
-            $config = App::module('analytics')->config();
-
-            $token = $oauth->requestToken('google', $code, $config['credentials'], self::REDIRECT_URI);
-
-            App::config('analytics')->set('token', $oauth->tokenToArray($token));
-
-            return App::response()->json(['success' => true]);
         } catch (\Exception $e) {
             return App::response()->json(array('message' => $e->getMessage()), 400);
         }
