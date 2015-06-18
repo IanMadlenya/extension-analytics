@@ -106,6 +106,7 @@
 
         data: function () {
             return {
+                init: false,
                 loading: false,
                 code: '',
                 profile: 0,
@@ -115,14 +116,6 @@
         },
 
         compiled: function () {
-
-            this.$watch('code', Vue.util.debounce(this.checkCode, 300));
-            this.$watch('profile', Vue.util.debounce(this.saveProfile, 300));
-
-            if (this.globals.profile) {
-                this.profile = this.globals.profile;
-            }
-
             this.modal = UIkit.modal(this.$$.modal);
         },
 
@@ -142,8 +135,18 @@
         methods: {
 
             show: function () {
-                if (this.globals.connected) {
-                    this.loadProfiles();
+                if (!this.init) {
+                    this.$watch('code', Vue.util.debounce(this.checkCode, 300));
+                    this.$watch('profile', Vue.util.debounce(this.saveProfile, 300));
+                    this.$watch('globals.connected', this.loadProfiles);
+
+                    if (this.globals.profile) {
+                        this.profile = this.globals.profile;
+                    }
+
+                    if (this.globals.connected) {
+                        this.loadProfiles();
+                    }
                 }
 
                 this.modal.show();
@@ -153,17 +156,20 @@
                 this.popup = window.open('analytics/auth', '', 'width=800,height=500');
             },
 
-            checkCode: function () {
+            checkCode: function (code) {
+                if (!code) {
+                    return;
+                }
+
                 this.popup.close();
                 this.loading = true;
 
-                var request = this.$http.post('admin/analytics/code', {code: this.code});
+                var request = this.$http.post('admin/analytics/code', {code: code});
 
                 request.success(function () {
                     this.loading = false;
                     this.globals.connected = true;
                     this.code = '';
-                    this.loadProfiles();
                 });
 
                 request.error(function () {
@@ -172,6 +178,10 @@
             },
 
             loadProfiles: function () {
+                if (!this.globals.connected) {
+                    return;
+                }
+
                 var request = this.$http.get('admin/analytics/profile');
 
                 this.loading = true;

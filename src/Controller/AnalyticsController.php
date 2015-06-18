@@ -24,7 +24,7 @@ class AnalyticsController
     {
         try {
             $config = App::module('analytics')->config();
-            $service = App::get('analytics/oauth')->create('google', $config['credentials'], false, self::REDIRECT_URI, array('ANALYTICS'));
+            $service = App::get('analytics/oauth')->create('google', $config['credentials'], false, self::REDIRECT_URI, array('ANALYTICS', 'USERINFO_PROFILE'));
 
             $service->setAccessType('offline');
             $authorizationUri = $service->getAuthorizationUri(array('approval_prompt' => 'force'));
@@ -61,7 +61,7 @@ class AnalyticsController
     public function userAction()
     {
         try {
-            return App::response()->json($this->request('https://www.googleapis.com/oauth2/v1/userinfo'));
+            return App::response()->json($this->request('https://www.googleapis.com/oauth2/v1/userinfo', ['id', 'name']));
         } catch (\Exception $e) {
             return App::response()->json(array('message' => $e->getMessage()), 400);
         }
@@ -94,7 +94,9 @@ class AnalyticsController
 
         if ($invalidCache || !$result = App::get('cache')->fetch(md5($url))) {
             try {
-                $result = $this->request($url);
+                $result = $this->request($url, ['columnHeaders', 'totalsForAllResults', 'dataTable']);
+                $result['time'] = time();
+
                 App::get('cache')->save(md5($url), $result, self::CACHE_TIME);
             } catch (\Exception $e) {
                 return App::response()->json(array('message' => $e->getMessage()), 400);
@@ -125,7 +127,9 @@ class AnalyticsController
 
         if ($invalidCache || !$result = App::get('cache')->fetch(md5($url))) {
             try {
-                $result = $this->request($url);
+                $result = $this->request($url, ['columnHeaders', 'totalsForAllResults', 'dataTable']);
+                $result['time'] = time();
+
                 App::get('cache')->save(md5($url), $result, self::REALTIME_CACHE_TIME);
             } catch (\Exception $e) {
                 return App::response()->json(array('message' => $e->getMessage()), 400);
@@ -141,7 +145,7 @@ class AnalyticsController
     public function profileAction()
     {
         try {
-            return App::response()->json($this->request(self::API . '/management/accounts/~all/webproperties/~all/profiles'));
+            return App::response()->json($this->request(self::API . '/management/accounts/~all/webproperties/~all/profiles', ['items']));
         } catch (\Exception $e) {
             return App::response()->json(array('message' => $e->getMessage()), 400);
         }
@@ -173,20 +177,22 @@ class AnalyticsController
         return App::response()->json(array());
     }
 
-    protected function request($url)
+    protected function request($url, $filter = [])
     {
         $config = App::module('analytics')->config();
         $service = App::get('analytics/oauth')->create('google', $config['credentials'], $config['token']);
         $result = json_decode($service->request($url), true);
 
-        $return = [];
-        foreach (['columnHeaders', 'totalsForAllResults', 'dataTable', 'items'] as $key) {
-            if (isset($result[$key])) {
-                $return[$key] = $result[$key];
+        if ($filter) {
+            $return = [];
+            foreach ($filter as $key) {
+                if (isset($result[$key])) {
+                    $return[$key] = $result[$key];
+                }
             }
+        } else {
+            $return = $result;
         }
-
-        $return['time'] = time();
 
         return $return;
     }
