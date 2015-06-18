@@ -1,31 +1,36 @@
 <template>
 
-    <a class="uk-icon-cogs" v-on="click: openSettings"></a>
+    <form class="pk-panel-teaser uk-form uk-form-stacked" v-show="editing" v-on="submit: $event.preventDefault()">
 
-    <form class="uk-form uk-margin" v-show="editing" v-on="submit: $event.preventDefault()">
+        <h3 class="uk-panel-title">{{ 'Analytics Widget' | trans }}</h3>
 
         <div class="uk-form-row">
+            <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
             <div class="uk-form-controls">
-                <select v-model="widget.preset" options="presetOptions"></select>
+                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset" options="presetOptions"></select>
             </div>
         </div>
 
-        <chart-options config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
+        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
 
-        <hr/>
+        <a class="uk-icon-cogs" v-on="click: openSettings"></a>
+
     </form>
 
-    <div class="uk-text-center" v-if="globals.configured">
-
-        <br/><br/>
+    <div v-if="globals.configured">
 
         <div class="uk-text-center" v-show="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
+
         <div v-show="!loading">
             <div v-el="view"></div>
-            <small v-if="result.time">{{'Report gernerated at' | trans}}: {{ result.time | toDateString }} <a
-                    class="uk-icon-refresh" v-on="click: invalidCache"></a></small>
+            <small v-if="result.time">{{'Report gernerated at' | trans}}: {{ result.time | toDateString }}
+                <a class="uk-icon-refresh" v-on="click: invalidCache"></a>
+            </small>
         </div>
+
     </div>
+
+    <div v-if="!globals.configured">Please authenticate <a class="uk-icon-cogs" v-on="click: openSettings"></a></div>
 
 </template>
 
