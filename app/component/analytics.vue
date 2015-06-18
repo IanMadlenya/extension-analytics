@@ -30,7 +30,7 @@
 
     </div>
 
-    <div v-if="!globals.configured">Please authenticate <a class="uk-icon-cogs" v-on="click: openSettings"></a></div>
+    <div v-if="!globals.configured">Google Analytics <a href="#" v-on="click: openSettings">authentication</a> needed.</div>
 
 </template>
 
