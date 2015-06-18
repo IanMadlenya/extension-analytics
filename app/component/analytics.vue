@@ -1,19 +1,38 @@
 <template>
 
+    <div class="uk-panel-badge">
+        <ul class="uk-subnav pk-subnav-icon">
+            <li v-show="$parent.editing[widget.id]"><a
+                    class="uk-icon-cogs pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}"
+                    v-on="click: openSettings"></a></li>
+            <li v-show="$parent.editing[widget.id]"><a class="pk-icon-delete pk-icon-hover"
+                                                       title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}"
+                                                       v-on="click: $parent.remove()" v-confirm="'Delete widget?'"></a></li>
+            <li v-show="$parent.type.editable !== false && !$parent.editing[widget.id]"><a
+                    class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}"
+                    data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a></li>
+            <li v-show="$parent.type.editable !== false && $parent.editing[widget.id]"><a
+                    class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}"
+                    v-on="click: $parent.edit()"></a></li>
+        </ul>
+    </div>
+
     <form class="pk-panel-teaser uk-form uk-form-stacked" v-show="editing" v-on="submit: $event.preventDefault()">
 
         <h3 class="uk-panel-title">{{ 'Analytics Widget' | trans }}</h3>
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
+
             <div class="uk-form-controls">
-                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset" options="presetOptions"></select>
+                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset"
+                        options="presetOptions"></select>
             </div>
         </div>
 
-        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
+        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}"
+                       preset="{{@ widget.preset }}"></chart-options>
 
-        <a class="uk-icon-cogs" v-on="click: openSettings"></a>
 
     </form>
 
@@ -43,6 +62,7 @@
         type: {
             id: 'analytics',
             label: 'Analytics',
+            disableToolbar: true,
             description: function () {
 
             },
