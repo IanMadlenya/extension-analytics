@@ -17,7 +17,7 @@
 
     </form>
 
-    <div v-if="configured">
+    <div v-show="configured">
 
         <div class="uk-text-center" v-show="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
 

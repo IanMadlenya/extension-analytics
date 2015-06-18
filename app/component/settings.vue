@@ -4,7 +4,7 @@
         <div class="uk-modal-dialog">
             <a class="uk-modal-close uk-close"></a>
 
-            <div class="uk-text-center" v-if="loading">
+            <div class="uk-text-center" v-show="loading">
                 <i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i>
             </div>
 
@@ -13,7 +13,7 @@
 
                 <h3 class="wk-form-heading">{{ 'Google API' | trans }}</h3>
 
-                <div class="uk-form-row" v-if="!globals.connected">
+                <div class="uk-form-row" v-show="!globals.connected">
                     <label class="uk-form-label">{{ 'Credentials' | trans }}</label>
 
                     <div class="uk-form-controls">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
 
-                <div class="uk-form-row" v-if="!globals.connected && ownCredentials">
+                <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
                     <label class="uk-form-label" for="form-client-id">{{ 'Client ID' | trans }}</label>
 
                     <div class="uk-form-controls">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
 
-                <div class="uk-form-row" v-if="!globals.connected && ownCredentials">
+                <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
                     <label class="uk-form-label" for="form-client-id">{{ 'Client secret' | trans }}</label>
 
                     <div class="uk-form-controls">
@@ -46,7 +46,7 @@
                     </div>
                 </div>
 
-                <div class="uk-form-row" v-if="!globals.connected">
+                <div class="uk-form-row" v-show="!globals.connected">
                     <label class="uk-form-label" for="form-auth-code">{{ 'Authorization' | trans }}</label>
 
                     <div class="uk-form-controls">
@@ -55,7 +55,7 @@
 
                         <a class="uk-button" v-on="click: openAuthWindow">{{ 'Request code' | trans }}</a>
 
-                        <i class="uk-icon-medium uk-icon-spinner uk-icon-spin" v-if="loading"></i>
+                        <i class="uk-icon-medium uk-icon-spinner uk-icon-spin" v-show="loading"></i>
 
                         <p class="uk-text-muted">
                             <span class="uk-badge uk-badge-danger uk-text-bold">Not configured</span> {{ 'To connect
@@ -65,11 +65,13 @@
                     </div>
                 </div>
 
-                <div class="uk-form-row" v-if="globals.connected">
-                    <label class="uk-form-label" for="form-auth-code">{{ 'Authorization' | trans }}</label>
+                <div class="uk-form-row" v-show="globals.connected">
+                    <label class="uk-form-label" for="form-auth-code">{{ 'Account' | trans }}</label>
 
                     <div class="uk-form-controls">
+                        <p v-show="uid">{{ 'UID' | trans }}: </p>
 
+                        <p v-show="name">{{ 'Name' | trans }}:</p>
                         <a class="uk-button" v-on="click: disconnect">{{ 'Disconnect' | trans }}</a>
 
                         <p class="uk-text-muted">{{ 'Disconnecting from Google will affect all widgets.' | trans }}</p>
@@ -109,6 +111,8 @@
                 init: false,
                 loading: false,
                 code: '',
+                uid: '',
+                name: '',
                 profile: 0,
                 profileList: [],
                 globals: window.$analytics
