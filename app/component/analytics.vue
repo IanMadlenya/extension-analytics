@@ -15,7 +15,16 @@
         <hr/>
     </form>
 
-    <div class="uk-text-center" v-if="globals.configured">
+
+    <div class="uk-text-center" v-if="!configured">
+
+        <p>{{ 'Not configured' | trans}}</p>
+
+        <a v-on="click: openSettings">{{ 'Open settings' | trans}}</a>
+
+    </div>
+
+    <div class="uk-text-center" v-if="configured">
 
         <br/><br/>
 
@@ -86,9 +95,14 @@
                 this.widget.$set('preset', this.globals.presets[0].id);
             }
 
-            this.$watch('globals.configured', function () {
+            this.$watch('globals.connected', function () {
                 this.configChanged();
             });
+
+            this.$watch('globals.profile', function () {
+                this.configChanged();
+            });
+
             this.$watch('widget.config', Vue.util.debounce(function () {
                 this.configChanged();
             }, 500), {
@@ -99,6 +113,11 @@
         },
 
         computed: {
+
+            configured: function () {
+                return this.globals.connected && this.globals.profile != false;
+            },
+
             presetOptions: function () {
                 var groups = this.globals.groups;
 
@@ -171,7 +190,7 @@
                     invalidCache: invalidCache
                 });
 
-                if (!this.globals.configured || !View) {
+                if (!this.configured || !View) {
                     return;
                 }
 
@@ -200,7 +219,7 @@
             newRealtime: function (invalidCache) {
                 var View = _.find(this.getViews(), {id: this.widget.config.views});
 
-                if (!this.globals.configured || !View) {
+                if (!this.configured || !View) {
                     return;
                 }
 

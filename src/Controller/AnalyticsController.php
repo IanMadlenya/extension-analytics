@@ -22,13 +22,17 @@ class AnalyticsController
      */
     public function authRedirectAction()
     {
-        $config = App::module('analytics')->config();
-        $service = App::get('analytics/oauth')->create('google', $config['credentials'], false, self::REDIRECT_URI, array('ANALYTICS'));
+        try {
+            $config = App::module('analytics')->config();
+            $service = App::get('analytics/oauth')->create('google', $config['credentials'], false, self::REDIRECT_URI, array('ANALYTICS'));
 
-        $service->setAccessType('offline');
-        $authorizationUri = $service->getAuthorizationUri(array('approval_prompt' => 'force'));
+            $service->setAccessType('offline');
+            $authorizationUri = $service->getAuthorizationUri(array('approval_prompt' => 'force'));
 
-        return App::response()->redirect($authorizationUri);
+            return App::response()->redirect($authorizationUri);
+        } catch (\Exception $e) {
+            return App::response( $e->getMessage(), 400);
+        }
     }
 
     /**
@@ -46,6 +50,18 @@ class AnalyticsController
             App::config('analytics')->set('token', $oauth->tokenToArray($token));
 
             return App::response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return App::response()->json(array('message' => $e->getMessage()), 400);
+        }
+    }
+
+    /**
+     * @Route("/user", methods="GET")
+     */
+    public function userAction()
+    {
+        try {
+            return App::response()->json($this->request('https://www.googleapis.com/oauth2/v1/userinfo'));
         } catch (\Exception $e) {
             return App::response()->json(array('message' => $e->getMessage()), 400);
         }
@@ -137,7 +153,11 @@ class AnalyticsController
      */
     public function saveProfileAction($profile)
     {
-        App::config('analytics')->set('profile', $profile);
+        if ($profile == 0) {
+            unset(App::config('analytics')['profile']);
+        } else {
+            App::config('analytics')->set('profile', $profile);
+        }
 
         return App::response()->json(array());
     }
@@ -148,6 +168,7 @@ class AnalyticsController
     public function disconnectAction()
     {
         unset(App::config('analytics')['profile']);
+        unset(App::config('analytics')['token']);
 
         return App::response()->json(array());
     }

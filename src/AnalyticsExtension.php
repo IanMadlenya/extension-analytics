@@ -47,7 +47,8 @@ class AnalyticsExtension extends Extension
                 array(
                     'groups' => $groupList,
                     'presets' => $presetList,
-                    'configured' => isset($config['token']) && isset($config['profile'])
+                    'connected' => isset($config['token']),
+                    'profile' => isset($config['profile']) ? $config['profile'] : false
                 )
             )), array(), 'string');
 

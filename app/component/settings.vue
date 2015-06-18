@@ -4,51 +4,89 @@
         <div class="uk-modal-dialog">
             <a class="uk-modal-close uk-close"></a>
 
-            <div v-if="state == 'link'">
-                <p>Not configured!</p>
-
-                <div>
-                    <label>
-                        <input type="checkbox" v-model="ownCredentials">
-                        Use own credentials
-                    </label>
-                </div>
-                <div v-show="ownCredentials">
-                    <label>
-                        Client ID:
-                        <input type="text" v-model="client_id">
-                    </label>
-                    <br/>
-                    <label>
-                        Client secret:
-                        <input type="text" v-model="client_secret">
-                    </label>
-                </div>
-                <a v-on="click: openAuthWindow">Authenticate</a>
-            </div>
-
-            <div v-if="state == 'waiting'">
-                <label>
-                    {{ 'Authorization code' | trans }}:
-                    <input v-model="code" type="text">
-                </label>
-            </div>
-
-            <div v-if="state == 'profiles'">
-                <label class="uk-form-label">Profile</label>
-
-                <div class="uk-form-controls">
-                    <select v-model="profile" options="profileOptions"></select>
-                </div>
-                <a v-on="click: saveProfile">Save</a>
-            </div>
-
-            <div v-if="state == 'configured'">
-                <a v-on="click: disconnect">Disconnect</a>
-            </div>
-
             <div class="uk-text-center" v-if="loading">
                 <i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i>
+            </div>
+
+
+            <div class="uk-form uk-form-horizontal">
+
+                <h3 class="wk-form-heading">{{ 'Google API' | trans }}</h3>
+
+                <div class="uk-form-row" v-if="!globals.connected">
+                    <label class="uk-form-label">{{ 'Credentials' | trans }}</label>
+
+                    <div class="uk-form-controls">
+                        <label>
+                            <input type="checkbox" v-model="ownCredentials">
+                            Use own credentials
+                        </label>
+
+                        <p class="uk-text-muted">
+                            {{'To connect with Twitter, click the button above. Follow the instructions and copy the
+                            provided PIN.' | trans}}
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="uk-form-row" v-if="!globals.connected && ownCredentials">
+                    <label class="uk-form-label" for="form-client-id">{{ 'Client ID' | trans }}</label>
+
+                    <div class="uk-form-controls">
+                        <input id="form-client-id" type="text" v-model="client_id">
+                    </div>
+                </div>
+
+                <div class="uk-form-row" v-if="!globals.connected && ownCredentials">
+                    <label class="uk-form-label" for="form-client-id">{{ 'Client secret' | trans }}</label>
+
+                    <div class="uk-form-controls">
+                        <input id="form-client-id" type="text" v-model="client_secret">
+                    </div>
+                </div>
+
+                <div class="uk-form-row" v-if="!globals.connected">
+                    <label class="uk-form-label" for="form-auth-code">{{ 'Authorization' | trans }}</label>
+
+                    <div class="uk-form-controls">
+
+                        <input id="form-auth-code" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code">
+
+                        <a class="uk-button" v-on="click: openAuthWindow">{{ 'Request code' | trans }}</a>
+
+                        <i class="uk-icon-medium uk-icon-spinner uk-icon-spin" v-if="loading"></i>
+
+                        <p class="uk-text-muted">
+                            <span class="uk-badge uk-badge-danger uk-text-bold">Not configured</span> {{ 'To connect
+                            with Google, click the button above. Follow the instructions and copy the provided code.' |
+                            trans }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="uk-form-row" v-if="globals.connected">
+                    <label class="uk-form-label" for="form-auth-code">{{ 'Authorization' | trans }}</label>
+
+                    <div class="uk-form-controls">
+
+                        <a class="uk-button" v-on="click: disconnect">{{ 'Disconnect' | trans }}</a>
+
+                        <p class="uk-text-muted">{{ 'Disconnecting from Google will affect all widgets.' | trans }}</p>
+
+                    </div>
+                </div>
+
+                <h3 class="wk-form-heading">{{ 'Google Analytics' | trans }}</h3>
+
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="wk-twitter-pin">{{ 'Profile' | trans }}</label>
+
+                    <div class="uk-form-controls">
+                        <select options="profileOptions" v-model="profile"
+                                v-attr="disabled: profileList.length == 0" v-attr="selected: globals.profile"></select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -70,34 +108,49 @@
             return {
                 loading: false,
                 code: '',
-                profile: '',
-                profileOptions: [],
+                profile: 0,
+                profileList: [],
                 globals: window.$analytics
             }
         },
 
         compiled: function () {
-            if (this.globals.configured) {
-                this.$set('state', 'configured');
-            } else {
-                this.$set('state', 'link');
+
+            this.$watch('code', Vue.util.debounce(this.checkCode, 300));
+            this.$watch('profile', Vue.util.debounce(this.saveProfile, 300));
+
+            if (this.globals.profile) {
+                this.profile = this.globals.profile;
             }
 
-            this.$watch('code', Vue.util.debounce(this.checkCode, 500));
             this.modal = UIkit.modal(this.$$.modal);
+        },
+
+        computed: {
+            profileOptions: function () {
+                var options = [];
+
+                options.push({value: 0, text: 'Select profile...'});
+                this.profileList.forEach(function (profile) {
+                    options.push({value: profile.id, text: profile.webPropertyId + ' - ' + profile.websiteUrl});
+                });
+
+                return options;
+            }
         },
 
         methods: {
 
             show: function () {
+                if (this.globals.connected) {
+                    this.loadProfiles();
+                }
+
                 this.modal.show();
             },
 
             openAuthWindow: function () {
-                var url = 'analytics/auth';
-
-                this.state = 'waiting';
-                this.popup = window.open(url, '', 'width=800,height=500');
+                this.popup = window.open('analytics/auth', '', 'width=800,height=500');
             },
 
             checkCode: function () {
@@ -108,6 +161,8 @@
 
                 request.success(function () {
                     this.loading = false;
+                    this.globals.connected = true;
+                    this.code = '';
                     this.loadProfiles();
                 });
 
@@ -123,8 +178,7 @@
 
                 request.success(function (res) {
                     this.loading = false;
-                    this.$set('profileOptions', this.getProfileOptions(res.items));
-                    this.state = 'profiles';
+                    this.$set('profileList', res.items);
                 });
             },
 
@@ -135,23 +189,12 @@
 
                 request.success(function () {
                     this.loading = false;
-                    this.globals.configured = true;
+                    this.globals.profile = this.profile;
                 });
 
                 request.error(function () {
 
                 });
-            },
-
-            getProfileOptions: function (profiles) {
-                var options = [];
-
-                options.push({value: null, text: 'Select profile..'});
-                profiles.forEach(function (profile) {
-                    options.push({value: profile.id, text: profile.webPropertyId + ' - ' + profile.websiteUrl});
-                });
-
-                return options;
             },
 
             disconnect: function () {
@@ -160,7 +203,9 @@
                 //this.$parent.loading = true;
 
                 request.success(function () {
-                    this.globals.configured = false;
+                    this.globals.connected = false;
+                    this.globals.profile = false;
+                    this.profile = 0;
                 });
 
                 request.error(function () {
