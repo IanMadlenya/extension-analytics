@@ -69,9 +69,10 @@
                     <label class="uk-form-label" for="form-auth-code">{{ 'Account' | trans }}</label>
 
                     <div class="uk-form-controls">
-                        <p v-show="uid">{{ 'UID' | trans }}: </p>
 
-                        <p v-show="name">{{ 'Name' | trans }}:</p>
+                        <p v-show="name">{{ 'Name' | trans }}: {{ name }}</p>
+                        <p v-show="id">{{ 'ID' | trans }}: {{ id }}</p>
+
                         <a class="uk-button" v-on="click: disconnect">{{ 'Disconnect' | trans }}</a>
 
                         <p class="uk-text-muted">{{ 'Disconnecting from Google will affect all widgets.' | trans }}</p>
@@ -111,7 +112,7 @@
                 init: false,
                 loading: false,
                 code: '',
-                uid: '',
+                id: '',
                 name: '',
                 profile: 0,
                 profileList: [],
@@ -142,7 +143,10 @@
                 if (!this.init) {
                     this.$watch('code', Vue.util.debounce(this.checkCode, 300));
                     this.$watch('profile', Vue.util.debounce(this.saveProfile, 300));
-                    this.$watch('globals.connected', this.loadProfiles);
+                    this.$watch('globals.connected', function () {
+                        this.loadProfiles();
+                        this.loadUser();
+                    });
 
                     if (this.globals.profile) {
                         this.profile = this.globals.profile;
@@ -150,6 +154,7 @@
 
                     if (this.globals.connected) {
                         this.loadProfiles();
+                        this.loadUser();
                     }
                 }
 
@@ -181,13 +186,27 @@
                 });
             },
 
+            loadUser: function () {
+                if (!this.globals.connected) {
+                    return;
+                }
+
+                var request = this.$http.get('admin/analytics/user');
+                this.loading = true;
+
+                request.success(function (res) {
+                    this.loading = false;
+                    this.$set('id', res.id);
+                    this.$set('name', res.name);
+                });
+            },
+
             loadProfiles: function () {
                 if (!this.globals.connected) {
                     return;
                 }
 
                 var request = this.$http.get('admin/analytics/profile');
-
                 this.loading = true;
 
                 request.success(function (res) {
@@ -198,7 +217,6 @@
 
             saveProfile: function () {
                 var request = this.$http.post('admin/analytics/profile', {profile: this.profile});
-
                 this.loading = true;
 
                 request.success(function () {
@@ -220,6 +238,8 @@
                     this.globals.connected = false;
                     this.globals.profile = false;
                     this.profile = 0;
+                    this.id = '';
+                    this.name = '';
                 });
 
                 request.error(function () {
