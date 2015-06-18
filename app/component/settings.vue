@@ -156,6 +156,8 @@
                         this.loadProfiles();
                         this.loadUser();
                     }
+
+                    this.init = true;
                 }
 
                 this.modal.show();
