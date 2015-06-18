@@ -1,4 +1,7 @@
 <template>
+
+    <a class="uk-icon-cogs" v-on="click: openSettings"></a>
+
     <form class="uk-form uk-margin" v-show="editing" v-on="submit: $event.preventDefault()">
 
         <div class="uk-form-row">
@@ -9,14 +12,8 @@
 
         <chart-options config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
 
-        <authentication globals="{{@ globals }}" v-if="globals.configured"></authentication>
-
         <hr/>
     </form>
-
-    <div class="uk-text-center" v-if="!globals.configured">
-        <authentication globals="{{@ globals }}"></authentication>
-    </div>
 
     <div class="uk-text-center" v-if="globals.configured">
 
@@ -66,7 +63,6 @@
         },
 
         components: {
-            authentication: require('./authentication.vue'),
             'chart-options': require('./chart-options.vue'),
 
             // Views:
@@ -133,6 +129,10 @@
         },
 
         methods: {
+
+            openSettings: function () {
+                this.globals.settingsVM.show();
+            },
 
             getViews: function () {
                 return _(this.$options.components.__proto__)

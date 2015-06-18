@@ -1,48 +1,56 @@
 <template>
 
-    <div v-if="state == 'link'">
-        <p>Not configured!</p>
-        <div>
-            <label>
-                <input type="checkbox" v-model="ownCredentials">
-                Use own credentials
-            </label>
+    <div class="uk-modal" v-el="modal">
+        <div class="uk-modal-dialog">
+            <a class="uk-modal-close uk-close"></a>
+
+            <div v-if="state == 'link'">
+                <p>Not configured!</p>
+
+                <div>
+                    <label>
+                        <input type="checkbox" v-model="ownCredentials">
+                        Use own credentials
+                    </label>
+                </div>
+                <div v-show="ownCredentials">
+                    <label>
+                        Client ID:
+                        <input type="text" v-model="client_id">
+                    </label>
+                    <br/>
+                    <label>
+                        Client secret:
+                        <input type="text" v-model="client_secret">
+                    </label>
+                </div>
+                <a v-on="click: openAuthWindow">Authenticate</a>
+            </div>
+
+            <div v-if="state == 'waiting'">
+                <label>
+                    {{ 'Authorization code' | trans }}:
+                    <input v-model="code" type="text">
+                </label>
+            </div>
+
+            <div v-if="state == 'profiles'">
+                <label class="uk-form-label">Profile</label>
+
+                <div class="uk-form-controls">
+                    <select v-model="profile" options="profileOptions"></select>
+                </div>
+                <a v-on="click: saveProfile">Save</a>
+            </div>
+
+            <div v-if="state == 'configured'">
+                <a v-on="click: disconnect">Disconnect</a>
+            </div>
+
+            <div class="uk-text-center" v-if="loading">
+                <i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i>
+            </div>
         </div>
-        <div v-show="ownCredentials">
-            <label>
-                Client ID:
-                <input type="text" v-model="client_id">
-            </label>
-            <br/>
-            <label>
-                Client secret:
-                <input type="text" v-model="client_secret">
-            </label>
-        </div>
-        <a v-on="click: openAuthWindow">Authenticate</a>
-    </div>
-
-    <div v-if="state == 'waiting'">
-        <label>
-            {{ 'Authorization code' | trans }}:
-            <input v-model="code" type="text">
-        </label>
-    </div>
-
-    <div v-if="state == 'profiles'">
-        <label class="uk-form-label">Profile</label>
-        <div class="uk-form-controls">
-            <select v-model="profile" options="profileOptions"></select>
-        </div>
-        <a v-on="click: saveProfile">Save</a>
-    </div>
-
-    <div v-if="state == 'configured'">
-        <a v-on="click: disconnect">Disconnect</a>
-    </div>
-
-    <div class="uk-text-center" v-if="loading">
-        <i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i>
     </div>
 
 </template>
@@ -50,7 +58,11 @@
 <script>
     var _ = require('lodash');
 
-    module.exports = {
+    module.exports = Vue.extend({
+
+        el: function () {
+            return document.createElement('div');
+        },
 
         props: ['globals', 'state'],
 
@@ -59,7 +71,8 @@
                 loading: false,
                 code: '',
                 profile: '',
-                profileOptions: []
+                profileOptions: [],
+                globals: window.$analytics
             }
         },
 
@@ -71,9 +84,15 @@
             }
 
             this.$watch('code', Vue.util.debounce(this.checkCode, 500));
+            this.modal = UIkit.modal(this.$$.modal);
         },
 
         methods: {
+
+            show: function () {
+                this.modal.show();
+            },
+
             openAuthWindow: function () {
                 var url = 'analytics/auth';
 
@@ -115,6 +134,7 @@
                 this.loading = true;
 
                 request.success(function () {
+                    this.loading = false;
                     this.globals.configured = true;
                 });
 
@@ -137,7 +157,7 @@
             disconnect: function () {
                 var request = this.$http.delete('admin/analytics/disconnect');
 
-                this.$parent.loading = true;
+                //this.$parent.loading = true;
 
                 request.success(function () {
                     this.globals.configured = false;
@@ -148,5 +168,5 @@
                 });
             }
         }
-    };
+    });
 </script>
