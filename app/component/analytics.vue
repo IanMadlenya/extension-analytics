@@ -5,22 +5,22 @@
             <li v-if="!$parent.editing[widget.id] && !loading && result.time">
                 <a class="pk-icon-refresh pk-icon-hover uk-hidden" title="{{ 'Refresh' | trans }} ({{ result.time | toDateString }})" data-uk-tooltip="{delay: 500}" v-on="click: invalidCache"></a>
             </li>
-            <li v-show="$parent.editing[widget.id]">
+            <li v-if="$parent.editing[widget.id]">
                 <a class="pk-icon-settings pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: openSettings"></a>
             </li>
-            <li v-show="$parent.editing[widget.id]">
+            <li v-if="$parent.editing[widget.id]">
                 <a class="pk-icon-delete pk-icon-hover" title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.remove()" v-confirm="'Delete widget?'"></a>
             </li>
-            <li v-show="$parent.type.editable !== false && !$parent.editing[widget.id]">
+            <li v-if="$parent.type.editable !== false && !$parent.editing[widget.id]">
                 <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
             </li>
-            <li v-show="$parent.type.editable !== false && $parent.editing[widget.id]">
+            <li v-if="$parent.type.editable !== false && $parent.editing[widget.id]">
                 <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
             </li>
         </ul>
     </div>
 
-    <form class="pk-panel-teaser uk-form uk-form-stacked" v-show="editing" v-on="submit: $event.preventDefault()">
+    <form class="pk-panel-teaser uk-form uk-form-stacked" v-if="editing" v-on="submit: $event.preventDefault()">
 
         <h3 class="uk-panel-title">{{ 'Analytics Widget' | trans }}</h3>
 
@@ -35,11 +35,11 @@
 
     </form>
 
-    <div v-show="configured">
+    <div v-if="configured">
 
-        <div class="uk-text-center" v-show="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
+        <div class="uk-text-center" v-if="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
 
-        <div v-show="!loading" v-el="view"></div>
+        <div v-if="!loading" v-el="view"></div>
 
     </div>
 
