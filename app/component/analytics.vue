@@ -2,18 +2,21 @@
 
     <div class="uk-panel-badge">
         <ul class="uk-subnav pk-subnav-icon">
-            <li v-show="$parent.editing[widget.id]"><a
-                    class="uk-icon-cogs pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}"
-                    v-on="click: openSettings"></a></li>
-            <li v-show="$parent.editing[widget.id]"><a class="pk-icon-delete pk-icon-hover"
-                                                       title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}"
-                                                       v-on="click: $parent.remove()" v-confirm="'Delete widget?'"></a></li>
-            <li v-show="$parent.type.editable !== false && !$parent.editing[widget.id]"><a
-                    class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}"
-                    data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a></li>
-            <li v-show="$parent.type.editable !== false && $parent.editing[widget.id]"><a
-                    class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}"
-                    v-on="click: $parent.edit()"></a></li>
+            <li v-if="!$parent.editing[widget.id] && !loading && result.time">
+                <a class="pk-icon-refresh pk-icon-hover uk-hidden" title="{{ 'Refresh' | trans }} ({{ result.time | toDateString }})" data-uk-tooltip="{delay: 500}" v-on="click: invalidCache"></a>
+            </li>
+            <li v-show="$parent.editing[widget.id]">
+                <a class="pk-icon-settings pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: openSettings"></a>
+            </li>
+            <li v-show="$parent.editing[widget.id]">
+                <a class="pk-icon-delete pk-icon-hover" title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.remove()" v-confirm="'Delete widget?'"></a>
+            </li>
+            <li v-show="$parent.type.editable !== false && !$parent.editing[widget.id]">
+                <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
+            </li>
+            <li v-show="$parent.type.editable !== false && $parent.editing[widget.id]">
+                <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
+            </li>
         </ul>
     </div>
 
@@ -23,16 +26,12 @@
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
-
             <div class="uk-form-controls">
-                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset"
-                        options="presetOptions"></select>
+                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset" options="presetOptions"></select>
             </div>
         </div>
 
-        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}"
-                       preset="{{@ widget.preset }}"></chart-options>
-
+        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
 
     </form>
 
@@ -40,12 +39,7 @@
 
         <div class="uk-text-center" v-show="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
 
-        <div v-show="!loading">
-            <div v-el="view"></div>
-            <small v-if="result.time">{{'Report gernerated at' | trans}}: {{ result.time | toDateString }}
-                <a class="uk-icon-refresh" v-on="click: invalidCache"></a>
-            </small>
-        </div>
+        <div v-show="!loading" v-el="view"></div>
 
     </div>
 

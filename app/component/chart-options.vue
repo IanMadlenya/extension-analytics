@@ -1,13 +1,13 @@
 <template>
 
-        <div class="uk-form-row" v-show="presetOptions.dimensions.length > 1">
+        <div class="uk-form-row" v-if="presetOptions.dimensions.length > 1">
             <label class="uk-form-label" for="form-analytics-dimension">{{ 'Dimension' | trans }}</label>
             <div class="uk-form-controls">
                 <select id="form-analytics-dimension" class="uk-width-1-1" v-model="config.dimensions" options="presetOptions.dimensions"></select>
             </div>
         </div>
 
-        <div class="uk-form-row" v-show="presetOptions.metrics.length > 1">
+        <div class="uk-form-row" v-if="presetOptions.metrics.length > 1">
             <label class="uk-form-label" for="form-analytics-metric">{{ 'Metric' | trans }}</label>
             <div class="uk-form-controls">
                 <select id="form-analytics-metric" class="uk-width-1-1" v-model="config.metrics" options="presetOptions.metrics"></select>
@@ -17,7 +17,7 @@
         <div class="uk-margin-top uk-grid uk-grid-small uk-grid-width-1-2">
             <div>
 
-                <div class="uk-form-row" v-show="presetOptions.views.length > 1">
+                <div class="uk-form-row" v-if="presetOptions.views.length > 1">
                     <label class="uk-form-label" for="form-analytics-chart">{{ 'Chart' | trans }}</label>
                     <div class="uk-form-controls">
                         <select id="form-analytics-chart" class="uk-width-1-1" v-model="config.views" options="presetOptions.views"></select>
@@ -27,7 +27,7 @@
             </div>
             <div>
 
-                <div class="uk-form-row" v-show="presetOptions.startDate">
+                <div class="uk-form-row" v-if="presetOptions.startDate">
                     <label class="uk-form-label" for="form-analytics-period">{{ 'Period' | trans }}</label>
                     <div class="uk-form-controls">
                         <select id="form-analytics-period" class="uk-width-1-1" v-model="config.startDate">

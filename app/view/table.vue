@@ -2,9 +2,9 @@
 
     <h3 class="uk-panel-title">{{ config.metrics | transGaCol }} - {{ config.dimensions | transGaCol }}</h3>
 
-    <div v-el="view"></div>
-
     <p>{{ config.startDate }}</p>
+
+    <div v-el="view"></div>
 
     <label>
         Max Results:

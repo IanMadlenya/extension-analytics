@@ -1,96 +1,68 @@
 <template>
 
     <div class="uk-modal" v-el="modal">
-        <div class="uk-modal-dialog">
-            <a class="uk-modal-close uk-close"></a>
+        <div class="uk-modal-dialog uk-form uk-form-horizontal">
 
-            <div class="uk-text-center" v-show="loading">
-                <i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i>
+            <div class="uk-modal-header">
+                <h2>{{ 'Google API' | trans }}</h2>
             </div>
 
-
-            <div class="uk-form uk-form-horizontal">
-
-                <h3 class="wk-form-heading">{{ 'Google API' | trans }}</h3>
-
-                <div class="uk-form-row" v-show="!globals.connected">
-                    <label class="uk-form-label">{{ 'Credentials' | trans }}</label>
-
-                    <div class="uk-form-controls">
-                        <label>
-                            <input type="checkbox" v-model="ownCredentials">
-                            Use own credentials
-                        </label>
-
-                        <p class="uk-text-muted">
-                            {{'To connect with Twitter, click the button above. Follow the instructions and copy the
-                            provided PIN.' | trans}}
-                        </p>
-
-                    </div>
-                </div>
-
-                <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
-                    <label class="uk-form-label" for="form-client-id">{{ 'Client ID' | trans }}</label>
-
-                    <div class="uk-form-controls">
-                        <input id="form-client-id" type="text" v-model="client_id">
-                    </div>
-                </div>
-
-                <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
-                    <label class="uk-form-label" for="form-client-id">{{ 'Client secret' | trans }}</label>
-
-                    <div class="uk-form-controls">
-                        <input id="form-client-id" type="text" v-model="client_secret">
-                    </div>
-                </div>
-
-                <div class="uk-form-row" v-show="!globals.connected">
-                    <label class="uk-form-label" for="form-auth-code">{{ 'Authorization' | trans }}</label>
-
-                    <div class="uk-form-controls">
-
-                        <input id="form-auth-code" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code">
-
+            <div class="uk-form-row" v-show="!globals.connected">
+                <label for="form-auth-code" class="uk-form-label">{{ 'Authorization' | trans }}</label>
+                <div class="uk-form-controls">
+                    <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code">
+                    <p>
                         <a class="uk-button" v-on="click: openAuthWindow">{{ 'Request code' | trans }}</a>
-
-                        <i class="uk-icon-medium uk-icon-spinner uk-icon-spin" v-show="loading"></i>
-
-                        <p class="uk-text-muted">
-                            <span class="uk-badge uk-badge-danger uk-text-bold">Not configured</span> {{ 'To connect
-                            with Google, click the button above. Follow the instructions and copy the provided code.' |
-                            trans }}
-                        </p>
-                    </div>
-                </div>
-
-                <div class="uk-form-row" v-show="globals.connected">
-                    <label class="uk-form-label" for="form-auth-code">{{ 'Account' | trans }}</label>
-
-                    <div class="uk-form-controls">
-
-                        <p v-show="name">{{ 'Name' | trans }}: {{ name }}</p>
-                        <p v-show="id">{{ 'ID' | trans }}: {{ id }}</p>
-
-                        <a class="uk-button" v-on="click: disconnect">{{ 'Disconnect' | trans }}</a>
-
-                        <p class="uk-text-muted">{{ 'Disconnecting from Google will affect all widgets.' | trans }}</p>
-
-                    </div>
-                </div>
-
-                <h3 class="wk-form-heading">{{ 'Google Analytics' | trans }}</h3>
-
-                <div class="uk-form-row">
-                    <label class="uk-form-label" for="wk-twitter-pin">{{ 'Profile' | trans }}</label>
-
-                    <div class="uk-form-controls">
-                        <select options="profileOptions" v-model="profile"
-                                v-attr="disabled: profileList.length == 0" v-attr="selected: globals.profile"></select>
-                    </div>
+                        <i class="uk-icon-spinner uk-icon-spin" v-show="loading"></i>
+                    </p>
                 </div>
             </div>
+
+            <div class="uk-form-row" v-show="!globals.connected">
+                <span class="uk-form-label">{{ 'Quota Limit' | trans }}</span>
+                <div class="uk-form-controls uk-form-controls-text">
+                    <label><input type="checkbox" v-model="ownCredentials"> Use own credentials</label>
+                    <p class="uk-form-help-block">{{ 'The Google Analytics API is limited by 50,000 requests per day. Use your own credentials to obtain your own full quota.' | trans}}</p>
+                </div>
+            </div>
+
+            <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
+                <label for="form-client-id" class="uk-form-label">{{ 'Client ID' | trans }}</label>
+                <div class="uk-form-controls">
+                    <input id="form-client-id" class="uk-form-width-large" type="text" v-model="client_id">
+                </div>
+            </div>
+
+            <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
+                <label for="form-client-secret" class="uk-form-label">{{ 'Client secret' | trans }}</label>
+                <div class="uk-form-controls">
+                    <input id="form-client-secret" class="uk-form-width-large" type="text" v-model="client_secret">
+                </div>
+            </div>
+
+            <div class="uk-form-row" v-show="globals.connected">
+                <label for="form-profile" class="uk-form-label">{{ 'Profile' | trans }}</label>
+                <div class="uk-form-controls">
+                    <select id="form-profile" class="uk-form-width-large" options="profileOptions" v-model="profile" v-attr="disabled: profileList.length == 0" v-attr="selected: globals.profile"></select>
+                </div>
+            </div>
+
+            <div class="uk-form-row" v-show="globals.connected && (name || id)">
+                <span class="uk-form-label">{{ 'Account' | trans }}</span>
+                <div class="uk-form-controls uk-form-controls-text">
+                    <p class="uk-form-controls-condensed" v-show="name">{{ name }}</p>
+                    <p class="uk-form-controls-condensed" v-show="id">{{ id }}</p>
+                </div>
+            </div>
+
+            <div class="uk-form-row" v-show="globals.connected">
+                <span for="form-auth-code" class="uk-form-label">{{ 'Authorization' | trans }}</span>
+                <div class="uk-form-controls">
+                    <a class="uk-button" v-on="click: disconnect">{{ 'Disconnect' | trans }}</a>
+                    <p class="uk-form-help-block">{{ 'Disconnecting from Google will affect all Analytics widgets.' | trans }}</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
