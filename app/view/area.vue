@@ -22,29 +22,29 @@
         data: function () {
             return {
                 options: {
-                    "height": 150,
-                    "theme": "maximized",
-                    "legend": "none",
-                    "backgroundColor": "#FFF",
-                    "colors": ["#058DC7"],
-                    "areaOpacity": 0.1,
-                    "pointSize": 8,
-                    "lineWidth": 4,
-                    "chartArea": {},
-                    "hAxis": {
-                        "format": "E",
-                        "textPosition": "in",
-                        "textStyle": {"color": "#058DC7"},
-                        "showTextEvery": 1,
-                        "baselineColor": "#fff",
-                        "gridlines": {"color": "none"}
+                    height: 150,
+                    theme: "maximized",
+                    legend: "none",
+                    backgroundColor: "#FFF",
+                    colors: ["#058DC7"],
+                    areaOpacity: 0.1,
+                    pointSize: 8,
+                    lineWidth: 4,
+                    chartArea: {},
+                    hAxis: {
+                        format: "E",
+                        textPosition: "in",
+                        textStyle: {"color": "#058DC7"},
+                        showTextEvery: 1,
+                        baselineColor: "#fff",
+                        gridlines: {"color": "none"}
                     },
-                    "vAxis": {
-                        "textPosition": "in",
-                        "textStyle": {"color": "#058DC7"},
-                        "baselineColor": "#ccc",
-                        "gridlines": {"color": "#fafafa"},
-                        "maxValue": 0
+                    vAxis: {
+                        textPosition: "in",
+                        textStyle: {"color": "#058DC7"},
+                        baselineColor: "#ccc",
+                        gridlines: {"color": "#fafafa"},
+                        maxValue: 0
                     }
                 }
             }

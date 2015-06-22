@@ -21,7 +21,13 @@
 
         data: function () {
             return {
-                options: {}
+                options: {
+                  //  theme: "maximized",
+                    legend: {
+                        alignment: "center",
+                        position: "bottom"
+                    }
+                }
             }
         },
 

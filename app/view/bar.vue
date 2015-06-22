@@ -22,7 +22,7 @@
         data: function () {
             return {
                 options: {
-                    "theme": "maximized"
+                    theme: "maximized"
                 }
             }
         },

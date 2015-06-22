@@ -23,18 +23,18 @@
         data: function () {
             return {
                 options: {
-                    "theme": "maximized",
-                    "height": 350,
-                    "pieHole": 0.5,
-                    "legend": {
-                        "alignment": "center",
-                        "position": "bottom"
+                    theme: "maximized",
+                    height: 350,
+                    pieHole: 0.5,
+                    legend: {
+                        alignment: "center",
+                        position: "bottom"
                     },
-                    "chartArea": {
-                        "top": 40,
-                        "height": "82%"
+                    chartArea: {
+                        top: 40,
+                        height: "82%"
                     },
-                    "sliceVisibilityThreshold": 1 / 120
+                    sliceVisibilityThreshold: 1 / 120
                 }
             }
         },
