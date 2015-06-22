@@ -29,15 +29,12 @@
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
-
             <div class="uk-form-controls">
-                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset"
-                        options="presetOptions"></select>
+                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset" options="presetOptions"></select>
             </div>
         </div>
 
-        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}"
-                       preset="{{@ widget.preset }}"></chart-options>
+        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
 
     </form>
 

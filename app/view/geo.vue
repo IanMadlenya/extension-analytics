@@ -25,6 +25,7 @@
         data: function () {
             return {
                 options: {
+                    colors: ["#AADFF3", "#058DC7"],
                     displayMode: 'auto'
                 },
                 continents: require('../data/continents.json'),
