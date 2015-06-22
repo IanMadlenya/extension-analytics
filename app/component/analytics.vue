@@ -24,7 +24,6 @@
     </div>
 
     <form class="pk-panel-teaser uk-form uk-form-stacked" v-if="editing" v-on="submit: $event.preventDefault()">
-
         <h3 class="uk-panel-title">{{ 'Analytics Widget' | trans }}</h3>
 
         <div class="uk-form-row">
@@ -35,15 +34,11 @@
         </div>
 
         <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
-
     </form>
 
     <div v-if="configured">
-
         <div class="uk-text-center" v-if="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
-
         <div v-show="!loading" v-el="view"></div>
-
     </div>
 
     <div v-if="!configured">Google Analytics <a href="#" v-on="click: openSettings">authentication</a> needed.</div>
@@ -107,14 +102,7 @@
             UIkit.tooltip(this.$$.refresh, {
                 delay: 500,
                 src: function () {
-                    var string = '';
-
-                    string += vm.$trans('Refresh');
-                    string += ' (';
-                    string += vm.$relativeDate(vm.result.time * 1000);
-                    string += ')';
-
-                    return string;
+                    return vm.$trans('Refresh (%time%)', {time: vm.$relativeDate(vm.result.time * 1000)});
                 }
             });
 

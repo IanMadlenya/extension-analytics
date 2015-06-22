@@ -23,6 +23,7 @@
             return {
                 options: {
                   //  theme: "maximized",
+                    colors: ["#058DC7"],
                     legend: {
                         alignment: "center",
                         position: "bottom"
