@@ -1,8 +1,6 @@
 <template>
 
-    <h3 class="uk-panel-title">{{ config.metrics | transGaCol }} - {{ config.dimensions | transGaCol }}</h3>
-
-    <p>{{ config.startDate }}</p>
+    <h3 class="uk-panel-title">{{ config.metrics | transGaCol }} this {{ config.startDate}}</h3>
 
     <div v-el="view"></div>
 

@@ -2,8 +2,6 @@
 
     <p v-repeat="result.totalsForAllResults">{{ $key | transGaCol }}: {{ $value }}</p>
 
-    <p>{{ config.startDate }}</p>
-
 </template>
 
 <script>

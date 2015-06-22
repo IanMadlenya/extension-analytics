@@ -9,8 +9,11 @@
 
             <div class="uk-form-row" v-show="!globals.connected">
                 <label for="form-auth-code" class="uk-form-label">{{ 'Authorization' | trans }}</label>
+
                 <div class="uk-form-controls">
-                    <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code">
+                    <input id="form-auth-code" class="uk-form-width-large" type="text"
+                           placeholder="{{ 'Auth code' | trans }}" v-model="code">
+
                     <p>
                         <a class="uk-button" v-on="click: openAuthWindow">{{ 'Request code' | trans }}</a>
                         <i class="uk-icon-spinner uk-icon-spin" v-show="loading"></i>
@@ -20,14 +23,18 @@
 
             <div class="uk-form-row" v-show="!globals.connected">
                 <span class="uk-form-label">{{ 'Quota Limit' | trans }}</span>
+
                 <div class="uk-form-controls uk-form-controls-text">
                     <label><input type="checkbox" v-model="ownCredentials"> Use own credentials</label>
-                    <p class="uk-form-help-block">{{ 'The Google Analytics API is limited by 50,000 requests per day. Use your own credentials to obtain your own full quota.' | trans}}</p>
+
+                    <p class="uk-form-help-block">{{ 'The Google Analytics API is limited by 50,000 requests per day.
+                        Use your own credentials to obtain your own full quota.' | trans}}</p>
                 </div>
             </div>
 
             <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
                 <label for="form-client-id" class="uk-form-label">{{ 'Client ID' | trans }}</label>
+
                 <div class="uk-form-controls">
                     <input id="form-client-id" class="uk-form-width-large" type="text" v-model="client_id">
                 </div>
@@ -35,6 +42,7 @@
 
             <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
                 <label for="form-client-secret" class="uk-form-label">{{ 'Client secret' | trans }}</label>
+
                 <div class="uk-form-controls">
                     <input id="form-client-secret" class="uk-form-width-large" type="text" v-model="client_secret">
                 </div>
@@ -42,24 +50,31 @@
 
             <div class="uk-form-row" v-show="globals.connected">
                 <label for="form-profile" class="uk-form-label">{{ 'Profile' | trans }}</label>
+
                 <div class="uk-form-controls">
-                    <select id="form-profile" class="uk-form-width-large" options="profileOptions" v-model="profile" v-attr="disabled: profileList.length == 0" v-attr="selected: globals.profile"></select>
+                    <select id="form-profile" class="uk-form-width-large" options="profileOptions" v-model="profileId"
+                            v-attr="disabled: profileList.length == 0" v-attr="selected: globals.profile"></select>
                 </div>
             </div>
 
             <div class="uk-form-row" v-show="globals.connected && (name || id)">
                 <span class="uk-form-label">{{ 'Account' | trans }}</span>
+
                 <div class="uk-form-controls uk-form-controls-text">
                     <p class="uk-form-controls-condensed" v-show="name">{{ name }}</p>
+
                     <p class="uk-form-controls-condensed" v-show="id">{{ id }}</p>
                 </div>
             </div>
 
             <div class="uk-form-row" v-show="globals.connected">
                 <span for="form-auth-code" class="uk-form-label">{{ 'Authorization' | trans }}</span>
+
                 <div class="uk-form-controls">
                     <a class="uk-button" v-on="click: disconnect">{{ 'Disconnect' | trans }}</a>
-                    <p class="uk-form-help-block">{{ 'Disconnecting from Google will affect all Analytics widgets.' | trans }}</p>
+
+                    <p class="uk-form-help-block">{{ 'Disconnecting from Google will affect all Analytics widgets.' |
+                        trans }}</p>
                 </div>
             </div>
 
@@ -86,7 +101,7 @@
                 code: '',
                 id: '',
                 name: '',
-                profile: 0,
+                profileId: 0,
                 profileList: [],
                 globals: window.$analytics
             }
@@ -94,6 +109,12 @@
 
         compiled: function () {
             this.modal = UIkit.modal(this.$$.modal);
+            this.$watch('code', Vue.util.debounce(this.checkCode, 300));
+            this.$watch('profileId', Vue.util.debounce(this.saveProfile, 300));
+            this.$watch('globals.connected', function () {
+                this.loadProfiles();
+                this.loadUser();
+            });
         },
 
         computed: {
@@ -113,15 +134,8 @@
 
             show: function () {
                 if (!this.init) {
-                    this.$watch('code', Vue.util.debounce(this.checkCode, 300));
-                    this.$watch('profile', Vue.util.debounce(this.saveProfile, 300));
-                    this.$watch('globals.connected', function () {
-                        this.loadProfiles();
-                        this.loadUser();
-                    });
-
-                    if (this.globals.profile) {
-                        this.profile = this.globals.profile;
+                    if (this.globals.profile.profileId) {
+                        this.profileId = this.globals.profile.profileId;
                     }
 
                     if (this.globals.connected) {
@@ -190,12 +204,18 @@
             },
 
             saveProfile: function () {
-                var request = this.$http.post('admin/analytics/profile', {profile: this.profile});
+                var profile = _.find(this.profileList, {id: this.profileId});
+                    profile = {
+                        accountId: profile.accountId,
+                        propertyId: profile.internalWebPropertyId,
+                        profileId: profile.id
+                    };
+                var request = this.$http.post('admin/analytics/profile', profile);
                 this.loading = true;
 
                 request.success(function () {
                     this.loading = false;
-                    this.globals.profile = this.profile;
+                    this.globals.profile = profile;
                 });
 
                 request.error(function () {
@@ -211,7 +231,7 @@
                 request.success(function () {
                     this.globals.connected = false;
                     this.globals.profile = false;
-                    this.profile = 0;
+                    this.profile = {};
                     this.id = '';
                     this.name = '';
                 });

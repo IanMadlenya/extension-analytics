@@ -75,14 +75,14 @@ class AnalyticsController
     {
         $config = App::module('analytics')->config();
 
-        if (!isset($config['profile'])) {
-            return $this['response']->json(array('message' => 'Not configured'), 400);
+        if (!isset($config['profile']['profileId'])) {
+            return App::response()->json(array('message' => 'Not configured'), 400);
         }
 
         $data = array('metrics' => $metrics,
             'dimensions' => $dimensions,
             'start-date' => $startDate,
-            'ids' => 'ga:' . $config['profile'],
+            'ids' => 'ga:' . $config['profile']['profileId'],
             'end-date' => 'today',
             'output' => 'dataTable');
 
@@ -114,13 +114,13 @@ class AnalyticsController
     {
         $config = App::module('analytics')->config();
 
-        if (!isset($config['profile'])) {
+        if (!isset($config['profile']['profileId'])) {
             return $this['response']->json(array('message' => 'Not configured'), 400);
         }
 
         $data = array('metrics' => $metrics,
             'dimensions' => $dimensions,
-            'ids' => 'ga:' . $config['profile'],
+            'ids' => 'ga:' . $config['profile']['profileId'],
             'output' => 'dataTable');
 
         $url = self::API . '/data/realtime?' . http_build_query($data);
@@ -153,14 +153,14 @@ class AnalyticsController
 
     /**
      * @Route("/profile", methods="POST")
-     * @Request({"profile": "string"})
+     * @Request({"accountId": "int", "propertyId": "int", "profileId": "int"})
      */
-    public function saveProfileAction($profile)
+    public function saveProfileAction($accountId, $propertyId = 0, $profileId = 0)
     {
-        if ($profile == 0) {
+        if ($accountId == 0) {
             unset(App::config('analytics')['profile']);
         } else {
-            App::config('analytics')->set('profile', $profile);
+            App::config('analytics')->set('profile', compact("accountId", "propertyId", "profileId"));
         }
 
         return App::response()->json(array());

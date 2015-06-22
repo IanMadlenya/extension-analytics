@@ -22,25 +22,24 @@ class AnalyticsExtension extends Extension
             $presetList = array();
             $groupList = array();
 
-            foreach (glob(__DIR__ . '/../presets/*.json') as $file) {
-                $file = json_decode(file_get_contents($file), true);
+            foreach (json_decode(file_get_contents(__DIR__ . '/../presets.json'), true) as $group) {
 
-                if (!$file) {
+                if (!$group) {
                     continue;
                 }
 
                 $groupList[] = array(
-                    'id' => $file['id'],
-                    'label' => $file['label']
+                    'id' => $group['id'],
+                    'label' => $group['label']
                 );
 
-                $group = array_map(function ($preset) use ($file) {
-                    $preset['groupID'] = $file['id'];
+                $groupPresets = array_map(function ($preset) use ($group) {
+                    $preset['groupID'] = $group['id'];
 
                     return $preset;
-                }, $file['presets']);
+                }, $group['presets']);
 
-                $presetList = array_merge($presetList, $group);
+                $presetList = array_merge($presetList, $groupPresets);
             }
 
             $app['scripts']->register('analytics-config', sprintf('var $analytics = %s;', json_encode(

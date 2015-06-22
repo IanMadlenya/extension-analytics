@@ -2,20 +2,27 @@
 
     <div class="uk-panel-badge">
         <ul class="uk-subnav pk-subnav-icon">
-            <li v-if="!$parent.editing[widget.id] && !loading && result.time">
-                <a class="pk-icon-refresh pk-icon-hover uk-hidden" title="{{ 'Refresh' | trans }} ({{ result.time | toDateString }})" data-uk-tooltip="{delay: 500}" v-on="click: invalidCache"></a>
+            <li v-show="!$parent.editing[widget.id] && gaUrl">
+                <a href="{{ gaUrl }}" class="pk-icon-reply pk-icon-hover uk-hidden"></a>
             </li>
-            <li v-if="$parent.editing[widget.id]">
-                <a class="pk-icon-settings pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: openSettings"></a>
+            <li v-show="!$parent.editing[widget.id] && !loading && result.time">
+                <a class="pk-icon-edit pk-icon-hover uk-hidden" v-el="refresh" v-on="click: invalidCache"></a>
             </li>
-            <li v-if="$parent.editing[widget.id]">
-                <a class="pk-icon-delete pk-icon-hover" title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.remove()" v-confirm="'Delete widget?'"></a>
+            <li v-show="$parent.editing[widget.id]">
+                <a class="pk-icon-edit pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}"
+                   v-on="click: openSettings"></a>
             </li>
-            <li v-if="$parent.type.editable !== false && !$parent.editing[widget.id]">
-                <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
+            <li v-show="$parent.editing[widget.id]">
+                <a class="pk-icon-delete pk-icon-hover" title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}"
+                   v-on="click: $parent.remove()" v-confirm="'Delete widget?'"></a>
             </li>
-            <li v-if="$parent.type.editable !== false && $parent.editing[widget.id]">
-                <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
+            <li v-show="!$parent.editing[widget.id]">
+                <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}"
+                   data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
+            </li>
+            <li v-show="$parent.editing[widget.id]">
+                <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}"
+                   v-on="click: $parent.edit()"></a>
             </li>
         </ul>
     </div>
@@ -26,12 +33,15 @@
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
+
             <div class="uk-form-controls">
-                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset" options="presetOptions"></select>
+                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset"
+                        options="presetOptions"></select>
             </div>
         </div>
 
-        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
+        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}"
+                       preset="{{@ widget.preset }}"></chart-options>
 
     </form>
 
@@ -101,6 +111,20 @@
                 vm.$broadcast('resize');
             }, 50));
 
+            UIkit.tooltip(this.$$.refresh, {
+                delay: 500,
+                src: function () {
+                    var string = '';
+
+                    string += vm.$trans('Refresh');
+                    string += ' (';
+                    string += vm.$relativeDate(vm.result.time * 1000);
+                    string += ')';
+
+                    return string;
+                }
+            });
+
             if (this.widget.preset == undefined) {
                 this.widget.$set('preset', this.globals.presets[0].id);
             }
@@ -148,12 +172,18 @@
 
             currentPreset: function () {
                 return _.find(this.globals.presets, {id: this.widget.preset});
-            }
-        },
+            },
 
-        filters: {
-            toDateString: function (timestamp) {
-                return new Date(timestamp * 1000).toLocaleString();
+            gaUrl: function () {
+                if (!this.currentPreset.uri || !this.globals.profile) {
+                    return false;
+                }
+
+                return 'https://www.google.com/analytics/web/?pli=1#report/' +
+                    this.currentPreset.uri +
+                    '/a' + this.globals.profile.accountId +
+                    'w' + this.globals.profile.propertyId +
+                    'p' + this.globals.profile.profileId + '/';
             }
         },
 
