@@ -39,7 +39,7 @@
 
         <div class="uk-text-center" v-if="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
 
-        <div v-if="!loading" v-el="view"></div>
+        <div v-show="!loading" v-el="view"></div>
 
     </div>
 
