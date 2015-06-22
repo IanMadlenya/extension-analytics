@@ -11,9 +11,7 @@
                 <label for="form-auth-code" class="uk-form-label">{{ 'Authorization' | trans }}</label>
 
                 <div class="uk-form-controls">
-                    <input id="form-auth-code" class="uk-form-width-large" type="text"
-                           placeholder="{{ 'Auth code' | trans }}" v-model="code">
-
+                    <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code">
                     <p>
                         <a class="uk-button" v-on="click: openAuthWindow">{{ 'Request code' | trans }}</a>
                         <i class="uk-icon-spinner uk-icon-spin" v-show="loading"></i>
@@ -26,7 +24,6 @@
 
                 <div class="uk-form-controls uk-form-controls-text">
                     <label><input type="checkbox" v-model="ownCredentials"> Use own credentials</label>
-
                     <p class="uk-form-help-block">{{ 'The Google Analytics API is limited by 50,000 requests per day.
                         Use your own credentials to obtain your own full quota.' | trans}}</p>
                 </div>
@@ -34,7 +31,6 @@
 
             <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
                 <label for="form-client-id" class="uk-form-label">{{ 'Client ID' | trans }}</label>
-
                 <div class="uk-form-controls">
                     <input id="form-client-id" class="uk-form-width-large" type="text" v-model="client_id">
                 </div>
@@ -42,7 +38,6 @@
 
             <div class="uk-form-row" v-show="!globals.connected && ownCredentials">
                 <label for="form-client-secret" class="uk-form-label">{{ 'Client secret' | trans }}</label>
-
                 <div class="uk-form-controls">
                     <input id="form-client-secret" class="uk-form-width-large" type="text" v-model="client_secret">
                 </div>
@@ -50,20 +45,17 @@
 
             <div class="uk-form-row" v-show="globals.connected">
                 <label for="form-profile" class="uk-form-label">{{ 'Profile' | trans }}</label>
-
                 <div class="uk-form-controls">
-                    <select id="form-profile" class="uk-form-width-large" options="profileOptions" v-model="profileId"
-                            v-attr="disabled: profileList.length == 0" v-attr="selected: globals.profile"></select>
+                    <select id="form-profile" class="uk-form-width-large" options="profileOptions" v-model="profileId" v-attr="disabled: profileList.length == 0" v-attr="selected: globals.profile"></select>
                 </div>
             </div>
 
             <div class="uk-form-row" v-show="globals.connected && (name || id)">
                 <span class="uk-form-label">{{ 'Account' | trans }}</span>
 
-                <div class="uk-form-controls uk-form-controls-text">
-                    <p class="uk-form-controls-condensed" v-show="name">{{ name }}</p>
-
-                    <p class="uk-form-controls-condensed" v-show="id">{{ id }}</p>
+                <div class="uk-form-controls uk-form-controls-text" v-show="name && id">
+                    <p class="uk-form-controls-condensed">{{ name }}</p>
+                    <p class="uk-form-controls-condensed">{{ id }}</p>
                 </div>
             </div>
 
@@ -109,12 +101,6 @@
 
         compiled: function () {
             this.modal = UIkit.modal(this.$$.modal);
-            this.$watch('code', Vue.util.debounce(this.checkCode, 300));
-            this.$watch('profileId', Vue.util.debounce(this.saveProfile, 300));
-            this.$watch('globals.connected', function () {
-                this.loadProfiles();
-                this.loadUser();
-            });
         },
 
         computed: {
@@ -142,6 +128,13 @@
                         this.loadProfiles();
                         this.loadUser();
                     }
+
+                    this.$watch('code', Vue.util.debounce(this.checkCode, 300));
+                    this.$watch('profileId', Vue.util.debounce(this.saveProfile, 300));
+                    this.$watch('globals.connected', function () {
+                        this.loadProfiles();
+                        this.loadUser();
+                    });
 
                     this.init = true;
                 }
@@ -205,17 +198,25 @@
 
             saveProfile: function () {
                 var profile = _.find(this.profileList, {id: this.profileId});
+
+                if (profile) {
                     profile = {
                         accountId: profile.accountId,
                         propertyId: profile.internalWebPropertyId,
                         profileId: profile.id
                     };
+                } else {
+                    profile = {
+                        accountId: 0
+                    };
+                }
+
                 var request = this.$http.post('admin/analytics/profile', profile);
                 this.loading = true;
 
-                request.success(function () {
+                request.success(function (res) {
                     this.loading = false;
-                    this.globals.profile = profile;
+                    this.globals.profile = res.profile;
                 });
 
                 request.error(function () {
@@ -225,8 +226,6 @@
 
             disconnect: function () {
                 var request = this.$http.delete('admin/analytics/disconnect');
-
-                //this.$parent.loading = true;
 
                 request.success(function () {
                     this.globals.connected = false;

@@ -24,11 +24,11 @@
             return {
                 options: {
                     "theme": "maximized",
-                    "height": 282,
-                    // "pieHole": 0.5,
+                    "height": 350,
+                    "pieHole": 0.5,
                     "legend": {
                         "alignment": "center",
-                        "position": "top"
+                        "position": "bottom"
                     },
                     "chartArea": {
                         "top": 40,

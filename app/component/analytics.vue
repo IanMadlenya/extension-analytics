@@ -3,26 +3,22 @@
     <div class="uk-panel-badge">
         <ul class="uk-subnav pk-subnav-icon">
             <li v-show="!$parent.editing[widget.id] && gaUrl">
-                <a href="{{ gaUrl }}" class="pk-icon-reply pk-icon-hover uk-hidden"></a>
+                <a href="{{ gaUrl }}" target="_blank" class="pk-icon-reply pk-icon-hover uk-hidden"></a>
             </li>
             <li v-show="!$parent.editing[widget.id] && !loading && result.time">
                 <a class="pk-icon-edit pk-icon-hover uk-hidden" v-el="refresh" v-on="click: invalidCache"></a>
             </li>
             <li v-show="$parent.editing[widget.id]">
-                <a class="pk-icon-edit pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}"
-                   v-on="click: openSettings"></a>
+                <a class="pk-icon-edit pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: openSettings"></a>
             </li>
             <li v-show="$parent.editing[widget.id]">
-                <a class="pk-icon-delete pk-icon-hover" title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}"
-                   v-on="click: $parent.remove()" v-confirm="'Delete widget?'"></a>
+                <a class="pk-icon-delete pk-icon-hover" title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.remove()" v-confirm="'Delete widget?'"></a>
             </li>
             <li v-show="!$parent.editing[widget.id]">
-                <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}"
-                   data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
+                <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
             </li>
             <li v-show="$parent.editing[widget.id]">
-                <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}"
-                   v-on="click: $parent.edit()"></a>
+                <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
             </li>
         </ul>
     </div>

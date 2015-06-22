@@ -163,7 +163,7 @@ class AnalyticsController
             App::config('analytics')->set('profile', compact("accountId", "propertyId", "profileId"));
         }
 
-        return App::response()->json(array());
+        return App::response()->json(array('profile' => App::config('analytics')->get('profile')));
     }
 
     /**
