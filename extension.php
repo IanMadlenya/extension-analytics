@@ -1,5 +1,7 @@
 <?php
 
+use Pagekit\Analytics\OAuthHelper;
+
 return [
 
     'name' => 'analytics',
