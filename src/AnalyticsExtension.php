@@ -16,7 +16,7 @@ class AnalyticsExtension extends Extension
             return new OAuthHelper();
         });
 
-        $app->on('app.request', function () use ($app) {
+        $app->on('request', function () use ($app) {
             $config = App::module('analytics')->config();
 
             $presetList = array();
