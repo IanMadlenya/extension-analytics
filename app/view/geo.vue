@@ -35,6 +35,7 @@
             this.$on('request', function (params) {
                 if (params.dimensions == 'ga:city') {
                     params.maxResults = 20;
+                    params.sort = '-' + params.metrics;
                     // params.dimensions = 'ga:latitude,ga:longitude,'.concat(params.dimensions);
                 }
             });

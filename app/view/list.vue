@@ -52,7 +52,6 @@
 
         methods: {
             render: function (result) {
-                console.log(result.dataTable)
                 this.$set('result', result.dataTable);
             }
         }
