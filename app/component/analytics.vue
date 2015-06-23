@@ -89,7 +89,7 @@
             counter: require('../view/counter.vue'),
             geo: require('../view/geo.vue'),
             pie: require('../view/pie.vue'),
-            table: require('../view/table.vue')
+            list: require('../view/list.vue')
         },
 
         compiled: function () {

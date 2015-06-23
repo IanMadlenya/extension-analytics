@@ -2,7 +2,20 @@
 
     <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
-    <div v-el="view"></div>
+    <table class="uk-table">
+        <caption></caption>
+        <thead>
+        <tr>
+            <th v-repeat="result.cols">{{ label }}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr v-repeat="result.rows">
+            <td v-repeat="c">{{ f || v }}</td>
+        </tr>
+        </tbody>
+    </table>
 
     <label>
         Max Results:
@@ -16,8 +29,8 @@
     module.exports = {
 
         view: {
-            id: 'table',
-            label: 'Table',
+            id: 'list',
+            label: 'List',
             description: function () {
 
             },
@@ -25,33 +38,22 @@
         },
 
         data: function () {
-            return {
-                options: {
-                    sortColumn: 1,
-                    sortAscending: false,
-                    width: '100%'
-                }
-            }
+          return {
+              result: {}
+          };
         },
 
         created: function () {
             this.$on('request', function (params) {
                 params.maxResults = this.config.results || 5;
-            });
-
-            this.$on('resize', function () {
-                if (this.chart) {
-                    this.chart.draw(this.dataTable, this.options);
-                }
+                params.sort = '-' + params.metrics;
             });
         },
 
         methods: {
             render: function (result) {
-                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.Table(this.$$.view));
-
-                this.chart.draw(this.dataTable, this.options);
+                console.log(result.dataTable)
+                this.$set('result', result.dataTable);
             }
         }
     };

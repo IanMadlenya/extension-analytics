@@ -69,9 +69,9 @@ class AnalyticsController
 
     /**
      * @Route("/api", methods="POST")
-     * @Request({"metrics": "string", "dimensions":"string", "startDate":"string", "invalidCache": "boolean", "maxResults": "int"})
+     * @Request({"metrics": "string", "dimensions":"string", "startDate":"string", "invalidCache": "boolean", "sort":"string", "maxResults": "int"})
      */
-    public function apiAction($metrics, $dimensions, $startDate, $invalidCache = false, $maxResults = false)
+    public function apiAction($metrics, $dimensions, $startDate, $invalidCache = false, $sort = false, $maxResults = false)
     {
         $config = App::module('analytics')->config();
 
@@ -85,6 +85,10 @@ class AnalyticsController
             'ids' => 'ga:' . $config['profile']['profileId'],
             'end-date' => 'today',
             'output' => 'dataTable');
+
+        if ($sort) {
+            $data['sort'] = $sort;
+        }
 
         if ($maxResults) {
             $data['max-results'] = $maxResults;

@@ -23,7 +23,7 @@
         data: function () {
             return {
                 options: {
-                    colors: ["#AADFF3", "#058DC7"],
+                    colors: ['#AADFF3', '#058DC7'],
                     displayMode: 'auto'
                 },
                 continents: require('../data/continents.json'),
@@ -34,8 +34,8 @@
         created: function () {
             this.$on('request', function (params) {
                 if (params.dimensions == 'ga:city') {
-                    //params.dimensions = 'ga:region'
-                    //params.dimensions = 'ga:latitude,ga:longitude,'.concat(params.dimensions);
+                    params.maxResults = 20;
+                    // params.dimensions = 'ga:latitude,ga:longitude,'.concat(params.dimensions);
                 }
             });
 

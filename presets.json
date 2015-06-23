@@ -60,7 +60,7 @@
         "views": [
           "bar",
           "pie",
-          "table"
+          "list"
         ]
       },
       {
@@ -85,7 +85,7 @@
         "views": [
           "geo",
           "pie",
-          "table"
+          "list"
         ]
       },
       {
@@ -107,7 +107,7 @@
         "views": [
           "pie",
           "bar",
-          "table"
+          "list"
         ]
       },
       {
@@ -134,7 +134,7 @@
         "views": [
           "pie",
           "bar",
-          "table"
+          "list"
         ]
       },
       {
@@ -157,7 +157,7 @@
         "views": [
           "pie",
           "bar",
-          "table"
+          "list"
         ]
       }
     ]
