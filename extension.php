@@ -4,7 +4,53 @@ return [
 
     'name' => 'analytics',
 
-    'main' => 'Pagekit\\Analytics\\AnalyticsExtension',
+    'main' => function ($app) {
+        $app->set('analytics/oauth', function () {
+            return new OAuthHelper();
+        });
+
+        $app->on('request', function () use ($app) {
+            $presetList = array();
+            $groupList = array();
+
+            foreach (json_decode(file_get_contents(__DIR__ . '/presets.json'), true) as $group) {
+
+                if (!$group) {
+                    continue;
+                }
+
+                $groupList[] = array(
+                    'id' => $group['id'],
+                    'label' => $group['label']
+                );
+
+                $groupPresets = array_map(function ($preset) use ($group) {
+                    $preset['groupID'] = $group['id'];
+
+                    return $preset;
+                }, $group['presets']);
+
+                $presetList = array_merge($presetList, $groupPresets);
+            }
+
+            $app['scripts']->register('analytics-config', sprintf('var $analytics = %s;', json_encode(
+                array(
+                    'groups' => $groupList,
+                    'presets' => $presetList,
+                    'connected' => $this->config('token'),
+                    'profile' => $this->config('profile')
+                )
+            )), array(), 'string');
+
+            $app['scripts']->register('google', '//www.google.com/jsapi');
+            $app['scripts']->register('widget-analytics', 'analytics:app/bundle/analytics.js', array('~dashboard', 'google', 'analytics-config'));
+        });
+
+        $app->on('uninstall.analytics', function () use ($app) {
+            // remove the config
+            $app['config']->remove($this->name);
+        });
+    },
 
     'autoload' => [
 

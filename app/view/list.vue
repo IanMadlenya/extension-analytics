@@ -3,24 +3,17 @@
     <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
     <table class="uk-table">
-        <caption></caption>
         <thead>
         <tr>
             <th v-repeat="result.cols">{{ label }}</th>
         </tr>
         </thead>
-
         <tbody>
         <tr v-repeat="result.rows">
             <td v-repeat="c">{{ f || v }}</td>
         </tr>
         </tbody>
     </table>
-
-    <label>
-        Max Results:
-        <input type="number" v-model="$parent.widget.config.results">
-    </label>
 
 </template>
 
@@ -38,14 +31,14 @@
         },
 
         data: function () {
-          return {
-              result: {}
-          };
+            return {
+                result: {}
+            };
         },
 
         created: function () {
             this.$on('request', function (params) {
-                params.maxResults = this.config.results || 5;
+                params.maxResults = 20;
                 params.sort = '-' + params.metrics;
             });
         },
