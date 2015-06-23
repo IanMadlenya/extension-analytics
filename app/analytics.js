@@ -12,9 +12,3 @@ window.Dashboard.component('analytics', Analytics);
 $(function () {
     window.$analytics.settingsVM = new Settings().$appendTo('body');
 });
-
-// add google translation filter
-Vue.filter('transGaCol', function (metric) {
-    return utils.transCol(metric);
-});
-

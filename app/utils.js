@@ -2,8 +2,6 @@ var _ = require('lodash');
 
 module.exports = {
 
-    gaColumns: require('./data/gaColumns.json'),
-
     parseRows: function (dataTable, params) {
         var self = this;
         _.forEach(dataTable.rows, function (value) {
@@ -15,12 +13,8 @@ module.exports = {
     parseCols: function (dataTable) {
         var self = this;
         _.forEach(dataTable.cols, function (value) {
-            value.label = self.transCol(value.label);
+            value.label = Vue.prototype.$trans(value.label);
         });
-    },
-
-    transCol: function (id) {
-        return _.result(_.find(this.gaColumns, {id: id}), "attributes.uiName");
     },
 
     parseLabel: function (value, params) {

@@ -1,6 +1,6 @@
 <template>
 
-    <p v-repeat="result.totalsForAllResults">{{ $key | transGaCol }}: {{ $value }}</p>
+    <p v-repeat="result.totalsForAllResults">{{ $key | trans }}: {{ $value }}</p>
 
 </template>
 

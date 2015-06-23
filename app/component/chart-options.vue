@@ -31,9 +31,9 @@
                 <label class="uk-form-label" for="form-analytics-period">{{ 'Period' | trans }}</label>
                 <div class="uk-form-controls">
                     <select id="form-analytics-period" class="uk-width-1-1" v-model="config.startDate">
-                        <option value="7daysAgo">Week</option>
-                        <option value="30daysAgo">Month</option>
-                        <option value="365daysAgo">Year</option>
+                        <option value="7daysAgo">{{ '7daysAgo' | trans }}</option>
+                        <option value="30daysAgo">{{ '30daysAgo' | trans }}</option>
+                        <option value="365daysAgo">{{ '365daysAgo' | trans }}</option>
                     </select>
                 </div>
             </div>
@@ -48,6 +48,7 @@
     var utils = require('../utils.js');
 
     module.exports = {
+
         props: ['config', 'preset'],
 
         compiled: function () {
@@ -78,7 +79,7 @@
                             if (key == 'views') {
                                 text = _.result(_.find(vm.$parent.getViews(), {id: el}), 'label');
                             } else {
-                                text = utils.transCol(el);
+                                text = vm.$trans(el);
                             }
 
                             return {
