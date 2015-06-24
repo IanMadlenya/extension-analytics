@@ -53,10 +53,8 @@
                     case 'ga:city':
                         this.options.displayMode = 'markers';
 
-                        result.dataTable.rows = _.forEach(result.dataTable.rows, function (value) {
-                            value.c[0].v = parseFloat(value.c[0].v);
-                            value.c[1].v = parseFloat(value.c[1].v);
-                        });
+                        result.dataTable.cols[0].type = 'number';
+                        result.dataTable.cols[1].type = 'number';
 
                         break;
 

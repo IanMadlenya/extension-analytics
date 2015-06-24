@@ -5,8 +5,8 @@ module.exports = {
     parseRows: function (dataTable, params) {
         var self = this;
         _.forEach(dataTable.rows, function (value) {
-            value.c[1].v = parseFloat(value.c[1].v);
-            value.c[1].f = self.parseLabel(value.c[1].v, params);
+            value.c[value.c.length - 1].v = parseFloat(value.c[value.c.length - 1].v);
+            value.c[value.c.length - 1].f = self.parseLabel(value.c[value.c.length - 1].v, params);
         });
     },
 
