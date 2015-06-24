@@ -36,7 +36,7 @@
                 if (params.dimensions == 'ga:city') {
                     params.maxResults = 20;
                     params.sort = '-' + params.metrics;
-                    // params.dimensions = 'ga:latitude,ga:longitude,'.concat(params.dimensions);
+                    params.dimensions = 'ga:latitude,ga:longitude,'.concat(params.dimensions);
                 }
             });
 
@@ -49,14 +49,15 @@
 
         methods: {
             render: function (result) {
-                var vm = this;
-
-                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.GeoChart(this.$$.view));
-
                 switch (this.config.dimensions) {
                     case 'ga:city':
                         this.options.displayMode = 'markers';
+
+                        result.dataTable.rows = _.forEach(result.dataTable.rows, function (value) {
+                            value.c[0].v = parseFloat(value.c[0].v);
+                            value.c[1].v = parseFloat(value.c[1].v);
+                        });
+
                         break;
 
                     case 'ga:country':
@@ -81,6 +82,10 @@
                         });
                         break;
                 }
+                var vm = this;
+
+                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
+                this.$add('chart', new google.visualization.GeoChart(this.$$.view));
 
                 this.chart.draw(this.dataTable, this.options);
             }

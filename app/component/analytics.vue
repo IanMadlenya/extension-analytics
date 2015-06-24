@@ -24,8 +24,6 @@
     </div>
 
     <form class="pk-panel-teaser uk-form uk-form-stacked" v-if="editing" v-on="submit: $event.preventDefault()">
-        <h3 class="uk-panel-title">{{ 'Analytics Widget' | trans }}</h3>
-
         <div class="uk-form-row">
             <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
             <div class="uk-form-controls">
