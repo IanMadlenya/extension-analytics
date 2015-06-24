@@ -2,7 +2,7 @@
 
     <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
-    <div v-el="view"></div>
+    <div v-el="chart"></div>
 
 </template>
 
@@ -11,7 +11,7 @@
 
     module.exports = {
 
-        view: {
+        chart: {
             id: 'pie',
             label: 'Pie Chart',
             description: function () {
@@ -50,7 +50,7 @@
         methods: {
             render: function (result) {
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.PieChart(this.$$.view));
+                this.$add('chart', new google.visualization.PieChart(this.$$.chart));
 
                 this.chart.draw(this.dataTable, this.options);
             }

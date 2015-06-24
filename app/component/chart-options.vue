@@ -17,10 +17,10 @@
     <div class="uk-margin-top uk-grid uk-grid-small uk-grid-width-1-2">
         <div>
 
-            <div class="uk-form-row" v-if="presetOptions.views.length > 1">
+            <div class="uk-form-row" v-if="presetOptions.charts.length > 1">
                 <label class="uk-form-label" for="form-analytics-chart">{{ 'Chart' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-analytics-chart" class="uk-width-1-1" v-model="config.views" options="presetOptions.views"></select>
+                    <select id="form-analytics-chart" class="uk-width-1-1" v-model="config.charts" options="presetOptions.charts"></select>
                 </div>
             </div>
 
@@ -30,7 +30,7 @@
             <div class="uk-form-row" v-if="presetOptions.startDate">
                 <label class="uk-form-label" for="form-analytics-period">{{ 'Period' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-analytics-period" class="uk-width-1-1" v-model="config.startDate">
+                    <select id="form-analytics-period" class="uk-width-1-1" v-model="config.startDate">   fvi
                         <option value="7daysAgo">{{ '7daysAgo' | trans }}</option>
                         <option value="30daysAgo">{{ '30daysAgo' | trans }}</option>
                         <option value="365daysAgo">{{ '365daysAgo' | trans }}</option>
@@ -39,6 +39,10 @@
             </div>
 
         </div>
+    </div>
+
+    <div class="uk-form-row uk-margin-top" v-show="customOptions">
+        <div v-el="customOptions"></div>
     </div>
 
 </template>
@@ -51,35 +55,59 @@
 
         props: ['config', 'preset'],
 
+        data: function () {
+            return {
+                customOptions: false
+            }
+        },
+
+        created: function () {
+            this.$watch('config.charts', function (chart) {
+                var Chart = this.$parent.getChart(chart).customOptions;
+
+                if (this.customOptions) {
+                    this.customOptions.$remove();
+                    this.customOptions = false;
+                }
+
+                if (Chart) {
+                    this.$set(
+                        'customOptions',
+                        this.$addChild({}, Chart).$appendTo(this.$$.customOptions)
+                    );
+                }
+            });
+        },
+
         compiled: function () {
             if (this.config.dimensions == undefined ||
                 this.config.metrics == undefined ||
                 this.config.startDate == undefined ||
-                this.config.views == undefined) {
+                this.config.charts == undefined) {
                 this.setDefaults();
             }
 
             this.$watch('preset', function () {
                 this.setDefaults();
-            })
+            });
         },
 
         computed: {
 
             presetOptions: function () {
-                var currentPreset = this.$parent.currentPreset;
+                var currentPreset = this.currentPreset;
                 var presetOptions = {};
                 var vm = this;
 
-                ['dimensions', 'metrics', 'views'].forEach(function (key) {
+                ['dimensions', 'metrics', 'charts'].forEach(function (key) {
                     if (currentPreset && _.isArray(currentPreset[key]) && currentPreset[key].length > 0) {
                         presetOptions[key] = currentPreset[key].map(function (el) {
                             var text;
 
-                            if (key == 'views') {
-                                text = _.result(_.find(vm.$parent.getViews(), {id: el}), 'label');
-                            } else {
+                            if (key != 'charts') {
                                 text = vm.$trans(el);
+                            } else {
+                                text = vm.$parent.getChart(el).label;
                             }
 
                             return {
@@ -92,9 +120,13 @@
                     }
                 });
 
-                presetOptions['startDate'] = !this.$parent.currentPreset.realtime;
+                presetOptions['startDate'] = !currentPreset.realtime;
 
                 return presetOptions;
+            },
+
+            currentPreset: function () {
+                return this.$parent.currentPreset;
             }
         },
 
@@ -104,13 +136,13 @@
 
                 this.$set('config', {});
 
-                ['dimensions', 'metrics', 'views'].forEach(function (key) {
+                ['dimensions', 'metrics', 'charts'].forEach(function (key) {
                     if (_.isArray(vm.presetOptions[key]) && vm.presetOptions[key].length > 0) {
                         vm.config.$set(key, vm.presetOptions[key][0].value);
                     }
                 });
 
-                if (!this.$parent.currentPreset.realtime) {
+                if (!this.currentPreset.realtime) {
                     this.config.$set('startDate', '7daysAgo');
                 }
             }

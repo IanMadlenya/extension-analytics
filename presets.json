@@ -10,7 +10,7 @@
           "rt:activeUsers"
         ],
         "dimensions": ["rt:userType"],
-        "views": [
+        "charts": [
           "counter"
         ],
         "realtime": true
@@ -35,7 +35,7 @@
           "ga:sessions"
         ],
         "dimensions": ["ga:date"],
-        "views": [
+        "charts": [
           "area",
           "column",
           "counter"
@@ -57,7 +57,7 @@
         "dimensions": [
           "ga:language"
         ],
-        "views": [
+        "charts": [
           "bar",
           "pie",
           "list"
@@ -82,7 +82,7 @@
           "ga:country",
           "ga:subContinent"
         ],
-        "views": [
+        "charts": [
           "geo",
           "pie",
           "list"
@@ -104,7 +104,7 @@
         "dimensions": [
           "ga:userType"
         ],
-        "views": [
+        "charts": [
           "pie",
           "bar",
           "list"
@@ -131,7 +131,7 @@
           "ga:flashVersion",
           "ga:javaEnabled"
         ],
-        "views": [
+        "charts": [
           "pie",
           "bar",
           "list"
@@ -154,7 +154,7 @@
           "ga:networkLocation",
           "ga:hostname"
         ],
-        "views": [
+        "charts": [
           "pie",
           "bar",
           "list"
@@ -183,7 +183,7 @@
           "ga:sourceMedium",
           "ga:medium"
         ],
-        "views": [
+        "charts": [
           "area",
           "pie"
         ]
@@ -205,7 +205,7 @@
           "ga:medium",
           "ga:keyword"
         ],
-        "views": [
+        "charts": [
           "area",
           "pie"
         ],

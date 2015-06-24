@@ -8,6 +8,7 @@
             <th v-repeat="result.cols ">{{ label }}</th>
         </tr>
         </thead>
+
         <tbody>
         <tr v-repeat="result.rows | pagination page">
             <td v-repeat="c">{{ f || v }}</td>
@@ -24,7 +25,7 @@
 
     module.exports = {
 
-        view: {
+        chart: {
             id: 'list',
             label: 'List',
             description: function () {
@@ -43,11 +44,9 @@
 
         created: function () {
             this.$on('request', function (params) {
-                params.maxResults = 30;
+                params.maxResults = 15;
                 params.sort = '-' + params.metrics;
             });
-
-
         },
 
         methods: {
@@ -57,8 +56,9 @@
                 this.pageination = UIkit.pagination(this.$$.pageination, {
                     pages: Math.floor(result.dataTable.rows.length / this.itemsPerPage),
                     onSelectPage: function (page) {
-                    vm.page = page;
-                }});
+                        vm.page = page;
+                    }
+                });
 
                 this.$set('result', result.dataTable);
             }

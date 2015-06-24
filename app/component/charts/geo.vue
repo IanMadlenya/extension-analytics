@@ -2,22 +2,27 @@
 
     <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
-    <div v-el="view"></div>
+    <div v-el="chart"></div>
 
 </template>
 
 <script>
     var _ = require('lodash');
 
+    var continents = require('../../data/continents.json');
+    var subcontinents = require('../../data/subContinents.json');
+
     module.exports = {
 
-        view: {
+        chart: {
             id: 'geo',
             label: 'Geo Chart',
             description: function () {
 
             },
-            defaults: {}
+            defaults: {},
+
+            customOptions: require('./geo-options.vue')
         },
 
         data: function () {
@@ -25,17 +30,13 @@
                 options: {
                     colors: ['#AADFF3', '#058DC7'],
                     displayMode: 'auto'
-                },
-                continents: require('../data/continents.json'),
-                subContinents: require('../data/subContinents.json')
+                }
             }
         },
 
         created: function () {
             this.$on('request', function (params) {
                 if (params.dimensions == 'ga:city') {
-                    params.maxResults = 20;
-                    params.sort = '-' + params.metrics;
                     params.dimensions = 'ga:latitude,ga:longitude,'.concat(params.dimensions);
                 }
             });
@@ -49,7 +50,10 @@
 
         methods: {
             render: function (result) {
-                var vm = this;
+
+                if (this.config.region) {
+                    this.options.region = this.config.region;
+                }
 
                 switch (this.config.dimensions) {
                     case 'ga:city':
@@ -62,6 +66,7 @@
 
                     case 'ga:country':
                         this.options.resolution = 'countries';
+
                         break;
 
                     case 'ga:continent':
@@ -69,8 +74,9 @@
 
                         result.dataTable.rows = _.forEach(result.dataTable.rows, function (value) {
                             value.c[0].f = value.c[0].v;
-                            value.c[0].v = _.result(_.find(vm.continents, {label: value.c[0].v}), 'code');
+                            value.c[0].v = _.result(_.find(continents, {label: value.c[0].v}), 'code');
                         });
+
                         break;
 
                     case 'ga:subContinent':
@@ -78,13 +84,14 @@
 
                         result.dataTable.rows = _.forEach(result.dataTable.rows, function (value) {
                             value.c[0].f = value.c[0].v;
-                            value.c[0].v = _.result(_.find(vm.subContinents, {label: value.c[0].v}), 'code');
+                            value.c[0].v = _.result(_.find(subContinents, {label: value.c[0].v}), 'code');
                         });
+
                         break;
                 }
 
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.GeoChart(this.$$.view));
+                this.$add('chart', new google.visualization.GeoChart(this.$$.chart));
 
                 this.chart.draw(this.dataTable, this.options);
             }

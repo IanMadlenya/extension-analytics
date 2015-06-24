@@ -8,7 +8,7 @@
 
     module.exports = {
 
-        view: {
+        chart: {
             id: 'counter',
             label: 'Counter',
             description: function () {

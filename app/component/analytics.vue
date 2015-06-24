@@ -36,7 +36,7 @@
 
     <div v-if="configured">
         <div class="uk-text-center" v-if="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
-        <div v-show="!loading" v-el="view"></div>
+        <div v-show="!loading" v-el="chart"></div>
     </div>
 
     <div v-if="!configured">Google Analytics <a href="#" v-on="click: openSettings">authentication</a> needed.</div>
@@ -61,7 +61,7 @@
                     dimensions: '',
                     metrics: '',
                     startDate: '',
-                    views: ''
+                    chart: ''
                 }
             }
         },
@@ -80,14 +80,14 @@
         components: {
             'chart-options': require('./chart-options.vue'),
 
-            // Views:
-            area: require('../view/area.vue'),
-            bar: require('../view/bar.vue'),
-            column: require('../view/column.vue'),
-            counter: require('../view/counter.vue'),
-            geo: require('../view/geo.vue'),
-            pie: require('../view/pie.vue'),
-            list: require('../view/list.vue')
+            // Charts:
+            area: require('./charts/area.vue'),
+            bar: require('./charts/bar.vue'),
+            column: require('./charts/column.vue'),
+            counter: require('./charts/counter.vue'),
+            geo: require('./charts/geo.vue'),
+            pie: require('./charts/pie.vue'),
+            list: require('./charts/list.vue')
         },
 
         compiled: function () {
@@ -172,15 +172,17 @@
                 this.globals.settingsVM.show();
             },
 
-            getViews: function () {
-                return _(this.$options.components.__proto__)
+            getChart: function (id) {
+                var charts = _(this.$options.components.__proto__)
                     .filter(function (component) {
-                        return _.has(component, 'options.view');
+                        return _.has(component, 'options.chart');
                     })
                     .map(function (component) {
-                        return _.merge(component.options.view, {component: component.options.name});
+                        return _.merge(component.options.chart, {component: component.options.name});
                     })
                     .value();
+
+                return _.find(charts, {id: id});
             },
 
             invalidCache: function () {
@@ -196,12 +198,12 @@
                 if (this.currentPreset.realtime) {
                     this.newRealtime(invalidCache);
                 } else {
-                    this.refreshView(invalidCache);
+                    this.refreshChart(invalidCache);
                 }
             },
 
-            refreshView: function (invalidCache) {
-                var View = _.find(this.getViews(), {id: this.widget.config.views});
+            refreshChart: function (invalidCache) {
+                var Chart = this.getChart(this.widget.config.charts);
                 var params = _.clone({
                     metrics: this.widget.config.metrics,
                     dimensions: this.widget.config.dimensions,
@@ -209,13 +211,13 @@
                     invalidCache: invalidCache
                 });
 
-                if (!this.configured || !View) {
+                if (!this.configured || !Chart) {
                     return;
                 }
 
                 this.$set('loading', true);
-                var view = this.initView(View);
-                view.$emit('request', params);
+                var chart = this.initChart(Chart);
+                chart.$emit('request', params);
 
                 var request = this.$http.post('admin/analytics/api', params);
                 request.success(function (result) {
@@ -225,26 +227,26 @@
                     this.$set('loading', false);
                     this.$set('result', result);
 
-                    if (_.has(view, 'render')) {
+                    if (_.has(chart, 'render')) {
                         this.$nextTick(function () {
-                            view.render(result);
+                            chart.render(result);
                         });
                     }
                 });
 
-                this.view = view;
+                this.chart = chart;
             },
 
             newRealtime: function (invalidCache) {
-                var View = _.find(this.getViews(), {id: this.widget.config.views});
+                var Chart = this.getChart(this.widget.config.charts);
 
-                if (!this.configured || !View) {
+                if (!this.configured || !Chart) {
                     return;
                 }
 
                 this.$set('loading', true);
 
-                this.view = this.initView(View);
+                this.chart = this.initChart(Chart);
                 this.refreshRealtime(invalidCache);
                 this.refreshIntervall = setInterval(this.refreshRealtime, 1000 * 30);
             },
@@ -256,7 +258,7 @@
                     invalidCache: invalidCache
                 });
 
-                this.view.$emit('request', params);
+                this.chart.$emit('request', params);
                 var request = this.$http.post('admin/analytics/realtime', params);
 
                 request.success(function (result) {
@@ -268,25 +270,25 @@
                     this.$set('loading', false);
                     this.$set('result', result);
 
-                    if (_.has(this.view, 'render')) {
+                    if (_.has(this.chart, 'render')) {
                         this.$nextTick(function () {
-                            this.view.render(result);
+                            this.chart.render(result);
                         });
                     }
                 });
             },
 
-            initView: function (View) {
+            initChart: function (Chart) {
                 var vm = this;
 
                 return this.$addChild({
-                    el: this.$$.view,
+                    el: this.$$.chart,
                     data: function () {
                         return {
                             config: _.clone(vm.widget.config)
                         }
                     }
-                }, this.$options.components[View.component]);
+                }, this.$options.components[Chart.component]);
             }
         }
     }

@@ -1,8 +1,8 @@
 <template>
 
-    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
+    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans}}</h3>
 
-    <div v-el="view"></div>
+    <div v-el="chart"></div>
 
 </template>
 
@@ -10,9 +10,9 @@
 
     module.exports = {
 
-        view: {
-            id: 'bar',
-            label: 'Bar Chart',
+        chart: {
+            id: 'column',
+            label: 'Column Chart',
             description: function () {
 
             },
@@ -22,7 +22,12 @@
         data: function () {
             return {
                 options: {
-                    theme: "maximized"
+                  //  theme: "maximized",
+                    colors: ["#058DC7"],
+                    legend: {
+                        alignment: "center",
+                        position: "bottom"
+                    }
                 }
             }
         },
@@ -39,7 +44,7 @@
             render: function (result) {
 
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.BarChart(this.$$.view));
+                this.$add('chart', new google.visualization.ColumnChart(this.$$.chart));
 
                 this.chart.draw(this.dataTable, this.options);
             }

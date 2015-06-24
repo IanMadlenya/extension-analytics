@@ -2,7 +2,7 @@
 
     <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
-    <div v-el="view"></div>
+    <div v-el="chart"></div>
 
 </template>
 
@@ -10,7 +10,7 @@
 
     module.exports = {
 
-        view: {
+        chart: {
             id: 'area',
             label: 'Area Chart',
             description: function () {
@@ -72,7 +72,7 @@
             render: function (result) {
 
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.AreaChart(this.$$.view));
+                this.$add('chart', new google.visualization.AreaChart(this.$$.chart));
 
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';

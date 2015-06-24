@@ -1,6 +1,5 @@
 <?php
 
-
 // Time period
 
 __('7daysAgo');
