@@ -14,7 +14,7 @@
                     <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code">
                     <p>
                         <a class="uk-button" v-on="click: openAuthWindow">{{ 'Request code' | trans }}</a>
-                        <i class="uk-icon-spinner uk-icon-spin" v-show="loading"></i>
+                        <v-loader v-show="loading"></v-loader>
                     </p>
                 </div>
             </div>

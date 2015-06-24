@@ -3,7 +3,7 @@
     <div class="uk-panel-badge">
         <ul class="uk-subnav pk-subnav-icon">
             <li v-show="!$parent.editing[widget.id] && gaUrl">
-                <a href="{{ gaUrl }}" target="_blank" class="pk-icon-reply pk-icon-hover uk-hidden"></a>
+                <a href="{{ gaUrl }}" target="_blank" class="pk-icon-share pk-icon-hover uk-hidden"></a>
             </li>
             <li v-show="!$parent.editing[widget.id] && !loading && result.time">
                 <a class="pk-icon-refresh pk-icon-hover uk-hidden" v-el="refresh" v-on="click: invalidCache"></a>
@@ -35,7 +35,7 @@
     </form>
 
     <div v-if="configured">
-        <div class="uk-text-center" v-if="loading"><i class="uk-icon-medium uk-icon-spinner uk-icon-spin"></i></div>
+        <p class="uk-text-center" v-if="loading"><v-loader></v-loader></p>
         <div v-show="!loading" v-el="chart"></div>
     </div>
 
