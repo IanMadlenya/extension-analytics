@@ -49,6 +49,8 @@
 
         methods: {
             render: function (result) {
+                var vm = this;
+
                 switch (this.config.dimensions) {
                     case 'ga:city':
                         this.options.displayMode = 'markers';
@@ -80,7 +82,6 @@
                         });
                         break;
                 }
-                var vm = this;
 
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
                 this.$add('chart', new google.visualization.GeoChart(this.$$.view));
