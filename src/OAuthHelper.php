@@ -137,6 +137,15 @@ class OAuthHelper
         return $data;
     }
 
+    /**
+     * @param $provider
+     * @param $code
+     * @param $credentials
+     * @param $redirectUri
+     * @param bool $token
+     * @return bool
+     * @throws \Exception
+     */
     public function requestToken($provider, $code, $credentials, $redirectUri, $token = false)
     {
         $service = $this->create($provider, $credentials, $token, $redirectUri);

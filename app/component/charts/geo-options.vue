@@ -10,9 +10,6 @@
 <script>
     var _ = require('lodash');
 
-    var continents = require('../../data/continents.json');
-    var subcontinents = require('../../data/subContinents.json');
-
     module.exports = Vue.extend({
 
         inherit: true,
@@ -22,33 +19,50 @@
         },
 
         data: function () {
-            var options = _([
+            var options = [
                 {
-                    label: 'Continents',
-                    data: continents
+                    value: 0,
+                    text: Vue.prototype.$trans('World')
                 },
                 {
-                    label: 'Subcontinents',
-                    data: subcontinents
-                }
-            ]).map(function (group) {
-                return {
-                    label: group.label,
-                    options: _.map(group.data, function (entry) {
+                    label: Vue.prototype.$trans('Continents'),
+                    options: _.map(window.$analytics.continents, function (continent, code) {
                         return {
-                            value: entry.code,
-                            text: entry.label
-                        };
+                            value: code,
+                            text: continent
+                        }
                     })
-                };
-            }).value();
+                },
+                {
+                    label: Vue.prototype.$trans('Subcontinents'),
+                    options: _.map(window.$analytics.subcontinents, function (subcontinent, code) {
+                        return {
+                            value: code,
+                            text: subcontinent
+                        }
+                    })
+                },
+                {
+                    label: Vue.prototype.$trans('Countries'),
+                    options: _.map(window.$analytics.countries, function (country, code) {
+                        return {
+                            value: code,
+                            text: country
+                        }
+                    })
+                }
+            ];
+
             return {
                 regionOptions: options
             };
         },
 
         compiled: function () {
-           console.log(this)
+            if (!this.config.region) {
+                // Add 'World' as default
+                this.config.$add('region', 0);
+            }
         }
 
     });

@@ -37,3 +37,10 @@ __('ga:subContinent');
 __('ga:userType');
 __('rt:activeUsers');
 __('rt:userType');
+
+// Geo Chart
+
+__('World');
+__('Continents');
+__('Subcontinents');
+__('Countries');

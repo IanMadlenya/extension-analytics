@@ -11,7 +11,6 @@ module.exports = {
     },
 
     parseCols: function (dataTable) {
-        var self = this;
         _.forEach(dataTable.cols, function (value) {
             value.label = Vue.prototype.$trans(value.label);
         });

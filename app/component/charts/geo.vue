@@ -10,7 +10,7 @@
     var _ = require('lodash');
 
     var continents = require('../../data/continents.json');
-    var subcontinents = require('../../data/subContinents.json');
+    var subcontinents = require('../../data/sub-continents.json');
 
     module.exports = {
 
@@ -51,7 +51,7 @@
         methods: {
             render: function (result) {
 
-                if (this.config.region) {
+                if (this.config.region && this.config.region != '0') {
                     this.options.region = this.config.region;
                 }
 

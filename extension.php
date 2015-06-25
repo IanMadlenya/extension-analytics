@@ -40,7 +40,10 @@ return [
                     'groups' => $groupList,
                     'presets' => $presetList,
                     'connected' => $this->config('token'),
-                    'profile' => $this->config('profile')
+                    'profile' => $this->config('profile'),
+                    'continents' => $app['intl']->territory()->getContinents(),
+                    'subcontinents' => $app['intl']->territory()->getList('S'),
+                    'countries' => $app['intl']->territory()->getCountries()
                 )
             )), array(), 'string');
 
