@@ -23,14 +23,14 @@
         data: function () {
             return {
                 options: {
-                    theme: "maximized",
+                    theme: 'maximized',
                     pieHole: 0.5,
                     legend: {
-                        alignment: "center",
-                        position: "bottom"
+                        alignment: 'center',
+                        position: 'bottom'
                     },
                     chartArea: {
-                        height: "85%",
+                        height: '85%',
                         top: 7
                     },
                     sliceVisibilityThreshold: 1 / 120
