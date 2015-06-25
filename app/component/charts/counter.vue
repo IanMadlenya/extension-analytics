@@ -1,6 +1,9 @@
 <template>
 
-    <p v-repeat="result.totalsForAllResults">{{ $key | trans }}: {{ $value }}</p>
+    <div class="uk-text-center" v-repeat="result.totalsForAllResults">
+        <h3 class="pk-text-large">{{ $value }}</h3>
+        <p>{{ $key | trans }}</p>
+    </div>
 
 </template>
 
