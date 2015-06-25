@@ -1,6 +1,6 @@
 <template>
 
-    <!--    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>-->
+    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
     <div v-el="chart"></div>
 
