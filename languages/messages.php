@@ -40,7 +40,6 @@ __('rt:userType');
 
 // Geo Chart
 
-__('World');
 __('Continents');
 __('Subcontinents');
 __('Countries');

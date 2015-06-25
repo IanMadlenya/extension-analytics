@@ -41,9 +41,12 @@ return [
                     'presets' => $presetList,
                     'connected' => $this->config('token'),
                     'profile' => $this->config('profile'),
-                    'continents' => $app['intl']->territory()->getContinents(),
-                    'subcontinents' => $app['intl']->territory()->getList('S'),
-                    'countries' => $app['intl']->territory()->getCountries()
+                    'geo' => array(
+                        'world' => $app['intl']->territory()->getName('001'),
+                        'continents' => $app['intl']->territory()->getContinents(),
+                        'subcontinents' => $app['intl']->territory()->getList('S'),
+                        'countries' => $app['intl']->territory()->getCountries()
+                    )
                 )
             )), array(), 'string');
 

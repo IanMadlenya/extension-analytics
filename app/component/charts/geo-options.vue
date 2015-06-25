@@ -22,11 +22,11 @@
             var options = [
                 {
                     value: 0,
-                    text: Vue.prototype.$trans('World')
+                    text: window.$analytics.geo.world
                 },
                 {
                     label: Vue.prototype.$trans('Continents'),
-                    options: _.map(window.$analytics.continents, function (continent, code) {
+                    options: _.map(window.$analytics.geo.continents, function (continent, code) {
                         return {
                             value: code,
                             text: continent
@@ -35,7 +35,7 @@
                 },
                 {
                     label: Vue.prototype.$trans('Subcontinents'),
-                    options: _.map(window.$analytics.subcontinents, function (subcontinent, code) {
+                    options: _.map(window.$analytics.geo.subcontinents, function (subcontinent, code) {
                         return {
                             value: code,
                             text: subcontinent
@@ -44,7 +44,7 @@
                 },
                 {
                     label: Vue.prototype.$trans('Countries'),
-                    options: _.map(window.$analytics.countries, function (country, code) {
+                    options: _.map(window.$analytics.geo.countries, function (country, code) {
                         return {
                             value: code,
                             text: country
@@ -62,6 +62,8 @@
             if (!this.config.region) {
                 // Add 'World' as default
                 this.config.$add('region', 0);
+            } else {
+                this.config.$set('region', this.config.region);
             }
         }
 
