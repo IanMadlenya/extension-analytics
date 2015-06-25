@@ -1,6 +1,6 @@
 <template>
 
-    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
+    <!--    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>-->
 
     <div v-el="chart"></div>
 
@@ -24,16 +24,13 @@
             return {
                 options: {
                     theme: "maximized",
-                    height: 350,
                     pieHole: 0.5,
                     legend: {
                         alignment: "center",
                         position: "bottom"
                     },
                     chartArea: {
-                        top: "-20%",
                         height: "80%"
-
                     },
                     sliceVisibilityThreshold: 1 / 120
                 }
@@ -43,6 +40,7 @@
         created: function () {
             this.$on('resize', function () {
                 if (this.chart) {
+                    this.options.height = this.$el.offsetWidth + 20;
                     this.chart.draw(this.dataTable, this.options);
                 }
             });
@@ -53,6 +51,7 @@
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
                 this.$add('chart', new google.visualization.PieChart(this.$$.chart));
 
+                this.options.height = this.$el.offsetWidth + 20;
                 this.chart.draw(this.dataTable, this.options);
             }
         }
