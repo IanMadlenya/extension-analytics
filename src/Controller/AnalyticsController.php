@@ -31,7 +31,7 @@ class AnalyticsController
 
             return App::response()->redirect($authorizationUri);
         } catch (\Exception $e) {
-            return App::response( $e->getMessage(), 400);
+            return App::response($e->getMessage(), 400);
         }
     }
 
@@ -69,9 +69,9 @@ class AnalyticsController
 
     /**
      * @Route("/api", methods="POST")
-     * @Request({"metrics": "string", "dimensions":"string", "startDate":"string", "invalidCache": "boolean", "sort":"string", "maxResults": "int"})
+     * @Request({"metrics": "string", "dimensions":"string", "startDate":"string", "filters":"string", "invalidCache": "boolean", "sort":"string", "maxResults": "int"})
      */
-    public function apiAction($metrics, $dimensions, $startDate, $invalidCache = false, $sort = false, $maxResults = false)
+    public function apiAction($metrics, $dimensions, $startDate, $filters = false, $invalidCache = false, $sort = false, $maxResults = false)
     {
         $config = App::module('analytics')->config();
 
@@ -92,6 +92,10 @@ class AnalyticsController
 
         if ($maxResults) {
             $data['max-results'] = $maxResults;
+        }
+
+        if ($filters) {
+            $data['filters'] = $filters;
         }
 
         $url = self::API . '/data/ga?' . http_build_query($data);

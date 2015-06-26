@@ -39,6 +39,21 @@
                 if (params.dimensions == 'ga:city') {
                     params.dimensions = 'ga:latitude,ga:longitude,'.concat(params.dimensions);
                 }
+
+                if (this.config.region && this.config.region != '0') {
+                    var filter;
+
+                    if (filter = _.result(_.find(continents, {code: this.config.region}), 'label'))   {
+                        // region is a continent
+                        params.filters = 'ga:continent==' + filter;
+                    } else if (filter = _.result(_.find(subcontinents, {code: this.config.region}), 'label')) {
+                        // region is a subcontinent
+                        params.filters = 'ga:subcontinent==' + filter;
+                    } else {
+                        // region is a country
+                        params.filters = 'ga:countryIsoCode==' + this.config.region;
+                    }
+                }
             });
 
             this.$on('resize', function () {
