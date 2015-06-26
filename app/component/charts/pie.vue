@@ -20,6 +20,10 @@
             defaults: {}
         },
 
+        el: function () {
+            return document.createElement('div');
+        },
+
         data: function () {
             return {
                 options: {

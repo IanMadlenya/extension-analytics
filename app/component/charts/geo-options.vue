@@ -65,6 +65,12 @@
             } else {
                 this.config.$set('region', this.config.region);
             }
+        },
+
+        beforeDestroy: function () {
+            if (this.config.charts !== 'geo') {
+                this.config.$delete('region');
+            }
         }
 
     });

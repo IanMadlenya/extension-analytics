@@ -24,7 +24,8 @@
 
                 <div class="uk-form-controls uk-form-controls-text">
                     <label><input type="checkbox" v-model="ownCredentials"> Use own credentials</label>
-                    <p class="uk-form-help-block">{{ 'The Google Analytics API is limited by 50,000 requests per day. Use your own credentials to obtain your own full quota.' | trans}}</p>
+                    <p class="uk-form-help-block">{{ 'The Google Analytics API is limited by 50,000 requests per day.
+                        Use your own credentials to obtain your own full quota.' | trans}}</p>
                 </div>
             </div>
 
@@ -64,7 +65,8 @@
                 <div class="uk-form-controls">
                     <a class="uk-button" v-on="click: disconnect">{{ 'Disconnect' | trans }}</a>
 
-                    <p class="uk-form-help-block">{{ 'Disconnecting from Google will affect all Analytics widgets.' | trans }}</p>
+                    <p class="uk-form-help-block">{{ 'Disconnecting from Google will affect all Analytics widgets.' |
+                        trans }}</p>
                 </div>
             </div>
 

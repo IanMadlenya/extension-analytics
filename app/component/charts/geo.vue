@@ -25,6 +25,10 @@
             customOptions: require('./geo-options.vue')
         },
 
+        el: function () {
+            return document.createElement('div');
+        },
+
         data: function () {
             return {
                 options: {
@@ -43,7 +47,7 @@
                 if (this.config.region && this.config.region != '0') {
                     var filter;
 
-                    if (filter = _.result(_.find(continents, {code: this.config.region}), 'label'))   {
+                    if (filter = _.result(_.find(continents, {code: this.config.region}), 'label')) {
                         // region is a continent
                         params.filters = 'ga:continent==' + filter;
                     } else if (filter = _.result(_.find(subcontinents, {code: this.config.region}), 'label')) {

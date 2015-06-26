@@ -30,7 +30,7 @@
             <div class="uk-form-row" v-if="presetOptions.startDate">
                 <label class="uk-form-label" for="form-analytics-period">{{ 'Period' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-analytics-period" class="uk-width-1-1" v-model="config.startDate">   fvi
+                    <select id="form-analytics-period" class="uk-width-1-1" v-model="config.startDate"> fvi
                         <option value="7daysAgo">{{ '7daysAgo' | trans }}</option>
                         <option value="30daysAgo">{{ '30daysAgo' | trans }}</option>
                         <option value="365daysAgo">{{ '365daysAgo' | trans }}</option>
@@ -62,24 +62,6 @@
         },
 
         created: function () {
-            this.$watch('config.charts', function (chart) {
-                var Chart = this.$parent.getChart(chart).customOptions;
-
-                if (this.customOptions) {
-                    this.customOptions.$remove();
-                    this.customOptions = false;
-                }
-
-                if (Chart) {
-                    this.$set(
-                        'customOptions',
-                        this.$addChild({}, Chart).$appendTo(this.$$.customOptions)
-                    );
-                }
-            });
-        },
-
-        compiled: function () {
             if (this.config.dimensions == undefined ||
                 this.config.metrics == undefined ||
                 this.config.startDate == undefined ||
@@ -87,9 +69,12 @@
                 this.setDefaults();
             }
 
-            this.$watch('preset', function () {
-                this.setDefaults();
-            });
+            this.$watch('preset', this.setDefaults);
+        },
+
+        compiled: function () {
+            this.addCustomOptions();
+            this.$watch('config.charts', this.addCustomOptions);
         },
 
         computed: {
@@ -144,6 +129,22 @@
 
                 if (!this.currentPreset.realtime) {
                     this.config.$set('startDate', '7daysAgo');
+                }
+            },
+
+            addCustomOptions: function () {
+                var Chart = this.$parent.getChart(this.config.charts).customOptions;
+
+                if (this.customOptions) {
+                    this.customOptions.$destroy(true);
+                    this.$set('customOptions', false);
+                }
+
+                if (Chart) {
+                    this.$set(
+                        'customOptions',
+                        this.$addChild({}, Chart).$appendTo(this.$$.customOptions)
+                    );
                 }
             }
         }

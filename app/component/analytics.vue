@@ -35,7 +35,9 @@
     </form>
 
     <div v-if="configured">
-        <p class="uk-text-center" v-if="loading"><v-loader></v-loader></p>
+        <p class="uk-text-center" v-if="loading">
+            <v-loader></v-loader>
+        </p>
         <div v-show="!loading" v-el="chart"></div>
     </div>
 
@@ -203,7 +205,6 @@
             },
 
             refreshChart: function (invalidCache) {
-                var Chart = this.getChart(this.widget.config.charts);
                 var params = _.clone({
                     metrics: this.widget.config.metrics,
                     dimensions: this.widget.config.dimensions,
@@ -211,13 +212,13 @@
                     invalidCache: invalidCache
                 });
 
-                if (!this.configured || !Chart) {
+                if (!this.configured || !this.initChart(this.widget.config.charts)) {
                     return;
                 }
 
                 this.$set('loading', true);
-                var chart = this.initChart(Chart);
-                chart.$emit('request', params);
+
+                this.chart.$emit('request', params);
 
                 var request = this.$http.post('admin/analytics/api', params);
                 request.success(function (result) {
@@ -227,26 +228,21 @@
                     this.$set('loading', false);
                     this.$set('result', result);
 
-                    if (_.has(chart, 'render')) {
+                    if (_.has(this.chart, 'render')) {
                         this.$nextTick(function () {
-                            chart.render(result);
+                            this.chart.render(result);
                         });
                     }
                 });
-
-                this.chart = chart;
             },
 
             newRealtime: function (invalidCache) {
-                var Chart = this.getChart(this.widget.config.charts);
-
-                if (!this.configured || !Chart) {
+                if (!this.configured || !this.initChart(this.widget.config.charts)) {
                     return;
                 }
 
                 this.$set('loading', true);
 
-                this.chart = this.initChart(Chart);
                 this.refreshRealtime(invalidCache);
                 this.refreshIntervall = setInterval(this.refreshRealtime, 1000 * 30);
             },
@@ -278,17 +274,27 @@
                 });
             },
 
-            initChart: function (Chart) {
+            initChart: function (chart) {
                 var vm = this;
+                var Chart = this.getChart(chart);
 
-                return this.$addChild({
-                    el: this.$$.chart,
-                    data: function () {
-                        return {
-                            config: _.clone(vm.widget.config)
-                        }
+                if (Chart) {
+                    if (this.chart) {
+                        this.chart.$destroy(true);
                     }
-                }, this.$options.components[Chart.component]);
+
+                    this.chart = this.$addChild({
+                        data: function () {
+                            return {
+                                config: _.clone(vm.widget.config)
+                            }
+                        }
+                    }, this.$options.components[Chart.component]).$appendTo(this.$$.chart);
+
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }
