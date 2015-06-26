@@ -64,7 +64,6 @@
         compiled: function () {
 
             if (this.config.metrics === undefined) {
-                console.log('undefinded');
                 this.setDefaults();
             }
 
@@ -72,17 +71,17 @@
 
             this.$watch('config.charts', function (chart) {
                     var Chart = this.$parent.getChart(chart);
-                    var options = Chart.customOptions;
+                    var Options = Chart.customOptions;
 
                     if (this.customOptions) {
                         this.customOptions.$destroy(true);
                         this.$set('customOptions', false);
                     }
 
-                    if (options) {
+                    if (Options) {
                         this.$set(
                             'customOptions',
-                            this.$addChild({}, Chart).$appendTo(this.$$.customOptions)
+                            this.$addChild({}, Options).$appendTo(this.$$.customOptions)
                         );
                     }
                 },
