@@ -30,7 +30,7 @@
             <div class="uk-form-row" v-if="presetOptions.startDate">
                 <label class="uk-form-label" for="form-analytics-period">{{ 'Period' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-analytics-period" class="uk-width-1-1" v-model="config.startDate"> fvi
+                    <select id="form-analytics-period" class="uk-width-1-1" v-model="config.startDate">
                         <option value="7daysAgo">{{ '7daysAgo' | trans }}</option>
                         <option value="30daysAgo">{{ '30daysAgo' | trans }}</option>
                         <option value="365daysAgo">{{ '365daysAgo' | trans }}</option>
@@ -61,20 +61,35 @@
             }
         },
 
-        created: function () {
-            if (this.config.dimensions == undefined ||
-                this.config.metrics == undefined ||
-                this.config.startDate == undefined ||
-                this.config.charts == undefined) {
+        compiled: function () {
+
+            if (this.config.metrics === undefined) {
+                console.log('undefinded');
                 this.setDefaults();
             }
 
             this.$watch('preset', this.setDefaults);
-        },
 
-        compiled: function () {
-            this.addCustomOptions();
-            this.$watch('config.charts', this.addCustomOptions);
+            this.$watch('config.charts', function (chart) {
+                    var Chart = this.$parent.getChart(chart);
+                    var options = Chart.customOptions;
+
+                    if (this.customOptions) {
+                        this.customOptions.$destroy(true);
+                        this.$set('customOptions', false);
+                    }
+
+                    if (options) {
+                        this.$set(
+                            'customOptions',
+                            this.$addChild({}, Chart).$appendTo(this.$$.customOptions)
+                        );
+                    }
+                },
+                {
+                    immediate: true
+                }
+            );
         },
 
         computed: {
@@ -85,7 +100,7 @@
                 var vm = this;
 
                 ['dimensions', 'metrics', 'charts'].forEach(function (key) {
-                    if (currentPreset && _.isArray(currentPreset[key]) && currentPreset[key].length > 0) {
+                    if (_.isArray(currentPreset[key]) && currentPreset[key].length > 0) {
                         presetOptions[key] = currentPreset[key].map(function (el) {
                             var text;
 
@@ -129,22 +144,6 @@
 
                 if (!this.currentPreset.realtime) {
                     this.config.$set('startDate', '7daysAgo');
-                }
-            },
-
-            addCustomOptions: function () {
-                var Chart = this.$parent.getChart(this.config.charts).customOptions;
-
-                if (this.customOptions) {
-                    this.customOptions.$destroy(true);
-                    this.$set('customOptions', false);
-                }
-
-                if (Chart) {
-                    this.$set(
-                        'customOptions',
-                        this.$addChild({}, Chart).$appendTo(this.$$.customOptions)
-                    );
                 }
             }
         }

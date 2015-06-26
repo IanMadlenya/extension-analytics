@@ -59,12 +59,7 @@
 
             },
             defaults: {
-                config: {
-                    dimensions: '',
-                    metrics: '',
-                    startDate: '',
-                    chart: ''
-                }
+                config: {}
             }
         },
 
@@ -92,6 +87,12 @@
             list: require('./charts/list.vue')
         },
 
+        created: function () {
+            if (this.widget.preset == undefined) {
+                this.widget.$set('preset', this.globals.presets[0].id);
+            }
+        },
+
         compiled: function () {
             var vm = this;
 
@@ -105,10 +106,6 @@
                     return vm.$trans('Refresh (%time%)', {time: vm.$relativeDate(vm.result.time * 1000)});
                 }
             });
-
-            if (this.widget.preset == undefined) {
-                this.widget.$set('preset', this.globals.presets[0].id);
-            }
 
             this.$watch('globals.connected', function () {
                 this.configChanged();
