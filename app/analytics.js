@@ -1,9 +1,11 @@
 var Analytics = require('./component/analytics.vue');
 var Settings = require('./component/settings.vue');
-var utils = require('./utils.js');
 
 // init google visualization api
-google.load('visualization', '1.0', {'packages': ['corechart', 'table', 'geochart']});
+google.load('visualization', '1', {
+    language: window.$globalize.locale,
+    packages: ['corechart', 'geochart']
+});
 
 // init dashboard widget
 window.Dashboard.component('analytics', Analytics);

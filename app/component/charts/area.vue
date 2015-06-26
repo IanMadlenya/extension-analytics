@@ -1,7 +1,7 @@
 <template>
 
     <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
-
+    <p v-repeat="result.totalsForAllResults">{{ $key | trans }}: {{ $value }}</p>
     <div v-el="chart"></div>
 
 </template>
@@ -22,29 +22,29 @@
         data: function () {
             return {
                 options: {
-                    height: 150,
-                    theme: "maximized",
-                    legend: "none",
-                    backgroundColor: "#FFF",
-                    colors: ["#058DC7"],
                     areaOpacity: 0.1,
-                    pointSize: 8,
+                    colors: ["#058DC7"],
+                    legend: "none",
                     lineWidth: 4,
-                    chartArea: {},
+                    pointSize: 8,
+                    theme: "maximized",
                     hAxis: {
-                        format: "E",
-                        textPosition: "in",
-                        textStyle: {"color": "#058DC7"},
-                        showTextEvery: 1,
                         baselineColor: "#fff",
-                        gridlines: {"color": "none"}
+                        gridlines: {"color": "none"},
+                        showTextEvery: 1,
+                        textPosition: "out",
+                        textStyle: {"color": "#058DC7"}
                     },
                     vAxis: {
-                        textPosition: "in",
-                        textStyle: {"color": "#058DC7"},
                         baselineColor: "#ccc",
                         gridlines: {"color": "#fafafa"},
-                        maxValue: 0
+                        textPosition: "out",
+                        textStyle: {"color": "#058DC7"}
+                    },
+                    chartArea: {
+                        height: '85%',
+                        width: '85%',
+                        top: 5
                     }
                 }
             }
@@ -53,7 +53,7 @@
         created: function () {
             this.$on('request', function (params) {
                 if (params.dimensions == 'ga:date' && params.startDate == '365daysAgo') {
-                    params.dimensions = 'ga:yearMonth';
+                    params.dimensions = 'ga:month';
                 }
 
                 if (params.dimensions == 'ga:yearMonth' && params.startDate != '365daysAgo') {
@@ -71,25 +71,26 @@
         methods: {
             render: function (result) {
 
-                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.AreaChart(this.$$.chart));
-
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';
-                    this.options.hAxis.showTextEvery = 1;
                 } else if (this.config.startDate == '30daysAgo') {
-                    this.options.hAxis.format = 'MMM d';
-                    this.options.hAxis.showTextEvery = 1;
-                } else if (this.config.startDate == '365daysAgo') {
-                    this.options.hAxis.showTextEvery = 1;
-                    this.options.hAxis.format = 'MMM yy';
+                    var format = window.$globalize.main.en.dates.calendars.gregorian.dateFormats.medium;
+                    format = format.replace(/[^md]*y[^md]*/i, '');
+                    this.options.hAxis.format = format;
 
-                    var dateFormatter = new google.visualization.DateFormat({
-                        pattern: "MMMM yyyy"
+                } else if (this.config.startDate == '365daysAgo') {
+                    this.options.hAxis.showTextEvery = 2;
+                    _.map(result.dataTable.rows, function (row) {
+                        row.c[0].f = window.$globalize.main.en.dates.calendars.gregorian.months['stand-alone'].abbreviated[parseInt(row.c[0].v)];
+
+                        return row;
                     });
 
-                    dateFormatter.format(this.dataTable, 0);
                 }
+
+                this.$set('result', result);
+                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
+                this.$add('chart', new google.visualization.AreaChart(this.$$.chart));
 
                 this.chart.draw(this.dataTable, this.options);
             }

@@ -22,7 +22,30 @@
         data: function () {
             return {
                 options: {
-                    theme: 'maximized'
+                    colors: ['#058DC7'],
+                    legend: 'none',
+                    lineWidth: 4,
+                    pointSize: 8,
+                    theme: 'maximized',
+                    hAxis: {
+                        baselineColor: '#fff',
+                        gridlines: {'color': 'none'},
+                        showTextEvery: 1,
+                        textPosition: 'in',
+                        textStyle: {
+                            color: '#058DC7',
+                            auraColor: '#FFF'
+                        }
+                    },
+                    vAxis: {
+                        baselineColor: '#ccc',
+                        gridlines: {'color': '#fafafa'},
+                        textPosition: 'in',
+                        textStyle: {
+                            color: '#058DC7',
+                            auraColor: '#FFF'
+                        }
+                    }
                 }
             }
         },
