@@ -34,13 +34,10 @@
         <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
     </form>
 
-    <div v-if="configured">
-        <p class="uk-text-center" v-if="loading">
-            <v-loader></v-loader>
-        </p>
-        <div v-show="!loading" v-el="chart"></div>
-    </div>
+    <div v-show="!loading && configured" v-el="chart"></div>
 
+    <div class="uk-text-center" v-if="loading && configured"><v-loader></v-loader></div>
+   
     <div v-if="!configured">Google Analytics <a href="#" v-on="click: openSettings">authentication</a> needed.</div>
 
 </template>
