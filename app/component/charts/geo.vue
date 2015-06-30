@@ -63,6 +63,7 @@
 
             this.$on('resize', function () {
                 if (this.chart) {
+                    this.setSize();
                     this.chart.draw(this.dataTable, this.options);
                 }
             });
@@ -110,11 +111,27 @@
                         break;
                 }
 
+
+
                 this.$set('result', result);
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
                 this.$add('chart', new google.visualization.GeoChart(this.$$.chart));
 
+                if (this.config.metrics == 'ga:bounceRate') {
+                    var formatter = new google.visualization.NumberFormat({
+                        fractionDigits: 2,
+                        suffix: '%'
+                    });
+
+                    formatter.format(this.dataTable, 1);
+                    this.options.legend = {numberFormat: '#\'%\''};
+                }
+
                 this.chart.draw(this.dataTable, this.options);
+            },
+
+            setSize: function () {
+                this.options.height = this.$el.parentElement.offsetWidth * 347/556;
             }
         },
 

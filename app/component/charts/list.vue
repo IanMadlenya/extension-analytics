@@ -1,8 +1,8 @@
 <template>
 
-    <h3 class="uk-panel-title">{{ total }} {{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
+    <h3 class="uk-panel-title">{{ total | format 1 }} {{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
-    <table class="uk-table">
+    <table class="uk-table" v-if="result.dataTable">
         <thead>
         <tr>
             <th v-repeat="result.dataTable.cols ">{{ label }}</th>
@@ -11,7 +11,7 @@
 
         <tbody>
         <tr v-repeat="result.dataTable.rows | pagination page">
-            <td v-repeat="c">{{ f || v }}</td>
+            <td v-repeat="c">{{ f || v | format $index }}</td>
         </tr>
         </tbody>
     </table>
@@ -72,6 +72,22 @@
         filters: {
             pagination: function (data, page) {
                 return _.chunk(data, this.itemsPerPage)[page] || [];
+            },
+
+            format: function (value, col) {
+
+                if (this.result.dataTable &&
+                    (this.result.dataTable.cols[col].id == 'ga:bounceRate' ||
+                    this.result.dataTable.cols[col].id == 'ga:percentNewSessions')) {
+                    var formatter = new google.visualization.NumberFormat({
+                        fractionDigits: 2,
+                        suffix: '%'
+                    });
+
+                    return formatter.formatValue(value);
+                }
+
+                return value;
             }
         },
 

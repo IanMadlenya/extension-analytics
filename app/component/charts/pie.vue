@@ -45,7 +45,7 @@
         created: function () {
             this.$on('resize', function () {
                 if (this.chart) {
-                    this.options.height = this.$el.parentElement.offsetWidth + 20;
+                    this.setSize();
                     this.chart.draw(this.dataTable, this.options);
                 }
             });
@@ -62,9 +62,14 @@
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
                 this.$add('chart', new google.visualization.PieChart(this.$$.chart));
 
-                this.options.height = this.$el.parentElement.offsetWidth + 20;
+                this.setSize();
                 this.chart.draw(this.dataTable, this.options);
+            },
+
+            setSize: function () {
+                this.options.height = this.$el.parentElement.offsetWidth + 20;
             }
+
         },
 
         computed: {

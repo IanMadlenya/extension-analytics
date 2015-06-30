@@ -32,7 +32,6 @@
                     legend: 'none',
                     lineWidth: 4,
                     pointSize: 8,
-//                    theme: 'maximized',
                     hAxis: {
                         baselineColor: '#fff',
                         gridlines: {'color': 'none'},
@@ -68,7 +67,7 @@
 
             this.$on('resize', function () {
                 if (this.chart) {
-                    this.options.chartArea.width = this.$el.parentElement.offsetWidth - 40;
+                    this.setSize();
                     this.chart.draw(this.dataTable, this.options);
                 }
             });
@@ -76,21 +75,16 @@
 
         methods: {
             render: function (result) {
-
-                this.options.chartArea.width = this.$el.parentElement.offsetWidth - 40;
-
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';
                 } else if (this.config.startDate == '30daysAgo') {
                     var format = window.$globalize.main.en.dates.calendars.gregorian.dateFormats.medium;
                     format = format.replace(/[^md]*y[^md]*/i, '');
                     this.options.hAxis.format = format;
-
                 } else if (this.config.startDate == '365daysAgo') {
                     this.options.hAxis.showTextEvery = 2;
                     _.map(result.dataTable.rows, function (row) {
                         row.c[0].f = window.$globalize.main.en.dates.calendars.gregorian.months['stand-alone'].abbreviated[parseInt(row.c[0].v)];
-
                         return row;
                     });
                 }
@@ -106,13 +100,15 @@
                     });
 
                     formatter.format(this.dataTable, 1);
-
                     this.options.vAxis.format = '#\'%\'';
                 }
 
-                window.table = this.dataTable;
-
+                this.setSize();
                 this.chart.draw(this.dataTable, this.options);
+            },
+
+            setSize: function () {
+                this.options.chartArea.width = this.$el.parentElement.offsetWidth - 40;
             }
         },
 
