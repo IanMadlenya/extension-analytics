@@ -1,12 +1,13 @@
 <template>
 
-    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
-    <p v-repeat="result.totalsForAllResults">{{ $key | trans }}: {{ $value }}</p>
+    <h3 class="uk-panel-title">{{ total }} {{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
+
     <div v-el="chart"></div>
 
 </template>
 
 <script>
+    var utils = require('../../utils.js');
 
     module.exports = {
 
@@ -27,27 +28,27 @@
             return {
                 options: {
                     areaOpacity: 0.1,
-                    colors: ["#058DC7"],
-                    legend: "none",
+                    colors: ['#058DC7'],
+                    legend: 'none',
                     lineWidth: 4,
                     pointSize: 8,
-                    theme: "maximized",
+//                    theme: 'maximized',
                     hAxis: {
-                        baselineColor: "#fff",
-                        gridlines: {"color": "none"},
+                        baselineColor: '#fff',
+                        gridlines: {'color': 'none'},
                         showTextEvery: 1,
-                        textPosition: "out",
-                        textStyle: {"color": "#058DC7"}
+                        textPosition: 'out',
+                        textStyle: {'color': '#058DC7'}
                     },
                     vAxis: {
-                        baselineColor: "#ccc",
-                        gridlines: {"color": "#fafafa"},
-                        textPosition: "out",
-                        textStyle: {"color": "#058DC7"}
+                        baselineColor: '#ccc',
+                        gridlines: {'color': '#fafafa'},
+                        textPosition: 'out',
+                        textStyle: {'color': '#058DC7'}
                     },
                     chartArea: {
+                        left: 30,
                         height: '85%',
-                        width: '85%',
                         top: 5
                     }
                 }
@@ -67,6 +68,7 @@
 
             this.$on('resize', function () {
                 if (this.chart) {
+                    this.options.chartArea.width = this.$el.parentElement.offsetWidth - 40;
                     this.chart.draw(this.dataTable, this.options);
                 }
             });
@@ -74,6 +76,8 @@
 
         methods: {
             render: function (result) {
+
+                this.options.chartArea.width = this.$el.parentElement.offsetWidth - 40;
 
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';
@@ -89,14 +93,35 @@
 
                         return row;
                     });
-
                 }
 
                 this.$set('result', result);
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
                 this.$add('chart', new google.visualization.AreaChart(this.$$.chart));
 
+                if (this.config.metrics == 'ga:bounceRate') {
+                    var formatter = new google.visualization.NumberFormat({
+                        fractionDigits: 2,
+                        suffix: '%'
+                    });
+
+                    formatter.format(this.dataTable, 1);
+
+                    this.options.vAxis.format = '#\'%\'';
+                }
+
+                window.table = this.dataTable;
+
                 this.chart.draw(this.dataTable, this.options);
+            }
+        },
+
+        computed: {
+
+            total: function () {
+                if (this.result && this.result.totalsForAllResults) {
+                    return utils.parseLabel(this.result.totalsForAllResults[this.config.metrics], this.config);
+                }
             }
         }
     };

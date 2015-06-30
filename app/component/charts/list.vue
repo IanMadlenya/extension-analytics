@@ -1,16 +1,16 @@
 <template>
 
-    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
+    <h3 class="uk-panel-title">{{ total }} {{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
     <table class="uk-table">
         <thead>
         <tr>
-            <th v-repeat="result.cols ">{{ label }}</th>
+            <th v-repeat="result.dataTable.cols ">{{ label }}</th>
         </tr>
         </thead>
 
         <tbody>
-        <tr v-repeat="result.rows | pagination page">
+        <tr v-repeat="result.dataTable.rows | pagination page">
             <td v-repeat="c">{{ f || v }}</td>
         </tr>
         </tbody>
@@ -22,6 +22,7 @@
 
 <script>
     var _ = require('lodash');
+    var utils = require('../../utils.js');
 
     module.exports = {
 
@@ -64,13 +65,22 @@
                     }
                 });
 
-                this.$set('result', result.dataTable);
+                this.$set('result', result);
             }
         },
 
         filters: {
             pagination: function (data, page) {
                 return _.chunk(data, this.itemsPerPage)[page] || [];
+            }
+        },
+
+        computed: {
+
+            total: function () {
+                if (this.result && this.result.totalsForAllResults) {
+                    return this.result.totalsForAllResults[this.config.metrics];
+                }
             }
         }
     };

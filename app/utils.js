@@ -4,10 +4,10 @@ module.exports = {
 
     parseRows: function (dataTable, params) {
         var self = this;
-        _.forEach(dataTable.rows, function (value) {
-            value.c[value.c.length - 1].v = parseFloat(value.c[value.c.length - 1].v);
-            value.c[value.c.length - 1].f = self.parseLabel(value.c[value.c.length - 1].v, params);
-        });
+        //_.forEach(dataTable.rows, function (value) {
+        //    value.c[value.c.length - 1].v = parseFloat(value.c[value.c.length - 1].v);
+        //    value.c[value.c.length - 1].f = self.parseLabel(value.c[value.c.length - 1].v, params);
+        //});
     },
 
     parseCols: function (dataTable) {
@@ -21,6 +21,7 @@ module.exports = {
             return this.secToTime(value);
         }
 
+        value = parseFloat(value);
         return value.toFixed(2).replace(/\.00$/, '')
     },
 

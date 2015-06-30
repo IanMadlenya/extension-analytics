@@ -95,7 +95,7 @@
 
             window.addEventListener('resize', Vue.util.debounce(function () {
                 vm.$broadcast('resize');
-            }, 50));
+            }, 10));
 
             UIkit.tooltip(this.$$.refresh, {
                 delay: 500,

@@ -1,6 +1,6 @@
 <template>
 
-    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
+    <h3 class="uk-panel-title">{{ total }} {{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
     <div v-el="chart"></div>
 
@@ -8,6 +8,7 @@
 
 <script>
     var _ = require('lodash');
+    var utils = require('../../utils.js');
 
     var continents = require('../../data/continents.json');
     var subcontinents = require('../../data/sub-continents.json');
@@ -109,10 +110,20 @@
                         break;
                 }
 
+                this.$set('result', result);
                 this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
                 this.$add('chart', new google.visualization.GeoChart(this.$$.chart));
 
                 this.chart.draw(this.dataTable, this.options);
+            }
+        },
+
+        computed: {
+
+            total: function () {
+                if (this.result && this.result.totalsForAllResults) {
+                    return utils.parseLabel(this.result.totalsForAllResults[this.config.metrics], this.config);
+                }
             }
         }
 
