@@ -48,13 +48,14 @@ module.exports = {
 
             if (params.metrics === 'ga:avgSessionDuration') {
                 value.c[value.c.length - 1].v = parseInt(value.c[value.c.length - 1].v, 10) / 60;
-                value.c[value.c.length - 1].f = Math.round(value.c[value.c.length - 1].v * 100) / 100 + ' min';
+                value.c[value.c.length - 1].f = Globalize.numberFormatter({maximumFractionDigits: 2})(value.c[value.c.length - 1].v) + ' min';
+
             }
         });
 
         _.forEach(result.totalsForAllResults, function (value, metric) {
             if (params.metrics === 'ga:avgSessionDuration') {
-                result.totalsForAllResults[metric] =  Math.round(value / 60 * 100) / 100 + ' min';
+                result.totalsForAllResults[metric] =  Globalize.numberFormatter({maximumFractionDigits: 2})(value / 60) + ' min';
             }
         });
     }
