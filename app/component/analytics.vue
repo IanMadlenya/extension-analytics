@@ -216,8 +216,7 @@
 
                 var request = this.$http.post('admin/analytics/api', params);
                 request.success(function (result) {
-                    utils.parseRows(result.dataTable, params);
-                    utils.parseCols(result.dataTable);
+                    utils.transCols(result.dataTable);
 
                     this.$set('loading', false);
                     this.$set('result', result);
@@ -252,10 +251,7 @@
                 var request = this.$http.post('admin/analytics/realtime', params);
 
                 request.success(function (result) {
-                    if (result.dataTable) {
-                        utils.parseRows(result.dataTable, params);
-                        utils.parseCols(result.dataTable);
-                    }
+                    utils.transCols(result.dataTable);
 
                     this.$set('loading', false);
                     this.$set('result', result);

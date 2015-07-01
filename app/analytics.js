@@ -1,3 +1,5 @@
+Vue.config.debug = true
+
 var Analytics = require('./component/analytics.vue');
 var Settings = require('./component/settings.vue');
 
