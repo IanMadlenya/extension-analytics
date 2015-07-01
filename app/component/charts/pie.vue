@@ -52,17 +52,13 @@
                     this.chart.draw(this.dataTable, this.options);
                 }
             });
-        },
 
-        methods: {
-            render: function (result) {
-
-                _.forEach(result.dataTable.rows, function (value) {
+            this.$on('render', function () {
+                _.forEach(this.result.dataTable.rows, function (value) {
                     value.c[value.c.length - 1].v = parseFloat(value.c[value.c.length - 1].v);
                 });
 
-                this.$add('result', result);
-                this.dataTable = new google.visualization.DataTable(result.dataTable);
+                this.dataTable = new google.visualization.DataTable(this.result.dataTable);
                 this.chart = new google.visualization.PieChart(this.$$.chart)
 
                 if (this.formatter) {
@@ -71,7 +67,10 @@
 
                 this.setSize();
                 this.chart.draw(this.dataTable, this.options);
-            },
+            });
+        },
+
+        methods: {
 
             setSize: function () {
                 this.options.height = this.$el.parentElement.offsetWidth + 20;

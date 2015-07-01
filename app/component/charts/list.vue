@@ -2,7 +2,7 @@
 
     <h3 class="uk-panel-title">{{ total | format 1 }} {{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
-    <table class="uk-table" v-if="result.dataTable">
+    <table class="uk-table" v-if="result">
         <thead>
         <tr>
             <th v-repeat="result.dataTable.cols ">{{ label }}</th>
@@ -42,8 +42,7 @@
         data: function () {
             return {
                 itemsPerPage: 5,
-                page: 0,
-                result: {}
+                page: 0
             };
         },
 
@@ -54,21 +53,17 @@
                 params.maxResults = 15;
                 params.sort = '-' + params.metrics;
             });
-        },
 
-        methods: {
-            render: function (result) {
+            this.$on('render', function () {
                 var vm = this;
 
                 this.pageination = UIkit.pagination(this.$$.pageination, {
-                    pages: Math.floor(result.dataTable.rows.length / this.itemsPerPage),
+                    pages: Math.floor(vm.result.dataTable.rows.length / this.itemsPerPage),
                     onSelectPage: function (page) {
                         vm.page = page;
                     }
                 });
-
-                this.$set('result', result);
-            }
+            });
         },
 
         filters: {

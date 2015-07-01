@@ -63,17 +63,7 @@
                 }
             });
 
-            this.$on('resize', function () {
-                if (this.chart) {
-                    this.setSize();
-                    this.chart.draw(this.dataTable, this.options);
-                }
-            });
-        },
-
-        methods: {
-            render: function (result) {
-
+            this.$on('render', function () {
                 if (this.config.region && this.config.region != '0') {
                     this.options.region = this.config.region;
                 }
@@ -82,8 +72,8 @@
                     case 'ga:city':
                         this.options.displayMode = 'markers';
 
-                        result.dataTable.cols[0].type = 'number';
-                        result.dataTable.cols[1].type = 'number';
+                        this.result.dataTable.cols[0].type = 'number';
+                        this.result.dataTable.cols[1].type = 'number';
 
                         break;
 
@@ -95,7 +85,7 @@
                     case 'ga:continent':
                         this.options.resolution = 'continents';
 
-                        result.dataTable.rows = _.forEach(result.dataTable.rows, function (value) {
+                        this.result.dataTable.rows = _.forEach(this.result.dataTable.rows, function (value) {
                             value.c[0].f = value.c[0].v;
                             value.c[0].v = _.result(_.find(continents, {label: value.c[0].v}), 'code');
                         });
@@ -105,7 +95,7 @@
                     case 'ga:subContinent':
                         this.options.resolution = 'subcontinents';
 
-                        result.dataTable.rows = _.forEach(result.dataTable.rows, function (value) {
+                        this.result.dataTable.rows = _.forEach(this.result.dataTable.rows, function (value) {
                             value.c[0].f = value.c[0].v;
                             value.c[0].v = _.result(_.find(subContinents, {label: value.c[0].v}), 'code');
                         });
@@ -113,8 +103,7 @@
                         break;
                 }
 
-                this.$add('result', result);
-                this.dataTable = new google.visualization.DataTable(result.dataTable);
+                this.dataTable = new google.visualization.DataTable(this.result.dataTable);
                 this.chart = new google.visualization.GeoChart(this.$$.chart)
 
                 if (this.formatter) {
@@ -126,11 +115,22 @@
                 }
 
                 this.chart.draw(this.dataTable, this.options);
-            },
+            });
+
+            this.$on('resize', function () {
+                if (this.chart) {
+                    this.setSize();
+                    this.chart.draw(this.dataTable, this.options);
+                }
+            });
+        },
+
+        methods: {
 
             setSize: function () {
                 this.options.height = this.$el.parentElement.offsetWidth * 347/556;
             }
+
         },
 
         computed: {

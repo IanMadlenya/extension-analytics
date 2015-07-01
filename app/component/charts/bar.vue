@@ -57,18 +57,8 @@
         created: function () {
             this.formatter = utils.createMetricFormatter(this.config.metrics);
 
-            this.$on('resize', function () {
-                if (this.chart) {
-                    this.chart.draw(this.dataTable, this.options);
-                }
-            });
-        },
-
-        methods: {
-            render: function (result) {
-
-                this.$add('result', result);
-                this.dataTable = new google.visualization.DataTable(result.dataTable);
+            this.$on('render', function () {
+                this.dataTable = new google.visualization.DataTable(this.result.dataTable);
                 this.chart = new google.visualization.BarChart(this.$$.chart)
 
                 if (this.formatter) {
@@ -76,7 +66,13 @@
                 }
 
                 this.chart.draw(this.dataTable, this.options);
-            }
+            });
+
+            this.$on('resize', function () {
+                if (this.chart) {
+                    this.chart.draw(this.dataTable, this.options);
+                }
+            });
         }
     };
 

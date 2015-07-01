@@ -1,9 +1,12 @@
 <template>
 
-    <div class="uk-text-center" v-repeat="result.totalsForAllResults">
-        <h3 class="pk-text-large">{{ $value }}</h3>
-        <p>{{ $key | trans }}</p>
+    <div v-if="result">
+        <div class="uk-text-center" v-repeat="result.totalsForAllResults">
+            <h3 class="pk-text-large">{{ $value }}</h3>
+            <p>{{ $key | trans }}</p>
+        </div>
     </div>
+    <div v-if="false"><!-- Placeholder needed --></div>
 
 </template>
 
@@ -25,22 +28,8 @@
             return document.createElement('div');
         },
 
-        data: function () {
-            return {
-                result: {
-                    totalsForAllResults: ''
-                }
-            };
-        },
-
         created: function () {
             this.formatter = utils.createMetricFormatter(this.config.metrics);
-        },
-
-        methods: {
-            render: function (result) {
-                this.$set('result', result);
-            }
         }
     };
 

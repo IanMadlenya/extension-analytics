@@ -66,23 +66,13 @@
         created: function () {
             this.formatter = utils.createMetricFormatter(this.config.metrics);
 
-            this.$on('resize', function () {
-                if (this.chart) {
-                    this.chart.draw(this.dataTable, this.options);
-                }
-            });
-        },
-
-        methods: {
-            render: function (result) {
-                this.$add('result', result);
-                this.dataTable = new google.visualization.DataTable(result.dataTable);
-                this.chart = new google.visualization.ColumnChart(this.$$.chart)
+            this.$on('render', function () {
+                this.dataTable = new google.visualization.DataTable(this.result.dataTable);
+                this.chart = new google.visualization.ColumnChart(this.$$.chart);
 
                 if (this.formatter) {
                     this.formatter.format(this.dataTable, 1);
                 }
-
 
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';
@@ -102,7 +92,13 @@
                 }
 
                 this.chart.draw(this.dataTable, this.options);
-            }
+            });
+
+            this.$on('resize', function () {
+                if (this.chart) {
+                    this.chart.draw(this.dataTable, this.options);
+                }
+            });
         },
 
         computed: {

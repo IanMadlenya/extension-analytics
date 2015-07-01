@@ -67,16 +67,7 @@
                 }
             });
 
-            this.$on('resize', function () {
-                if (this.chart) {
-                    this.setSize();
-                    this.chart.draw(this.dataTable, this.options);
-                }
-            });
-        },
-
-        methods: {
-            render: function (result) {
+            this.$on('render', function () {
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';
                 } else if (this.config.startDate == '30daysAgo') {
@@ -85,14 +76,13 @@
                     this.options.hAxis.format = format;
                 } else if (this.config.startDate == '365daysAgo') {
                     this.options.hAxis.showTextEvery = 2;
-                    _.map(result.dataTable.rows, function (row) {
+                    _.map(this.result.dataTable.rows, function (row) {
                         row.c[0].f = window.$globalize.main.en.dates.calendars.gregorian.months['stand-alone'].abbreviated[parseInt(row.c[0].v)];
                         return row;
                     });
                 }
 
-                this.$add('result', result);
-                this.dataTable = new google.visualization.DataTable(result.dataTable);
+                this.dataTable = new google.visualization.DataTable(this.result.dataTable);
                 this.chart = new google.visualization.AreaChart(this.$$.chart)
 
                 if (this.formatter) {
@@ -105,11 +95,22 @@
 
                 this.setSize();
                 this.chart.draw(this.dataTable, this.options);
-            },
+            });
+
+            this.$on('resize', function () {
+                if (this.chart) {
+                    this.setSize();
+                    this.chart.draw(this.dataTable, this.options);
+                }
+            });
+        },
+
+        methods: {
 
             setSize: function () {
                 this.options.chartArea.width = this.$el.parentElement.offsetWidth - 40;
             }
+
         },
 
         computed: {

@@ -220,12 +220,11 @@
 
                     this.$set('loading', false);
                     this.$set('result', result);
+                    this.chart.$add('result', result);
 
-                    if (_.has(this.chart, 'render')) {
-                        this.$nextTick(function () {
-                            this.chart.render(result);
-                        });
-                    }
+                    this.$nextTick(function () {
+                        this.chart.$emit('render');
+                    });
                 });
             },
 
@@ -258,11 +257,15 @@
                     this.$set('loading', false);
                     this.$set('result', result);
 
-                    if (_.has(this.chart, 'render')) {
-                        this.$nextTick(function () {
-                            this.chart.render(result);
-                        });
+                    if (this.chart.result) {
+                        this.chart.$set('result', result);
+                    } else {
+                        this.chart.$add('result', result);
                     }
+
+                    this.$nextTick(function () {
+                        this.chart.$emit('render');
+                    });
                 });
             },
 
