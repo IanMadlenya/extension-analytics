@@ -2,7 +2,7 @@
 
     <div v-if="result">
         <div class="uk-text-center" v-repeat="result.totalsForAllResults">
-            <h3 class="pk-text-large">{{ $value }}</h3>
+            <h3 class="pk-text-large">{{ $value | format }}</h3>
             <p>{{ $key | trans }}</p>
         </div>
     </div>
@@ -30,6 +30,17 @@
 
         created: function () {
             this.formatter = utils.createMetricFormatter(this.config.metrics);
+        },
+
+        filters: {
+            format: function (value) {
+
+                if (this.formatter) {
+                    return this.formatter.formatValue(value);
+                }
+
+                return value;
+            }
         }
     };
 

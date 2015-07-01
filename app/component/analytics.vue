@@ -66,7 +66,6 @@
             return {
                 loading: false,
                 result: {},
-                widget: {config: {}},
                 globals: window.$analytics
             };
         },
@@ -201,7 +200,8 @@
 
                 var request = this.$http.post('admin/analytics/api', params);
                 request.success(function (result) {
-                    utils.transCols(result.dataTable);
+                    utils.parseRows(result, params);
+                    utils.transCols(result);
 
                     this.$set('loading', false);
                     this.$set('result', result);
@@ -236,6 +236,7 @@
 
                 request.success(function (result) {
                     if (result.dataTable) {
+                        utils.parseRows(result.dataTable, params);
                         utils.transCols(result.dataTable);
                     }
 
