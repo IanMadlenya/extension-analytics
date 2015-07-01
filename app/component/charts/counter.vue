@@ -8,6 +8,7 @@
 </template>
 
 <script>
+    var utils = require('../../utils.js');
 
     module.exports = {
 
@@ -30,6 +31,10 @@
                     totalsForAllResults: ''
                 }
             };
+        },
+
+        created: function () {
+            this.formatter = utils.createMetricFormatter(this.config.metrics);
         },
 
         methods: {

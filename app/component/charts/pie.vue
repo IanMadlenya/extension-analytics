@@ -8,6 +8,7 @@
 
 <script>
     var _ = require('lodash');
+    var utils = require('../../utils.js');
 
     module.exports = {
 
@@ -43,6 +44,8 @@
         },
 
         created: function () {
+            this.formatter = utils.createMetricFormatter(this.config.metrics);
+
             this.$on('resize', function () {
                 if (this.chart) {
                     this.setSize();
@@ -58,9 +61,13 @@
                     value.c[value.c.length - 1].v = parseFloat(value.c[value.c.length - 1].v);
                 });
 
-                this.$set('result', result);
-                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.PieChart(this.$$.chart));
+                this.$add('result', result);
+                this.dataTable = new google.visualization.DataTable(result.dataTable);
+                this.chart = new google.visualization.PieChart(this.$$.chart)
+
+                if (this.formatter) {
+                    this.formatter.format(this.dataTable, 1);
+                }
 
                 this.setSize();
                 this.chart.draw(this.dataTable, this.options);
@@ -76,7 +83,12 @@
 
             total: function () {
                 if (this.result && this.result.totalsForAllResults) {
-                    return this.result.totalsForAllResults[this.config.metrics];
+                    var total = this.result.totalsForAllResults[this.config.metrics];
+                    if (this.formatter !== false) {
+                        return this.formatter.formatValue(total);
+                    }
+
+                    return total;
                 }
             }
         }

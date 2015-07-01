@@ -48,6 +48,8 @@
         },
 
         created: function () {
+            this.formatter = utils.createMetricFormatter(this.config.metrics);
+
             this.$on('request', function (params) {
                 params.maxResults = 15;
                 params.sort = '-' + params.metrics;
@@ -76,15 +78,8 @@
 
             format: function (value, col) {
 
-                if (this.result.dataTable &&
-                    (this.result.dataTable.cols[col].id == 'ga:bounceRate' ||
-                    this.result.dataTable.cols[col].id == 'ga:percentNewSessions')) {
-                    var formatter = new google.visualization.NumberFormat({
-                        fractionDigits: 2,
-                        suffix: '%'
-                    });
-
-                    return formatter.formatValue(value);
+                if (col == 1 && this.formatter) {
+                    return this.formatter.formatValue(value);
                 }
 
                 return value;
@@ -95,7 +90,12 @@
 
             total: function () {
                 if (this.result && this.result.totalsForAllResults) {
-                    return this.result.totalsForAllResults[this.config.metrics];
+                    var total = this.result.totalsForAllResults[this.config.metrics];
+                    if (this.formatter !== false) {
+                        return this.formatter.formatValue(total);
+                    }
+
+                    return total;
                 }
             }
         }

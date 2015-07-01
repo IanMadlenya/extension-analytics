@@ -64,6 +64,8 @@
         },
 
         created: function () {
+            this.formatter = utils.createMetricFormatter(this.config.metrics);
+
             this.$on('resize', function () {
                 if (this.chart) {
                     this.chart.draw(this.dataTable, this.options);
@@ -73,9 +75,14 @@
 
         methods: {
             render: function (result) {
-                this.$set('result', result);
-                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.ColumnChart(this.$$.chart));
+                this.$add('result', result);
+                this.dataTable = new google.visualization.DataTable(result.dataTable);
+                this.chart = new google.visualization.ColumnChart(this.$$.chart)
+
+                if (this.formatter) {
+                    this.formatter.format(this.dataTable, 1);
+                }
+
 
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';
@@ -87,11 +94,11 @@
                     this.options.hAxis.showTextEvery = 4;
                     this.options.hAxis.format = 'MMM yy';
 
-                    var dateFormatter = new google.visualization.DateFormat({
+                    var formatter = new google.visualization.DateFormat({
                         pattern: 'MMMM yyyy'
                     });
 
-                    dateFormatter.format(this.dataTable, 0);
+                    formatter.format(this.dataTable, 0);
                 }
 
                 this.chart.draw(this.dataTable, this.options);
@@ -102,7 +109,12 @@
 
             total: function () {
                 if (this.result && this.result.totalsForAllResults) {
-                    return utils.parseLabel(this.result.totalsForAllResults[this.config.metrics], this.config);
+                    var total = this.result.totalsForAllResults[this.config.metrics];
+                    if (this.formatter !== false) {
+                        return this.formatter.formatValue(total);
+                    }
+
+                    return total;
                 }
             }
         }

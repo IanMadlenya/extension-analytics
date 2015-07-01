@@ -55,6 +55,8 @@
         },
 
         created: function () {
+            this.formatter = utils.createMetricFormatter(this.config.metrics);
+
             this.$on('request', function (params) {
                 if (params.dimensions == 'ga:date' && params.startDate == '365daysAgo') {
                     params.dimensions = 'ga:month';
@@ -89,18 +91,16 @@
                     });
                 }
 
-                this.$set('result', result);
-                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.AreaChart(this.$$.chart));
+                this.$add('result', result);
+                this.dataTable = new google.visualization.DataTable(result.dataTable);
+                this.chart = new google.visualization.AreaChart(this.$$.chart)
 
-                if (this.config.metrics == 'ga:bounceRate') {
-                    var formatter = new google.visualization.NumberFormat({
-                        fractionDigits: 2,
-                        suffix: '%'
-                    });
+                if (this.formatter) {
+                    this.formatter.format(this.dataTable, 1);
+                }
 
-                    formatter.format(this.dataTable, 1);
-                    this.options.vAxis.format = '#\'%\'';
+                if (this.config.metrics == 'ga:bounceRate' || this.config.metrics == 'ga:percentNewSessions') {
+                    this.options.vAxis.format = '#\' %\'';
                 }
 
                 this.setSize();
@@ -116,7 +116,12 @@
 
             total: function () {
                 if (this.result && this.result.totalsForAllResults) {
-                    return utils.parseLabel(this.result.totalsForAllResults[this.config.metrics], this.config);
+                    var total = this.result.totalsForAllResults[this.config.metrics];
+                    if (this.formatter !== false) {
+                        return this.formatter.formatValue(total);
+                    }
+
+                    return total;
                 }
             }
         }

@@ -10,6 +10,23 @@ module.exports = {
         //});
     },
 
+    createMetricFormatter: function (metric) {
+        if (metric == 'ga:bounceRate' || metric == 'ga:percentNewSessions') {
+            return new google.visualization.NumberFormat({
+                fractionDigits: 2,
+                suffix: ' %'
+            });
+        }
+
+        if (metric == 'ga:pageviewsPerSession' || metric == 'ga:avgSessionDuration') {
+            return new google.visualization.NumberFormat({
+                fractionDigits: 2
+            });
+        }
+
+        return false;
+    },
+
     parseCols: function (dataTable) {
         _.forEach(dataTable.cols, function (value) {
             value.label = Vue.prototype.$trans(value.label);

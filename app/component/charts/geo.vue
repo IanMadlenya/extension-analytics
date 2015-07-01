@@ -40,6 +40,8 @@
         },
 
         created: function () {
+            this.formatter = utils.createMetricFormatter(this.config.metrics);
+
             this.$on('request', function (params) {
                 if (params.dimensions == 'ga:city') {
                     params.dimensions = 'ga:latitude,ga:longitude,'.concat(params.dimensions);
@@ -111,19 +113,15 @@
                         break;
                 }
 
+                this.$add('result', result);
+                this.dataTable = new google.visualization.DataTable(result.dataTable);
+                this.chart = new google.visualization.GeoChart(this.$$.chart)
 
+                if (this.formatter) {
+                    this.formatter.format(this.dataTable, 1);
+                }
 
-                this.$set('result', result);
-                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.GeoChart(this.$$.chart));
-
-                if (this.config.metrics == 'ga:bounceRate') {
-                    var formatter = new google.visualization.NumberFormat({
-                        fractionDigits: 2,
-                        suffix: '%'
-                    });
-
-                    formatter.format(this.dataTable, 1);
+                if (this.config.metrics == 'ga:bounceRate' || this.config.metrics == 'ga:percentNewSessions') {
                     this.options.legend = {numberFormat: '#\'%\''};
                 }
 
@@ -139,7 +137,12 @@
 
             total: function () {
                 if (this.result && this.result.totalsForAllResults) {
-                    return utils.parseLabel(this.result.totalsForAllResults[this.config.metrics], this.config);
+                    var total = this.result.totalsForAllResults[this.config.metrics];
+                    if (this.formatter !== false) {
+                        return this.formatter.formatValue(total);
+                    }
+
+                    return total;
                 }
             }
         }

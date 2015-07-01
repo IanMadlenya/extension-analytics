@@ -55,6 +55,8 @@
         },
 
         created: function () {
+            this.formatter = utils.createMetricFormatter(this.config.metrics);
+
             this.$on('resize', function () {
                 if (this.chart) {
                     this.chart.draw(this.dataTable, this.options);
@@ -65,8 +67,13 @@
         methods: {
             render: function (result) {
 
-                this.$add('dataTable', new google.visualization.DataTable(result.dataTable));
-                this.$add('chart', new google.visualization.BarChart(this.$$.chart));
+                this.$add('result', result);
+                this.dataTable = new google.visualization.DataTable(result.dataTable);
+                this.chart = new google.visualization.BarChart(this.$$.chart)
+
+                if (this.formatter) {
+                    this.formatter.format(this.dataTable, 1);
+                }
 
                 this.chart.draw(this.dataTable, this.options);
             }
