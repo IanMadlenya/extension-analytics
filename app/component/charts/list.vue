@@ -1,6 +1,6 @@
 <template>
 
-    <h3 class="uk-panel-title">{{ total | format 1 }} {{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
+    <h3 class="uk-panel-title">{{ total }} {{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
 
     <table class="uk-table" v-if="result">
         <thead>
