@@ -56,13 +56,16 @@
 
             this.$on('render', function () {
                 var vm = this;
+                var pages = Math.floor(this.result.dataTable.rows.length / this.itemsPerPage);
 
-                this.pageination = UIkit.pagination(this.$$.pageination, {
-                    pages: Math.floor(vm.result.dataTable.rows.length / this.itemsPerPage),
-                    onSelectPage: function (page) {
-                        vm.page = page;
-                    }
-                });
+                if (pages > 1) {
+                    this.pageination = UIkit.pagination(this.$$.pageination, {
+                        pages: pages,
+                        onSelectPage: function (page) {
+                            vm.page = page;
+                        }
+                    });
+                }
             });
         },
 

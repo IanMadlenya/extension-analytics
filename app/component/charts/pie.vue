@@ -54,9 +54,9 @@
             });
 
             this.$on('render', function () {
-//                _.forEach(this.result.dataTable.rows, function (value) {
-//                    value.c[value.c.length - 1].v = parseFloat(value.c[value.c.length - 1].v);
-//                });
+                _.forEach(this.result.dataTable.rows, function (value) {
+                    value.c[value.c.length - 1].v = parseFloat(value.c[value.c.length - 1].v);
+                });
 
                 this.dataTable = new google.visualization.DataTable(this.result.dataTable);
                 this.chart = new google.visualization.PieChart(this.$$.chart)

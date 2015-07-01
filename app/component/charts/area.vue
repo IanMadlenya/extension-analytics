@@ -46,7 +46,7 @@
                         textStyle: {'color': '#058DC7'}
                     },
                     chartArea: {
-                        left: 30,
+                        left: 35,
                         height: '85%',
                         top: 5
                     }
@@ -59,15 +59,14 @@
 
             this.$on('request', function (params) {
                 if (params.dimensions == 'ga:date' && params.startDate == '365daysAgo') {
-                    params.dimensions = 'ga:month';
-                }
-
-                if (params.dimensions == 'ga:yearMonth' && params.startDate != '365daysAgo') {
-                    params.dimensions = 'ga:date';
+                    params.dimensions = 'ga:yearMonth';
                 }
             });
 
             this.$on('render', function () {
+                this.dataTable = new google.visualization.DataTable(this.result.dataTable);
+                this.chart = new google.visualization.AreaChart(this.$$.chart);
+
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';
                 } else if (this.config.startDate == '30daysAgo') {
@@ -75,22 +74,22 @@
                     format = format.replace(/[^md]*y[^md]*/i, '');
                     this.options.hAxis.format = format;
                 } else if (this.config.startDate == '365daysAgo') {
-                    this.options.hAxis.showTextEvery = 2;
-                    _.map(this.result.dataTable.rows, function (row) {
-                        row.c[0].f = window.$globalize.main.en.dates.calendars.gregorian.months['stand-alone'].abbreviated[parseInt(row.c[0].v)];
-                        return row;
-                    });
-                }
+                    this.options.hAxis.showTextEvery = 1;
+                    this.options.hAxis.format = 'MMM';
 
-                this.dataTable = new google.visualization.DataTable(this.result.dataTable);
-                this.chart = new google.visualization.AreaChart(this.$$.chart)
+                    var dateFormatter = new google.visualization.DateFormat({
+                        pattern: "MMMM, y"
+                    });
+
+                    dateFormatter.format(this.dataTable, 0);
+                }
 
                 if (this.formatter) {
                     this.formatter.format(this.dataTable, 1);
                 }
 
                 if (this.config.metrics == 'ga:bounceRate' || this.config.metrics == 'ga:percentNewSessions') {
-                    this.options.vAxis.format = '#\' %\'';
+                    this.options.vAxis.format = '#\'%\'';
                 }
 
                 this.setSize();
@@ -108,7 +107,7 @@
         methods: {
 
             setSize: function () {
-                this.options.chartArea.width = this.$el.parentElement.offsetWidth - 40;
+                this.options.chartArea.width = this.$el.parentElement.offsetWidth - 45;
             }
 
         },

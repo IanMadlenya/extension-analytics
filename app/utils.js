@@ -6,8 +6,8 @@ module.exports = {
     createMetricFormatter: function (metric) {
         if (metric == 'ga:bounceRate' || metric == 'ga:percentNewSessions') {
             return new google.visualization.NumberFormat({
-                fractionDigits: 2,
-                suffix: ' %'
+                fractionDigits: 1,
+                suffix: '%'
             });
         }
 
@@ -29,45 +29,35 @@ module.exports = {
     },
 
     parseRows: function (result, params) {
-        var self = this;
+
+        if (params.dimensions === 'ga:yearMonth') {
+            result.dataTable.cols[0].type = 'date';
+            result.columnHeaders[0].dataType = 'DATE';
+        }
 
         _.forEach(result.dataTable.rows, function (value) {
-            value.c[value.c.length - 1].v = parseFloat(value.c[value.c.length - 1].v);
-            value.c[value.c.length - 1].f = self.parseLabel(value.c[value.c.length - 1].v, params.metrics);
+            if (params.dimensions === 'ga:yearMonth') {
+                var month = value.c[0].v.substr(4, 2) - 1;
+
+                if (month < 10) {
+                    month = '0' + month;
+                }
+
+                console.log(value.c[0].v)
+                value.c[0].v = 'Date(' + value.c[0].v.substr(0, 4) + ',' + month + ',01)';
+                console.log(value.c[0].v)
+            }
+
+            if (params.metrics === 'ga:avgSessionDuration') {
+                value.c[value.c.length - 1].v = parseInt(value.c[value.c.length - 1].v, 10) / 60;
+                value.c[value.c.length - 1].f = Math.round(value.c[value.c.length - 1].v * 100) / 100 + ' min';
+            }
         });
 
         _.forEach(result.totalsForAllResults, function (value, metric) {
-            result.totalsForAllResults[metric] = self.parseLabel(value, metric);
+            if (params.metrics === 'ga:avgSessionDuration') {
+                result.totalsForAllResults[metric] =  Math.round(value / 60 * 100) / 100 + ' min';
+            }
         });
-    },
-
-    parseLabel: function (value, metric) {
-        if (metric == 'ga:avgSessionDuration') {
-            return this.secToTime(value);
-        }
-
-        value = parseFloat(value);
-        return value.toFixed(2).replace(/\.00$/, '')
-    },
-
-    secToTime: function (value) {
-        var sec_num = parseInt(value, 10);
-        var hours = Math.floor(sec_num / 3600);
-        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-        var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-        if (hours < 10) {
-            hours = '0' + hours;
-        }
-
-        if (minutes < 10) {
-            minutes = '0' + minutes;
-        }
-
-        if (seconds < 10) {
-            seconds = '0' + seconds;
-        }
-
-        return hours + ':' + minutes + ':' + seconds;
     }
 };
