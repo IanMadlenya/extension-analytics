@@ -6,16 +6,21 @@ module.exports = {
     createMetricFormatter: function (metric) {
         if (metric == 'ga:bounceRate' || metric == 'ga:percentNewSessions') {
             return new google.visualization.NumberFormat({
-                fractionDigits: 1,
+                pattern: '#.#',
                 suffix: '%'
             });
         }
 
-        if (metric == 'ga:pageviewsPerSession'
-            // || metric == 'ga:avgSessionDuration'
-        ) {
+        if (metric == 'ga:pageviewsPerSession') {
             return new google.visualization.NumberFormat({
-                fractionDigits: 2
+                pattern: '#.##'
+            });
+        }
+
+        if (metric == 'ga:avgSessionDuration') {
+            return new google.visualization.NumberFormat({
+                pattern: '#.##',
+                suffix: ' min'
             });
         }
 
@@ -48,14 +53,12 @@ module.exports = {
 
             if (params.metrics === 'ga:avgSessionDuration') {
                 value.c[value.c.length - 1].v = parseInt(value.c[value.c.length - 1].v, 10) / 60;
-                value.c[value.c.length - 1].f = Globalize.numberFormatter({maximumFractionDigits: 2})(value.c[value.c.length - 1].v) + ' min';
-
             }
         });
 
         _.forEach(result.totalsForAllResults, function (value, metric) {
             if (params.metrics === 'ga:avgSessionDuration') {
-                result.totalsForAllResults[metric] =  Globalize.numberFormatter({maximumFractionDigits: 2})(value / 60) + ' min';
+                result.totalsForAllResults[metric] =  value / 60;
             }
         });
     }
