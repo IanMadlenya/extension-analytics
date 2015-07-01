@@ -6,7 +6,7 @@
                 <a href="{{ gaUrl }}" target="_blank" class="pk-icon-share pk-icon-hover uk-hidden"></a>
             </li>
             <li v-show="!$parent.editing[widget.id] && !loading && result.time">
-                <a class="pk-icon-refresh pk-icon-hover uk-hidden" v-el="refresh" v-on="click: invalidCache"></a>
+                <a class="pk-icon-refresh pk-icon-hover uk-hidden" v-el="refresh" v-on="click: configChanged(true)"></a>
             </li>
             <li v-show="$parent.editing[widget.id]">
                 <a class="pk-icon-settings pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: openSettings"></a>
@@ -37,7 +37,7 @@
     <div v-show="!loading && configured" v-el="chart"></div>
 
     <div class="uk-text-center" v-if="loading && configured"><v-loader></v-loader></div>
-   
+
     <div v-if="!configured">Google Analytics <a href="#" v-on="click: openSettings">authentication</a> needed.</div>
 
 </template>
@@ -104,27 +104,14 @@
                 }
             });
 
-            this.$watch('globals.connected', function () {
-                this.configChanged();
-            });
-
-            this.$watch('globals.profile', function () {
-                this.configChanged();
-            });
-
-            this.$watch('widget.config', Vue.util.debounce(function () {
-                this.configChanged();
-            }, 500), {
-                deep: true
-            });
-
-            this.configChanged();
+            this.$watch('configured', this.configChanged, {immediate: true});
+            this.$watch('widget.config', Vue.util.debounce(this.configChanged, 500), {deep: true});
         },
 
         computed: {
 
             configured: function () {
-                return this.globals.connected && this.globals.profile != false;
+                return this.globals.connected && Vue.util.isObject(this.globals.profile) &&  Object.keys(this.globals.profile).length;
             },
 
             presetOptions: function () {
@@ -181,11 +168,9 @@
                 return _.find(charts, {id: id});
             },
 
-            invalidCache: function () {
-                this.configChanged(true);
-            },
-
             configChanged: function (invalidCache) {
+                invalidCache = typeof invalidCache === 'boolean' ? invalidCache : undefined;
+
                 if (this.refreshIntervall) {
                     clearInterval(this.refreshIntervall);
                     this.refreshIntervall = null;
@@ -203,7 +188,7 @@
                     metrics: this.widget.config.metrics,
                     dimensions: this.widget.config.dimensions,
                     startDate: this.widget.config.startDate,
-                    invalidCache: invalidCache
+                    invalidCache: Boolean(invalidCache)
                 });
 
                 if (!this.configured || !this.initChart(this.widget.config.charts)) {
@@ -243,7 +228,7 @@
                 var params = _.clone({
                     metrics: this.widget.config.metrics,
                     dimensions: this.widget.config.dimensions,
-                    invalidCache: invalidCache
+                    invalidCache: Boolean(invalidCache)
                 });
 
                 this.chart.$emit('request', params);

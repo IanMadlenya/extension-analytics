@@ -120,7 +120,7 @@
 
             show: function () {
                 if (!this.init) {
-                    if (this.globals.profile.profileId) {
+                    if (this.globals.profile && this.globals.profile.profileId) {
                         this.profileId = this.globals.profile.profileId;
                     }
 
@@ -231,6 +231,7 @@
                     this.globals.connected = false;
                     this.globals.profile = false;
                     this.profile = {};
+                    this.profileId = 0;
                     this.id = '';
                     this.name = '';
                 });

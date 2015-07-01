@@ -40,7 +40,7 @@ return [
                     'groups' => $groupList,
                     'presets' => $presetList,
                     'connected' => $this->config('token'),
-                    'profile' => $this->config('profile'),
+                    'profile' => $this->config('profile', false),
                     'geo' => array(
                         'world' => $app['intl']->territory()->getName('001'),
                         'continents' => $app['intl']->territory()->getContinents(),
