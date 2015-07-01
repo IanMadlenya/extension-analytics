@@ -43,9 +43,7 @@ module.exports = {
                     month = '0' + month;
                 }
 
-                console.log(value.c[0].v)
                 value.c[0].v = 'Date(' + value.c[0].v.substr(0, 4) + ',' + month + ',01)';
-                console.log(value.c[0].v)
             }
 
             if (params.metrics === 'ga:avgSessionDuration') {
