@@ -251,7 +251,9 @@
                 var request = this.$http.post('admin/analytics/realtime', params);
 
                 request.success(function (result) {
-                    utils.transCols(result.dataTable);
+                    if (result.dataTable) {
+                        utils.transCols(result.dataTable);
+                    }
 
                     this.$set('loading', false);
                     this.$set('result', result);
