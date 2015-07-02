@@ -75,7 +75,6 @@
 
             // Charts:
             area: require('./charts/area.vue'),
-            bar: require('./charts/bar.vue'),
             column: require('./charts/column.vue'),
             counter: require('./charts/counter.vue'),
             geo: require('./charts/geo.vue'),
