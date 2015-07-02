@@ -39,7 +39,7 @@ return [
                 array(
                     'groups' => $groupList,
                     'presets' => $presetList,
-                    'connected' => $this->config('token'),
+                    'connected' => isset($this->config()['token']),
                     'profile' => $this->config('profile', false),
                     'geo' => array(
                         'world' => $app['intl']->territory()->getName('001'),

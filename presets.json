@@ -58,7 +58,6 @@
           "ga:language"
         ],
         "charts": [
-          "bar",
           "column",
           "pie",
           "list"
@@ -107,7 +106,6 @@
         ],
         "charts": [
           "pie",
-          "bar",
           "column",
           "list"
         ]
@@ -135,7 +133,6 @@
         ],
         "charts": [
           "pie",
-          "bar",
           "column",
           "list"
         ]
@@ -159,7 +156,6 @@
         ],
         "charts": [
           "pie",
-          "bar",
           "column",
           "list"
         ]
