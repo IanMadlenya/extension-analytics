@@ -1,6 +1,8 @@
 <template>
 
-    <h3 class="uk-panel-title">{{ total }} {{ config.metrics | trans }} this {{ config.startDate | trans}}</h3>
+    <div class="pk-text-large">{{ total }}</div>
+
+    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans}}</h3>
 
     <div v-el="chart"></div>
 

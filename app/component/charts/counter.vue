@@ -2,11 +2,11 @@
 
     <div v-if="result">
         <div class="uk-text-center" v-repeat="result.totalsForAllResults">
-            <h3 class="pk-text-large">{{ $value | format }}</h3>
+            <h3 class="pk-text-xlarge">{{ $value | format }}</h3>
             <p>{{ $key | trans }}</p>
         </div>
     </div>
-    <div v-if="false"><!-- Placeholder needed --></div>
+    <div v-if="false"><!-- v-if Hack --></div>
 
 </template>
 
