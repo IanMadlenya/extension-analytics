@@ -6,14 +6,26 @@ return [
 
     'name' => 'analytics',
 
+    'autoload' => [
+
+        'Pagekit\\Analytics\\' => 'src'
+
+    ],
+
     'main' => function ($app) {
+
         $app->set('analytics/oauth', function () {
             return new OAuthHelper();
         });
 
-        $app->on('request', function () use ($app) {
-            $presetList = array();
-            $groupList = array();
+    },
+
+    'events' => [
+
+        'request' => function () use ($app) {
+
+            $presetList = [];
+            $groupList  = [];
 
             foreach (json_decode(file_get_contents(__DIR__ . '/presets.json'), true) as $group) {
 
@@ -48,21 +60,15 @@ return [
                         'countries' => $app['intl']->territory()->getCountries()
                     )
                 )
-            )), array(), 'string');
+            )), [], 'string');
 
             $app['scripts']->register('google', '//www.google.com/jsapi');
             $app['scripts']->register('widget-analytics', 'analytics:app/bundle/analytics.js', array('~dashboard', 'google', 'analytics-config'));
-        });
+        },
 
-        $app->on('uninstall.analytics', function () use ($app) {
-            // remove the config
+        'uninstall.analytics' => function () use ($app) {
             $app['config']->remove($this->name);
-        });
-    },
-
-    'autoload' => [
-
-        'Pagekit\\Analytics\\' => 'src'
+        }
 
     ],
 
