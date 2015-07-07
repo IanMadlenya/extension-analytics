@@ -100,6 +100,14 @@
             }
         },
 
+        created: function () {
+            if (window.$analytics.root) {
+                this.$options.url = {
+                    root: this.$url.options.root + '/' + window.$analytics.root
+                };
+            }
+        },
+
         compiled: function () {
             this.modal = UIkit.modal(this.$$.modal);
         },
@@ -144,7 +152,13 @@
             },
 
             openAuthWindow: function () {
-                this.popup = window.open('analytics/auth', '', 'width=800,height=500');
+                var url = 'analytics/auth';
+
+                if (this.$url.route) {
+                    url = this.$url.route(url);
+                }
+
+                this.popup = window.open(url, '', 'width=800,height=500');
             },
 
             checkCode: function (code) {
@@ -152,14 +166,15 @@
                     return;
                 }
 
-                this.popup.close();
-                this.popup = false;
-
                 this.loading = true;
 
-                var request = this.$http.post('admin/analytics/code', {code: code});
+                var request = this.$http.post('analytics/code', {code: code});
 
                 request.success(function () {
+                    this.popup.close();
+                    delete this.popup; // avoid security exception
+                    this.popup = false;
+
                     this.loading = false;
                     this.globals.connected = true;
                     this.code = '';
@@ -175,13 +190,13 @@
                     return;
                 }
 
-                var request = this.$http.get('admin/analytics/user');
+                var request = this.$http.get('analytics/user');
                 this.loading = true;
 
                 request.success(function (res) {
                     this.loading = false;
-                    this.$set('id', res.id);
-                    this.$set('name', res.name);
+                    this.id = res.id;
+                    this.name = res.name;
                 });
             },
 
@@ -190,12 +205,12 @@
                     return;
                 }
 
-                var request = this.$http.get('admin/analytics/profile');
+                var request = this.$http.get('analytics/profile');
                 this.loading = true;
 
                 request.success(function (res) {
                     this.loading = false;
-                    this.$set('profileList', res.items);
+                    this.profileList = res.items;
                 });
             },
 
@@ -214,7 +229,7 @@
                     };
                 }
 
-                var request = this.$http.post('admin/analytics/profile', profile);
+                var request = this.$http.post('analytics/profile', profile);
                 this.loading = true;
 
                 request.success(function (res) {
@@ -228,7 +243,7 @@
             },
 
             disconnect: function () {
-                var request = this.$http.delete('admin/analytics/disconnect');
+                var request = this.$http.delete('analytics/disconnect');
 
                 request.success(function () {
                     this.globals.connected = false;

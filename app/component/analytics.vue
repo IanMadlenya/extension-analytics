@@ -36,7 +36,9 @@
 
     <div v-show="!loading && configured" v-el="chart"></div>
 
-    <div class="uk-text-center" v-if="loading && configured"><v-loader></v-loader></div>
+    <div class="uk-text-center" v-if="loading && configured">
+        <v-loader></v-loader>
+    </div>
 
     <div v-if="!configured">Google Analytics <a href="#" v-on="click: openSettings">authentication</a> needed.</div>
 
@@ -85,6 +87,12 @@
         },
 
         created: function () {
+            if (window.$analytics.root) {
+                this.$options.url = {
+                    root: this.$url.options.root + '/' + window.$analytics.root
+                };
+            }
+
             if (this.widget.preset == undefined) {
                 this.widget.$set('preset', this.globals.presets[0].id);
             }
@@ -111,7 +119,7 @@
         computed: {
 
             configured: function () {
-                return this.globals.connected && Vue.util.isObject(this.globals.profile) &&  Object.keys(this.globals.profile).length;
+                return this.globals.connected && Vue.util.isObject(this.globals.profile) && Object.keys(this.globals.profile).length;
             },
 
             presetOptions: function () {
@@ -199,7 +207,7 @@
 
                 this.chart.$emit('request', params);
 
-                var request = this.$http.post('admin/analytics/api', params);
+                var request = this.$http.post('analytics/api', params);
                 request.success(function (result) {
                     utils.parseRows(result, params);
                     utils.transCols(result);
@@ -233,7 +241,7 @@
                 });
 
                 this.chart.$emit('request', params);
-                var request = this.$http.post('admin/analytics/realtime', params);
+                var request = this.$http.post('analytics/realtime', params);
 
                 request.success(function (result) {
                     if (result.dataTable) {

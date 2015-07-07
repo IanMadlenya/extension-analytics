@@ -24,6 +24,8 @@
 
 <script>
     var _ = require('lodash');
+    var UIkit = require('uikit');
+
     var utils = require('../../utils.js');
 
     module.exports = {
