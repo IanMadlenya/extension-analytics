@@ -106,7 +106,7 @@
                             if (key != 'charts') {
                                 text = vm.$trans(el);
                             } else {
-                                text = vm.$parent.getChart(el).label;
+                                text = vm.$trans(vm.$parent.getChart(el).label);
                             }
 
                             return {

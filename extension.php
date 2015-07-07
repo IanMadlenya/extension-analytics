@@ -25,7 +25,7 @@ return [
         'request' => function () use ($app) {
 
             $presetList = [];
-            $groupList  = [];
+            $groupList = [];
 
             foreach (json_decode(file_get_contents(__DIR__ . '/presets.json'), true) as $group) {
 
@@ -47,20 +47,19 @@ return [
                 $presetList = array_merge($presetList, $groupPresets);
             }
 
-            $app['scripts']->register('analytics-config', sprintf('var $analytics = %s;', json_encode(
-                array(
+            $app['scripts']->register('analytics-config', sprintf('var $analytics = %s;', json_encode([
                     'groups' => $groupList,
                     'presets' => $presetList,
                     'connected' => isset($this->config()['token']),
                     'profile' => $this->config('profile', false),
-                    'geo' => array(
+                    'geo' => [
                         'world' => $app['intl']->territory()->getName('001'),
                         'continents' => $app['intl']->territory()->getContinents(),
                         'subcontinents' => $app['intl']->territory()->getList('S'),
                         'countries' => $app['intl']->territory()->getCountries()
-                    )
-                )
-            )), [], 'string');
+                    ]
+                ])
+            ), [], 'string');
 
             $app['scripts']->register('google', '//www.google.com/jsapi');
             $app['scripts']->register('widget-analytics', 'analytics:app/bundle/analytics.js', array('~dashboard', 'google', 'analytics-config'));

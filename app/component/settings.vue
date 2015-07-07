@@ -11,7 +11,7 @@
                 <label for="form-auth-code" class="uk-form-label">{{ 'Authorization' | trans }}</label>
 
                 <div class="uk-form-controls">
-                    <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code">
+                    <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code" v-attr="disabled: !popup">
                     <p>
                         <a class="uk-button" v-on="click: openAuthWindow">{{ 'Request code' | trans }}</a>
                         <v-loader v-show="loading"></v-loader>
@@ -93,6 +93,7 @@
                 code: '',
                 id: '',
                 name: '',
+                popup: false,
                 profileId: 0,
                 profileList: [],
                 globals: window.$analytics
@@ -152,6 +153,8 @@
                 }
 
                 this.popup.close();
+                this.popup = false;
+
                 this.loading = true;
 
                 var request = this.$http.post('admin/analytics/code', {code: code});

@@ -100,12 +100,12 @@ class AnalyticsController
 
         $url = self::API . '/data/ga?' . http_build_query($data);
 
-        if ($invalidCache || !$result = App::get('cache')->fetch(md5($url))) {
+        if ($invalidCache || !$result = App::get('cache')->fetch($url)) {
             try {
                 $result = $this->request($url, ['columnHeaders', 'totalsForAllResults', 'dataTable']);
                 $result['time'] = time();
 
-                App::get('cache')->save(md5($url), $result, self::CACHE_TIME);
+                App::get('cache')->save($url, $result, self::CACHE_TIME);
             } catch (\Exception $e) {
                 return App::response()->json(array('message' => $e->getMessage()), 400);
             }

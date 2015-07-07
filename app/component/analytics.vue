@@ -3,7 +3,7 @@
     <div class="uk-panel-badge">
         <ul class="uk-subnav pk-subnav-icon">
             <li v-show="!$parent.editing[widget.id] && gaUrl">
-                <a href="{{ gaUrl }}" target="_blank" class="pk-icon-share pk-icon-hover uk-hidden"></a>
+                <a href="{{ gaUrl }}" target="_blank" class="pk-icon-share pk-icon-hover uk-hidden" title="{{ 'Go to Google Analytics' | trans }}" data-uk-tooltip="{delay: 500}"></a>
             </li>
             <li v-show="!$parent.editing[widget.id] && !loading && result.time">
                 <a class="pk-icon-refresh pk-icon-hover uk-hidden" v-el="refresh" v-on="click: configChanged(true)"></a>
@@ -44,6 +44,8 @@
 
 <script>
     var _ = require('lodash');
+    var UIkit = require('uikit');
+
     var utils = require('../utils.js');
 
     module.exports = {

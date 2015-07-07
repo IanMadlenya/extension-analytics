@@ -2,7 +2,6 @@ var _ = require('lodash');
 
 module.exports = {
 
-
     createMetricFormatter: function (metric) {
         if (metric == 'ga:bounceRate' || metric == 'ga:percentNewSessions') {
             return new google.visualization.NumberFormat({
@@ -58,7 +57,7 @@ module.exports = {
 
         _.forEach(result.totalsForAllResults, function (value, metric) {
             if (params.metrics === 'ga:avgSessionDuration') {
-                result.totalsForAllResults[metric] =  value / 60;
+                result.totalsForAllResults[metric] = value / 60;
             }
         });
     }
