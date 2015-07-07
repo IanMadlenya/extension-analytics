@@ -2,8 +2,8 @@
 
     <div v-if="result">
         <div class="uk-text-center" v-repeat="result.totalsForAllResults">
-            <h3 class="pk-text-xlarge">{{ $value | format }}</h3>
-            <p>{{ $key | trans }}</p>
+            <div class="pk-text-xlarge uk-margin-small-bottom">{{ $value | format }}</div>
+            <h3 class="uk-panel-title uk-margin-remove">{{ $key | trans }}</h3>
         </div>
     </div>
     <div v-if="false"><!-- v-if Hack --></div>
