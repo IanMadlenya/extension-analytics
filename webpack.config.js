@@ -10,7 +10,8 @@ module.exports = [
             "lodash": "_",
             "jquery": "jQuery",
             "vue": "Vue",
-            "uikit": "UIkit"
+            "uikit": "UIkit",
+            "dashboard": "Dashboard"
         },
         module: {
             loaders: [
