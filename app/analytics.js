@@ -4,7 +4,6 @@ var Dashboard = require('dashboard');
 var Analytics = require('./component/analytics.vue');
 var Settings = require('./component/settings.vue');
 
-
 // init google visualization api
 google.load('visualization', '1', {
     language: document.documentElement.lang,
