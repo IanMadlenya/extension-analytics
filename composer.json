@@ -1,0 +1,18 @@
+{
+  "name": "yootheme/dashboard",
+  "type": "pagekit-extension",
+  "version": "0.0.1",
+  "description": "",
+  "license": "",
+  "authors": [
+    {
+      "name": "YOOtheme",
+      "email": "info@yootheme.com",
+      "homepage": "http://yootheme.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "composer/installers": "~1.0"
+  }
+}
