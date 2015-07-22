@@ -12,15 +12,8 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "composer/installers": "1.0.*@dev"
+    "php": ">=5.4.0"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:MalteScharenberg/installers.git"
-    }
-  ],
   "extra": {
     "branch-alias": {
       "dev-master": "1.1.x-dev"
