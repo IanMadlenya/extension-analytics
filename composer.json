@@ -1,22 +1,21 @@
 {
-  "name": "pagekit/analytics",
-  "type": "pagekit-extension",
-  "version": "0.0.1",
-  "description": "",
-  "license": "",
-  "authors": [
-    {
-      "name": "YOOtheme",
-      "email": "info@yootheme.com",
-      "homepage": "http://yootheme.com"
+    "name": "pagekit/analytics",
+    "type": "pagekit-extension",
+    "version": "0.0.1",
+    "title": "Analytics",
+    "description": "Analytics Extension.",
+    "license": "",
+    "authors": [
+        {
+            "name": "Pagekit",
+            "email": "info@pagekit.com",
+            "homepage": "http://pagekit.com"
+        }
+    ],
+    "extra": {
+        "image": "image.svg",
+        "branch-alias": {
+          "dev-master": "1.1.x-dev"
+        }
     }
-  ],
-  "require": {
-    "php": ">=5.4.0"
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.1.x-dev"
-    }
-  }
 }
