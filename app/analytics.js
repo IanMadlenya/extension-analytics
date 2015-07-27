@@ -11,7 +11,7 @@ google.load('visualization', '1', {
 });
 
 // init dashboard widget
-Dashboard.component('analytics', Analytics);
+Dashboard.components['analytics'] = Analytics;
 
 // inject settings modal
 $(function () {
