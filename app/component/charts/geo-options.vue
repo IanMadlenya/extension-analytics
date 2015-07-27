@@ -8,6 +8,7 @@
 </template>
 
 <script>
+
     var _ = require('lodash');
 
     module.exports = Vue.extend({

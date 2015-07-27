@@ -76,9 +76,10 @@
 </template>
 
 <script>
+
     var _ = require('lodash');
 
-    module.exports = Vue.extend({
+    module.exports = {
 
         el: function () {
             return document.createElement('div');
@@ -259,5 +260,6 @@
                 });
             }
         }
-    });
+    };
+
 </script>
