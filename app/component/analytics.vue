@@ -169,7 +169,7 @@
                         return _.has(component, 'options.chart');
                     })
                     .map(function (component) {
-                        return _.merge(component.options.chart, {component: component.options.name});
+                        return _.merge(component.options.chart, {component: component.options.id});
                     })
                     .value();
 

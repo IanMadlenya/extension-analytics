@@ -71,17 +71,16 @@
 
             this.$watch('config.charts', function (chart) {
                     var Chart = this.$parent.getChart(chart);
-                    var Options = Chart.customOptions;
 
                     if (this.customOptions) {
                         this.customOptions.$destroy(true);
                         this.$set('customOptions', false);
                     }
 
-                    if (Options) {
+                    if (Chart.customOptions) {
                         this.$set(
                             'customOptions',
-                            this.$addChild({}, Options).$appendTo(this.$$.customOptions)
+                            this.$addChild({}, Vue.extend(Chart.customOptions)).$appendTo(this.$$.customOptions)
                         );
                     }
                 },

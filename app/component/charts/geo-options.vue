@@ -11,7 +11,7 @@
 
     var _ = require('lodash');
 
-    module.exports = Vue.extend({
+    module.exports = {
 
         inherit: true,
 
@@ -74,6 +74,6 @@
             }
         }
 
-    });
+    };
 
 </script>
