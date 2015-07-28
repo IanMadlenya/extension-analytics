@@ -11,7 +11,7 @@
                 <label for="form-auth-code" class="uk-form-label">{{ 'Authorization' | trans }}</label>
 
                 <div class="uk-form-controls">
-                    <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code" v-attr="disabled: !popup">
+                    <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code" v-attr="disabled: disableInput">
                     <p>
                         <a class="uk-button" v-on="click: openAuthWindow">{{ 'Request code' | trans }}</a>
                         <v-loader v-show="loading"></v-loader>
@@ -94,7 +94,7 @@
                 code: '',
                 id: '',
                 name: '',
-                popup: false,
+                disableInput: true,
                 profileId: 0,
                 profileList: [],
                 globals: window.$analytics
@@ -160,6 +160,7 @@
                 }
 
                 this.popup = window.open(url, '', 'width=800,height=500');
+                this.disableInput = false;
             },
 
             checkCode: function (code) {
@@ -174,7 +175,8 @@
                 request.success(function () {
                     this.popup.close();
                     delete this.popup; // avoid security exception
-                    this.popup = false;
+
+                    this.disableInput = true;
 
                     this.loading = false;
                     this.globals.connected = true;
