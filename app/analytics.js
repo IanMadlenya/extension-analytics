@@ -2,7 +2,13 @@ var $ = require('jquery');
 
 var Dashboard = require('dashboard');
 var Analytics = require('./component/analytics.vue');
-var Settings  = Vue.extend(require('./component/settings.vue'));
+var Settings = require('./component/settings.vue');
+
+Settings.http = Analytics.http = {
+    beforeSend: function (request, options) {
+        options.url = 'admin/' + options.url;
+    }
+};
 
 // init google visualization api
 google.load('visualization', '1', {
@@ -16,6 +22,6 @@ Dashboard.components['analytics'] = Analytics;
 // inject settings modal
 $(function () {
 
-    window.$analytics.settingsVM = new Settings().$appendTo('body');
+    window.$analytics.settingsVM = new Vue(Settings).$appendTo('body');
 
 });
