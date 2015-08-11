@@ -22,6 +22,17 @@ return [
 
     'events' => [
 
+        'before@system/intl' => function ($event, $request) use ($app) {
+
+            $locale = $request->get('locale');
+            $app->extend('translator', function ($translator) use ($locale) {
+
+                $translator->addResource('php', __DIR__ . '/languages/en_US/messages.php', $locale);
+                return $translator;
+            });
+
+        },
+
         'request' => function () use ($app) {
 
             $presetList = [];
