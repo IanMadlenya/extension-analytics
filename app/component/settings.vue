@@ -153,7 +153,7 @@
             },
 
             openAuthWindow: function () {
-                var url = 'analytics/auth';
+                var url = 'admin/analytics/auth';
 
                 if (this.$url.route) {
                     url = this.$url.route(url);
