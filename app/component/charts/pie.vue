@@ -34,19 +34,28 @@
                     pieHole: 0.5,
                     legend: {
                         alignment: 'center',
-                        position: 'bottom'
+                        position: 'bottom',
+
+                        textStyle: {
+                            color: '#fff'
+                        }
                     },
                     chartArea: {
                         height: '85%',
                         top: 7
                     },
-                    sliceVisibilityThreshold: 1 / 120
+                    sliceVisibilityThreshold: 1 / 120,
+                    colors: ['#56a4e1', '#6cd5de', '#aed581', '#f4d97b', '#ff8a65', '#ff6a6a', '#fe6e85', '#ac76f6', '#7c84f5', '#628cea']
                 }
             }
         },
 
         created: function () {
             this.formatter = utils.createMetricFormatter(this.config.metrics);
+            console.log('blabla');
+            this.$on('request', function (params) {
+                params.sort = '-' + params.metrics;
+            });
 
             this.$on('resize', function () {
                 if (this.chart) {

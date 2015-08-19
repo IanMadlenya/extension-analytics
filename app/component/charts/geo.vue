@@ -35,7 +35,7 @@
         data: function () {
             return {
                 options: {
-                    colors: ['#AADFF3', '#058DC7'],
+                    colors: ['#92c8f1', '#56a4e1'],
                     displayMode: 'auto'
                 }
             }

@@ -30,7 +30,7 @@
             return {
                 options: {
                     areaOpacity: 0.1,
-                    colors: ['#058DC7'],
+                    colors: ['#56a4e1'],
                     legend: 'none',
                     lineWidth: 4,
                     pointSize: 8,
@@ -39,13 +39,13 @@
                         gridlines: {'color': 'none'},
                         showTextEvery: 1,
                         textPosition: 'out',
-                        textStyle: {'color': '#058DC7'}
+                        textStyle: {'color': '#56a4e1'}
                     },
                     vAxis: {
                         baselineColor: '#ccc',
                         gridlines: {'color': '#fafafa'},
                         textPosition: 'out',
-                        textStyle: {'color': '#058DC7'}
+                        textStyle: {'color': '#56a4e1'}
                     },
                     chartArea: {
                         left: 35,

@@ -29,7 +29,7 @@
         data: function () {
             return {
                 options: {
-                    colors: ['#058DC7'],
+                    colors: ['#56a4e1'],
                     legend: 'none',
                     lineWidth: 4,
                     pointSize: 8,
@@ -43,7 +43,7 @@
                         showTextEvery: 1,
                         textPosition: 'out',
                         textStyle: {
-                            color: '#058DC7'
+                            color: '#56a4e1'
                         }
                     },
                     vAxis: {
@@ -53,7 +53,7 @@
                         },
                         textPosition: 'out',
                         textStyle: {
-                            color: '#058DC7'
+                            color: '#56a4e1'
                         }
                     },
                     chartArea: {
