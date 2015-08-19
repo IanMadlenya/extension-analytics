@@ -45,7 +45,7 @@
                         top: 7
                     },
                     sliceVisibilityThreshold: 1 / 120,
-                    colors: ['#56a4e1', '#6cd5de', '#aed581', '#f4d97b', '#ff8a65', '#ff6a6a', '#fe6e85', '#ac76f6', '#7c84f5', '#628cea']
+                    colors: ['#56a4e1', '#aed581', '#f4d97b', '#ff8a65', '#ff6a6a', '#fe6e85', '#ac76f6', '#7c84f5', '#628cea', '#6cd5de']
                 }
             }
         },
