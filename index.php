@@ -33,7 +33,7 @@ return [
 
         },
 
-        'request' => function () use ($app) {
+        'before@dashboard' => function () use ($app) {
 
             $presetList = [];
             $groupList = [];
@@ -65,10 +65,10 @@ return [
                     'connected' => isset($this->config()['token']),
                     'profile' => $this->config('profile', false),
                     'geo' => [
-                        'world' => $app['intl']->territory()->getName('001'),
-                        'continents' => $app['intl']->territory()->getContinents(),
-                        'subcontinents' => $app['intl']->territory()->getList('S'),
-                        'countries' => $app['intl']->territory()->getCountries()
+                        'world' => $app->module('system/intl')->getTerritories()['001'],
+                        'continents' => $app->module('system/intl')->getContinents(),
+                        'subcontinents' => $app->module('system/intl')->getSubContinents(),
+                        'countries' => $app->module('system/intl')->getCountries()
                     ]
                 ])
             ), [], 'string');
