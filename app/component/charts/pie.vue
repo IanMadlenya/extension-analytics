@@ -34,11 +34,7 @@
                     pieHole: 0.5,
                     legend: {
                         alignment: 'center',
-                        position: 'bottom',
-
-                        textStyle: {
-                            color: '#fff'
-                        }
+                        position: 'bottom'
                     },
                     chartArea: {
                         height: '85%',
