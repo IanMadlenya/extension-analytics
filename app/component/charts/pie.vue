@@ -52,7 +52,7 @@
 
         created: function () {
             this.formatter = utils.createMetricFormatter(this.config.metrics);
-            console.log('blabla');
+
             this.$on('request', function (params) {
                 params.sort = '-' + params.metrics;
             });
