@@ -37,7 +37,7 @@
                         position: 'bottom'
                     },
                     chartArea: {
-                        height: '85%',
+                        height: '75%',
                         top: 7
                     },
                     sliceVisibilityThreshold: 1 / 120,
