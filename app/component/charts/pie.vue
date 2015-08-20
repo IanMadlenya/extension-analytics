@@ -37,6 +37,16 @@
                         position: 'bottom',
                         textStyle: {
                             color: '#666'
+                        },
+                        pagingTextStyle: {
+                            color: '#666'
+                        },
+                        scrollArrows: {
+                            activeColor: '#000',
+                            inactiveColor: '#666',
+                            textStyle: {
+                                color: '#666'
+                            }
                         }
                     },
                     chartArea: {
