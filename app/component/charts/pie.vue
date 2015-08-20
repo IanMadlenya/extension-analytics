@@ -42,11 +42,8 @@
                             color: '#666'
                         },
                         scrollArrows: {
-                            activeColor: '#000',
-                            inactiveColor: '#666',
-                            textStyle: {
-                                color: '#666'
-                            }
+                            activeColor: '#666',
+                            inactiveColor: '#aaa'
                         }
                     },
                     chartArea: {
