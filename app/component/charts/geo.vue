@@ -36,7 +36,12 @@
             return {
                 options: {
                     colors: ['#92c8f1', '#56a4e1'],
-                    displayMode: 'auto'
+                    displayMode: 'auto',
+                    tooltip: {
+                        textStyle: {
+                            color: '#666'
+                        }
+                    }
                 }
             }
         },

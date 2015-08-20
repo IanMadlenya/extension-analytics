@@ -51,6 +51,11 @@
                         left: 35,
                         height: '85%',
                         top: 5
+                    },
+                    tooltip: {
+                        textStyle: {
+                            color: '#666'
+                        }
                     }
                 }
             }

@@ -34,11 +34,20 @@
                     pieHole: 0.5,
                     legend: {
                         alignment: 'center',
-                        position: 'bottom'
+                        position: 'bottom',
+                        textStyle: {
+                            color: '#666'
+                        }
                     },
                     chartArea: {
                         height: '75%',
                         top: 7
+                    },
+                    tooltip: {
+                        textStyle: {
+                            color: '#666'
+                        },
+                        showColorCode: 1
                     },
                     sliceVisibilityThreshold: 1 / 120,
                     colors: ['#56a4e1', '#aed581', '#f4d97b', '#ff8a65', '#ff6a6a', '#fe6e85', '#ac76f6', '#7c84f5', '#628cea', '#6cd5de']

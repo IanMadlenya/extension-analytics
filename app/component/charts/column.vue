@@ -60,6 +60,11 @@
                         height: '85%',
                         width: '85%',
                         top: 5
+                    },
+                    tooltip: {
+                        textStyle: {
+                            color: '#666'
+                        }
                     }
                 }
             }
