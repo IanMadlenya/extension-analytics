@@ -49,7 +49,6 @@
 
 <script>
     var _ = require('lodash');
-    var utils = require('../utils.js');
 
     module.exports = {
 
