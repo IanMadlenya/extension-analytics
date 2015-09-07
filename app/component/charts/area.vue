@@ -77,7 +77,7 @@
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';
                 } else if (this.config.startDate == '30daysAgo') {
-                    var format = window.$globalize.main[window.$globalize.locale].dates.calendars.gregorian.dateFormats.medium;
+                    var format = window.$locale.DATETIME_FORMATS.mediumDate;
                     format = format.replace(/[^md]*y[^md]*/i, '');
                     this.options.hAxis.format = format;
                 } else if (this.config.startDate == '365daysAgo') {
