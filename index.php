@@ -75,10 +75,6 @@ return [
 
             $app['scripts']->register('google', '//www.google.com/jsapi');
             $app['scripts']->register('widget-analytics', 'analytics:app/bundle/analytics.js', ['~dashboard', 'google', 'analytics-config']);
-        },
-
-        'uninstall.analytics' => function () use ($app) {
-            $app['config']->remove($this->name);
         }
 
     ],
