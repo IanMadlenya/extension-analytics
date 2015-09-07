@@ -2,7 +2,10 @@
 
     <div class="pk-text-large" v-show="widget.counter">{{ total }}</div>
 
-    <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans }}</h3>
+    <h3 class="uk-panel-title uk-width-3-4">
+        <span style="display: inline-block">{{ config.dimensions | trans }}</span>
+        <span style="display: inline-block">by {{ config.metrics | trans }} this {{ config.startDate | trans }}</span>
+    </h3>
 
     <div v-el="chart"></div>
 
@@ -135,7 +138,7 @@
         methods: {
 
             setSize: function () {
-                this.options.height = this.$el.parentElement.offsetWidth * 347/556;
+                this.options.height = this.$el.parentElement.offsetWidth * 347 / 556;
             }
 
         },
