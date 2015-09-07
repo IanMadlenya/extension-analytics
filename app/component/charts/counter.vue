@@ -3,7 +3,7 @@
     <div v-if="result">
         <div class="uk-text-center" v-repeat="result.totalsForAllResults">
             <div class="pk-text-xlarge uk-margin-small-bottom">{{ $value | format }}</div>
-            <h3 class="uk-panel-title uk-margin-remove">{{ $key | trans }}</h3>
+            <h3 class="uk-panel-title uk-margin-remove">{{ $key | trans }} this {{ config.startDate | trans}}</h3>
         </div>
     </div>
     <div v-if="false"><!-- v-if Hack --></div>
