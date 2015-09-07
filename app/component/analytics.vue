@@ -26,6 +26,7 @@
     <form class="pk-panel-teaser uk-form uk-form-stacked" v-if="editing" v-on="submit: $event.preventDefault()">
         <div class="uk-form-row">
             <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
+
             <div class="uk-form-controls">
                 <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset" options="presetOptions"></select>
             </div>
@@ -111,8 +112,6 @@
                     return vm.$trans('Refresh (%time%)', {time: vm.$relativeDate(vm.result.time * 1000)});
                 }
             });
-
-            this.$watch('configured', this.configChanged, {immediate: true});
 
             this.$watch('configured + widget.preset', function () {
                 if (this.unwatch) {
