@@ -84,9 +84,9 @@
           "ga:percentNewSessions"
         ],
         "dimensions": [
+          "ga:country",
           "ga:city",
           "ga:continent",
-          "ga:country",
           "ga:subContinent"
         ],
         "charts": [
