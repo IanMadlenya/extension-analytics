@@ -112,6 +112,13 @@
                                 text: text
                             }
                         });
+
+                        presetOptions[key].sort(function (a, b) {
+                            if (a.text < b.text) return -1;
+                            if (a.text > b.text) return 1;
+                            return 0;
+                        });
+
                     } else {
                         presetOptions[key] = [];
                     }
