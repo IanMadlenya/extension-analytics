@@ -142,9 +142,6 @@
 
                 ['dimensions', 'metrics', 'charts'].forEach(function (key) {
                     if (_.isArray(vm.currentPreset[key]) && vm.currentPreset[key].length > 0) {
-
-                        console.log( vm.currentPreset[key][0]);
-
                         vm.config.$set(key, vm.currentPreset[key][0]);
                     }
                 });
