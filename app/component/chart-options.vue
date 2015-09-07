@@ -45,10 +45,8 @@
         <div v-el="customOptions"></div>
     </div>
 
-    <div class="uk-margin-top">
-        <label class="uk-form-label" for="form-analytics-counter">
-            <input type="checkbox" id="form-analytics-counter" v-model="widget.counter"> {{ 'Show Counter?' | trans }}
-        </label>
+    <div class="uk-margin">
+        <label><input type="checkbox" v-model="widget.counter"> {{ 'Show Counter' | trans }}</label>
     </div>
 
 </template>
