@@ -3,14 +3,14 @@
     <div class="uk-form-row" v-if="presetOptions.dimensions.length > 1">
         <label class="uk-form-label" for="form-analytics-dimension">{{ 'Dimension' | trans }}</label>
         <div class="uk-form-controls">
-            <select id="form-analytics-dimension" class="uk-width-1-1" v-model="config.dimensions" options="presetOptions.dimensions"></select>
+            <select id="form-analytics-dimension" class="uk-width-1-1" v-model="widget.config.dimensions" options="presetOptions.dimensions"></select>
         </div>
     </div>
 
     <div class="uk-form-row" v-if="presetOptions.metrics.length > 1">
         <label class="uk-form-label" for="form-analytics-metric">{{ 'Metric' | trans }}</label>
         <div class="uk-form-controls">
-            <select id="form-analytics-metric" class="uk-width-1-1" v-model="config.metrics" options="presetOptions.metrics"></select>
+            <select id="form-analytics-metric" class="uk-width-1-1" v-model="widget.config.metrics" options="presetOptions.metrics"></select>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
             <div class="uk-form-row" v-if="presetOptions.charts.length > 1">
                 <label class="uk-form-label" for="form-analytics-chart">{{ 'Chart' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-analytics-chart" class="uk-width-1-1" v-model="config.charts" options="presetOptions.charts"></select>
+                    <select id="form-analytics-chart" class="uk-width-1-1" v-model="widget.config.charts" options="presetOptions.charts"></select>
                 </div>
             </div>
 
@@ -30,7 +30,7 @@
             <div class="uk-form-row" v-if="presetOptions.startDate">
                 <label class="uk-form-label" for="form-analytics-period">{{ 'Period' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-analytics-period" class="uk-width-1-1" v-model="config.startDate">
+                    <select id="form-analytics-period" class="uk-width-1-1" v-model="widget.config.startDate">
                         <option value="7daysAgo">{{ '7daysAgo' | trans }}</option>
                         <option value="30daysAgo">{{ '30daysAgo' | trans }}</option>
                         <option value="365daysAgo">{{ '365daysAgo' | trans }}</option>
@@ -41,8 +41,14 @@
         </div>
     </div>
 
-    <div class="uk-form-row uk-margin-top" v-show="customOptions">
+    <div class="uk-margin-top" v-show="customOptions">
         <div v-el="customOptions"></div>
+    </div>
+
+    <div class="uk-margin-top">
+        <label class="uk-form-label" for="form-analytics-counter">
+            <input type="checkbox" id="form-analytics-counter" v-model="widget.counter"> {{ 'Show Counter?' | trans }}
+        </label>
     </div>
 
 </template>
@@ -52,7 +58,7 @@
 
     module.exports = {
 
-        props: ['config', 'preset'],
+        props: ['widget'],
 
         data: function () {
             return {
@@ -62,13 +68,13 @@
 
         compiled: function () {
 
-            if (this.config.metrics === undefined) {
+            if (this.widget.config.metrics === undefined) {
                 this.setDefaults();
             }
 
-            this.$watch('preset', this.setDefaults);
+            this.$watch('widget.preset', this.setDefaults);
 
-            this.$watch('config.charts', function (chart) {
+            this.$watch('widget.config.charts', function (chart) {
                     var Chart = this.$parent.getChart(chart);
 
                     if (this.customOptions) {
@@ -138,16 +144,18 @@
             setDefaults: function () {
                 var vm = this;
 
-                this.$set('config', {});
+                this.$set('widget.config', {});
 
                 ['dimensions', 'metrics', 'charts'].forEach(function (key) {
                     if (_.isArray(vm.currentPreset[key]) && vm.currentPreset[key].length > 0) {
-                        vm.config.$set(key, vm.currentPreset[key][0]);
+                        vm.widget.config.$set(key, vm.currentPreset[key][0]);
                     }
                 });
 
+                vm.widget.counter = Boolean(vm.currentPreset['counter']);
+
                 if (!this.currentPreset.realtime) {
-                    this.config.$set('startDate', '7daysAgo');
+                    this.widget.config.$set('startDate', '7daysAgo');
                 }
             }
         }

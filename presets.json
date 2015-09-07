@@ -6,6 +6,7 @@
       {
         "id": "visitors",
         "label": "Visitors",
+        "counter": false,
         "metrics": [
           "rt:activeUsers"
         ],
@@ -25,6 +26,7 @@
         "id": "overview",
         "label": "Overview",
         "uri": "visitors-overview",
+        "counter": true,
         "metrics": [
           "ga:sessions",
           "ga:avgSessionDuration",
@@ -46,6 +48,7 @@
         "id": "language",
         "label": "Language",
         "uri": "visitors-language",
+        "counter": false,
         "metrics": [
           "ga:sessions",
           "ga:avgSessionDuration",
@@ -69,6 +72,7 @@
         "id": "location",
         "label": "Location",
         "uri": "visitors-geo",
+        "counter": false,
         "metrics": [
           "ga:sessions",
           "ga:avgSessionDuration",
@@ -95,6 +99,7 @@
         "id": "newReturning",
         "label": "New vs Returning",
         "uri": "visitors-type",
+        "counter": false,
         "metrics": [
           "ga:sessions",
           "ga:avgSessionDuration",
@@ -118,6 +123,7 @@
         "id": "browser",
         "label": "Browser & OS",
         "uri": "visitors-language",
+        "counter": false,
         "metrics": [
           "ga:sessions",
           "ga:avgSessionDuration",
@@ -146,6 +152,7 @@
         "id": "network",
         "label": "Network",
         "uri": "visitors-network",
+        "counter": false,
         "metrics": [
           "ga:sessions",
           "ga:avgSessionDuration",
@@ -175,6 +182,7 @@
       {
         "id": "allChannels",
         "label": "All Channels",
+        "counter": false,
         "metrics": [
           "ga:sessions",
           "ga:pageviews",
@@ -197,6 +205,7 @@
       {
         "id": "allTraffic",
         "label": "All Traffic",
+        "counter": false,
         "metrics": [
           "ga:sessions",
           "ga:pageviews",

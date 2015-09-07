@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <chart-options class="uk-form-row uk-display-block" config="{{@ widget.config }}" preset="{{@ widget.preset }}"></chart-options>
+        <chart-options class="uk-form-row uk-display-block" widget="{{@ widget }}"></chart-options>
     </form>
 
     <div v-show="!loading && configured" v-el="chart"></div>
@@ -276,7 +276,8 @@
                     this.chart = this.$addChild({
                         data: function () {
                             return {
-                                config: _.clone(vm.widget.config)
+                                config: _.clone(vm.widget.config),
+                                widget: vm.widget
                             }
                         }
                     }, this.$options.components[Chart.component]).$appendTo(this.$$.chart);

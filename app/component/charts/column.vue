@@ -1,6 +1,6 @@
 <template>
 
-    <div class="pk-text-large">{{ total }}</div>
+    <div class="pk-text-large" v-show="widget.counter">{{ total }}</div>
 
     <h3 class="uk-panel-title">{{ config.metrics | trans }} this {{ config.startDate | trans}}</h3>
 

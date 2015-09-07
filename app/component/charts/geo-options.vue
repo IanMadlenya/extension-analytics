@@ -2,7 +2,7 @@
 
     <label class="uk-form-label" for="form-analytics-region">{{ 'Region' | trans }}</label>
     <div class="uk-form-controls">
-        <select id="form-analytics-region" class="uk-width-1-1" v-model="config.region" options="regionOptions"></select>
+        <select id="form-analytics-region" class="uk-width-1-1" v-model="widget.config.region" options="regionOptions"></select>
     </div>
 
 </template>
@@ -60,17 +60,17 @@
         },
 
         compiled: function () {
-            if (!this.config.region) {
+            if (!this.widget.config.region) {
                 // Add 'World' as default
-                this.config.$add('region', 0);
+                this.widget.config.$add('region', 0);
             } else {
-                this.config.$set('region', this.config.region);
+                this.widget.config.$set('region', this.widget.config.region);
             }
         },
 
         beforeDestroy: function () {
-            if (this.config.charts !== 'geo') {
-                this.config.$delete('region');
+            if (this.widget.config.charts !== 'geo') {
+                this.widget.config.$delete('region');
             }
         }
 
