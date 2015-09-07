@@ -113,7 +113,17 @@
             });
 
             this.$watch('configured', this.configChanged, {immediate: true});
-            this.$watch('widget.config', Vue.util.debounce(this.configChanged, 500), {deep: true});
+
+            this.$watch('configured + widget.preset', function () {
+                if (this.unwatch) {
+                    this.unwatch();
+                }
+                this.$nextTick(function () {
+                    this.configChanged();
+                    this.unwatch = this.$watch('widget.config', Vue.util.debounce(this.configChanged, 500), {deep: true});
+                });
+            }, {immediate: true});
+
         },
 
         computed: {

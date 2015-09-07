@@ -152,7 +152,9 @@
                     }
                 });
 
-                vm.widget.counter = Boolean(vm.currentPreset['counter']);
+                vm.$nextTick(function () {
+                    this.widget.counter = Boolean(vm.currentPreset['counter']);
+                });
 
                 if (!this.currentPreset.realtime) {
                     this.widget.config.$set('startDate', '7daysAgo');
