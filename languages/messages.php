@@ -34,6 +34,7 @@ __('ga:sessions');
 __('ga:source');
 __('ga:sourceMedium');
 __('ga:subContinent');
+__('ga:users');
 __('ga:userType');
 __('rt:activeUsers');
 __('rt:userType');
