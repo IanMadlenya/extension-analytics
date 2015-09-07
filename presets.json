@@ -26,14 +26,14 @@
         "label": "Overview",
         "uri": "visitors-overview",
         "metrics": [
+          "ga:sessions",
           "ga:avgSessionDuration",
           "ga:newUsers",
           "ga:users",
           "ga:bounceRate",
           "ga:pageviews",
           "ga:pageviewsPerSession",
-          "ga:percentNewSessions",
-          "ga:sessions"
+          "ga:percentNewSessions"
         ],
         "dimensions": ["ga:date"],
         "charts": [
@@ -47,14 +47,14 @@
         "label": "Language",
         "uri": "visitors-language",
         "metrics": [
+          "ga:sessions",
           "ga:avgSessionDuration",
           "ga:newUsers",
           "ga:users",
           "ga:bounceRate",
           "ga:pageviews",
           "ga:pageviewsPerSession",
-          "ga:percentNewSessions",
-          "ga:sessions"
+          "ga:percentNewSessions"
         ],
         "dimensions": [
           "ga:language"
@@ -70,14 +70,14 @@
         "label": "Location",
         "uri": "visitors-geo",
         "metrics": [
+          "ga:sessions",
           "ga:avgSessionDuration",
           "ga:newUsers",
           "ga:users",
           "ga:bounceRate",
           "ga:pageviews",
           "ga:pageviewsPerSession",
-          "ga:percentNewSessions",
-          "ga:sessions"
+          "ga:percentNewSessions"
         ],
         "dimensions": [
           "ga:city",
@@ -96,14 +96,14 @@
         "label": "New vs Returning",
         "uri": "visitors-type",
         "metrics": [
+          "ga:sessions",
           "ga:avgSessionDuration",
           "ga:newUsers",
           "ga:users",
           "ga:bounceRate",
           "ga:pageviews",
           "ga:pageviewsPerSession",
-          "ga:percentNewSessions",
-          "ga:sessions"
+          "ga:percentNewSessions"
         ],
         "dimensions": [
           "ga:userType"
@@ -119,14 +119,14 @@
         "label": "Browser & OS",
         "uri": "visitors-language",
         "metrics": [
+          "ga:sessions",
           "ga:avgSessionDuration",
           "ga:newUsers",
           "ga:users",
           "ga:bounceRate",
           "ga:pageviews",
           "ga:pageviewsPerSession",
-          "ga:percentNewSessions",
-          "ga:sessions"
+          "ga:percentNewSessions"
         ],
         "dimensions": [
           "ga:browser",
@@ -147,14 +147,14 @@
         "label": "Network",
         "uri": "visitors-network",
         "metrics": [
+          "ga:sessions",
           "ga:avgSessionDuration",
           "ga:newUsers",
           "ga:users",
           "ga:bounceRate",
           "ga:pageviews",
           "ga:pageviewsPerSession",
-          "ga:percentNewSessions",
-          "ga:sessions"
+          "ga:percentNewSessions"
         ],
         "dimensions": [
           "ga:networkLocation",
