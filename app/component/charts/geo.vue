@@ -3,8 +3,7 @@
     <div class="pk-text-large" v-show="widget.counter">{{ total }}</div>
 
     <h3 class="uk-panel-title uk-width-3-4">
-        <span class="uk-text-nowrap">{{ config.dimensions | trans }}</span>
-        <span class="uk-text-nowrap">by {{ config.metrics | trans }} this {{ config.startDate | trans }}</span>
+        {{ config.metrics | trans }} this {{ config.startDate | trans }}
     </h3>
 
     <div v-el="chart"></div>
