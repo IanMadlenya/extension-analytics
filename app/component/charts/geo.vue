@@ -106,7 +106,7 @@
 
                         this.result.dataTable.rows = _.forEach(this.result.dataTable.rows, function (value) {
                             value.c[0].f = value.c[0].v;
-                            value.c[0].v = _.result(_.find(subContinents, {label: value.c[0].v}), 'code');
+                            value.c[0].v = _.result(_.find(subcontinents, {label: value.c[0].v}), 'code');
                         });
 
                         break;
