@@ -66,7 +66,7 @@
                 var pages = Math.floor(this.result.dataTable.rows.length / this.itemsPerPage);
 
                 if (pages > 1) {
-                    this.pageination = UIkit.pagination(this.$$.pageination, {
+                    this.pageination = UIkit.pagination(this.$els.pageination, {
                         pages: pages,
                         onSelectPage: function (page) {
                             vm.page = page;

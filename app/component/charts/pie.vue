@@ -6,7 +6,7 @@
         <span class="uk-text-nowrap">{{ config.dimensions | trans }}</span>
         <span class="uk-text-nowrap">by {{ config.metrics | trans }} this {{ config.startDate | trans }}</span>
     </h3>
-    <div v-el="chart"></div>
+    <div v-el:chart></div>
 
 </template>
 
@@ -84,7 +84,8 @@
                 });
 
                 this.dataTable = new google.visualization.DataTable(this.result.dataTable);
-                this.chart = new google.visualization.PieChart(this.$$.chart)
+
+                this.chart = new google.visualization.PieChart(this.$els.chart)
 
                 if (this.formatter) {
                     this.formatter.format(this.dataTable, 1);

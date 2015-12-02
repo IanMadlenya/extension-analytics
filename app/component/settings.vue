@@ -1,6 +1,6 @@
 <template>
 
-    <div class="uk-modal" v-el="modal">
+    <div class="uk-modal" v-el:modal>
         <div class="uk-modal-dialog uk-form uk-form-horizontal">
 
             <div class="uk-modal-header">
@@ -110,7 +110,7 @@
         },
 
         compiled: function () {
-            this.modal = UIkit.modal(this.$$.modal);
+            this.modal = UIkit.modal(this.$refs.modal);
         },
 
         computed: {

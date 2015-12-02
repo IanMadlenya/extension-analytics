@@ -11,7 +11,7 @@
         {{ config.metrics | trans }} this {{ config.startDate | trans }}
     </h3>
 
-    <div v-el="chart"></div>
+    <div v-el:chart></div>
 
 </template>
 
@@ -79,7 +79,7 @@
 
             this.$on('render', function () {
                 this.dataTable = new google.visualization.DataTable(this.result.dataTable);
-                this.chart = new google.visualization.AreaChart(this.$$.chart);
+                this.chart = new google.visualization.AreaChart(this.$els.chart);
 
                 if (this.config.startDate == '7daysAgo') {
                     this.options.hAxis.format = 'E';

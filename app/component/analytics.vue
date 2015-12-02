@@ -1,47 +1,51 @@
 <template>
 
-    <div class="uk-panel-badge">
-        <ul class="uk-subnav pk-subnav-icon">
-            <li v-show="!$parent.editing[widget.id] && gaUrl">
-                <a href="{{ gaUrl }}" target="_blank" class="pk-icon-share pk-icon-hover uk-hidden" title="{{ 'Go to Google Analytics' | trans }}" data-uk-tooltip="{delay: 500}"></a>
-            </li>
-            <li v-show="!$parent.editing[widget.id] && !loading && result.time">
-                <a class="pk-icon-refresh pk-icon-hover uk-hidden" v-el="refresh" v-on="click: configChanged(true)"></a>
-            </li>
-            <li v-show="$parent.editing[widget.id]">
-                <a class="pk-icon-settings pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: openSettings"></a>
-            </li>
-            <li v-show="$parent.editing[widget.id]">
-                <a class="pk-icon-delete pk-icon-hover" title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.remove()" v-confirm="'Delete widget?'"></a>
-            </li>
-            <li v-show="!$parent.editing[widget.id]">
-                <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
-            </li>
-            <li v-show="$parent.editing[widget.id]">
-                <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}" v-on="click: $parent.edit()"></a>
-            </li>
-        </ul>
-    </div>
-
-    <form class="pk-panel-teaser uk-form uk-form-stacked" v-if="editing" v-on="submit: $event.preventDefault()">
-        <div class="uk-form-row">
-            <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
-
-            <div class="uk-form-controls">
-                <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset" options="presetOptions"></select>
-            </div>
+    <div>
+        <div class="uk-panel-badge">
+            <ul class="uk-subnav pk-subnav-icon">
+                <li v-show="!editing && gaUrl">
+                    <a href="{{ gaUrl }}" target="_blank" class="pk-icon-share pk-icon-hover uk-hidden" title="{{ 'Go to Google Analytics' | trans }}" data-uk-tooltip="{delay: 500}"></a>
+                </li>
+                <li v-show="!editing && !loading && result.time">
+                    <a class="pk-icon-refresh pk-icon-hover uk-hidden" v-el="refresh" @click="configChanged(true)"></a>
+                </li>
+                <li v-show="editing">
+                    <a class="pk-icon-settings pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}" @click="openSettings"></a>
+                </li>
+                <li v-show="editing">
+                    <a class="pk-icon-delete pk-icon-hover" title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.remove()" v-confirm="'Delete widget?'"></a>
+                </li>
+                <li v-show="!editing">
+                    <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.edit()"></a>
+                </li>
+                <li v-show="editing">
+                    <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.edit()"></a>
+                </li>
+            </ul>
         </div>
 
-        <chart-options class="uk-form-row uk-display-block" widget="{{@ widget }}"></chart-options>
-    </form>
+        <form class="pk-panel-teaser uk-form uk-form-stacked" v-if="editing" v-on="submit: $event.preventDefault()">
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
 
-    <div v-show="!loading && configured" v-el="chart"></div>
+                <div class="uk-form-controls">
+                    <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset">
+                        <option v-for="preset in presetOptions" :value="preset.value">{{ preset.text }}</option>
+                    </select>
+                </div>
+            </div>
 
-    <div class="uk-text-center" v-if="loading && configured">
-        <v-loader></v-loader>
+            <chart-options class="uk-form-row uk-display-block" :widget.sync="widget" :currentPreset="currentPreset"></chart-options>
+        </form>
+
+        <div v-show="!loading && configured" v-el:chart></div>
+
+        <div class="uk-text-center" v-if="loading && configured">
+            <v-loader></v-loader>
+        </div>
+
+        <div v-if="!configured">Google Analytics <a href="#" v-on="click: openSettings">authentication</a> needed.</div>
     </div>
-
-    <div v-if="!configured">Google Analytics <a href="#" v-on="click: openSettings">authentication</a> needed.</div>
 
 </template>
 
@@ -106,7 +110,7 @@
                 vm.$broadcast('resize');
             }, 10));
 
-            UIkit.tooltip(this.$$.refresh, {
+            UIkit.tooltip(this.$refs.refresh, {
                 delay: 500,
                 src: function () {
                     return vm.$trans('Refresh (%time%)', {time: vm.$relativeDate(vm.result.time * 1000)});
@@ -133,6 +137,21 @@
 
             presetOptions: function () {
                 var groups = this.globals.groups;
+
+
+                console.log(_(this.globals.presets)
+                    .groupBy('groupID')
+                    .map(function (group, id) {
+                        return {
+                            label: _.find(groups, {id: id}).label,
+                            options: _.map(group, function (preset) {
+                                return {
+                                    value: preset.id,
+                                    text: preset.label
+                                };
+                            })
+                        };
+                    }).value())
 
                 return _(this.globals.presets)
                     .groupBy('groupID')
@@ -161,8 +180,8 @@
                 return 'https://www.google.com/analytics/web/?pli=1#report/' +
                     this.currentPreset.uri +
                     '/a' + this.globals.profile.accountId +
-                    'w' + this.globals.profile.propertyId +
-                    'p' + this.globals.profile.profileId + '/';
+                    'w'  + this.globals.profile.propertyId +
+                    'p'  + this.globals.profile.profileId + '/';
             }
         },
 
@@ -173,14 +192,16 @@
             },
 
             getChart: function (id) {
+
                 var charts = _(this.$options.components.__proto__)
-                    .filter(function (component) {
-                        return _.has(component, 'options.chart');
-                    })
-                    .map(function (component) {
-                        return _.merge(component.options.chart, {component: component.options.id});
-                    })
-                    .value();
+                    .map(function (component, key) {
+
+                        if (!component.options.chart) {
+                            return false;
+                        }
+
+                        return _.merge(component.options.chart, {component: key});
+                    }).value();
 
                 return _.find(charts, {id: id});
             },
@@ -223,7 +244,7 @@
 
                     this.$set('loading', false);
                     this.$set('result', result);
-                    this.chart.$add('result', result);
+                    Vue.set(this.chart, 'result', result);
 
                     this.$nextTick(function () {
                         this.chart.$emit('render');
@@ -261,11 +282,7 @@
                     this.$set('loading', false);
                     this.$set('result', result);
 
-                    if (this.chart.result) {
-                        this.chart.$set('result', result);
-                    } else {
-                        this.chart.$add('result', result);
-                    }
+                    Vue.set(this.chart, 'result', result);
 
                     this.$nextTick(function () {
                         this.chart.$emit('render');
@@ -282,14 +299,15 @@
                         this.chart.$destroy(true);
                     }
 
-                    this.chart = this.$addChild({
+                    this.chart = new this.$options.components.__proto__[Chart.component]({
+                        parent: this,
                         data: function () {
                             return {
                                 config: _.clone(vm.widget.config),
                                 widget: vm.widget
                             }
                         }
-                    }, this.$options.components[Chart.component]).$appendTo(this.$$.chart);
+                    }).$appendTo(this.$els.chart);
 
                     return true;
                 } else {
