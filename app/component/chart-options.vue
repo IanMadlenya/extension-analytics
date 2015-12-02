@@ -25,7 +25,7 @@
                 <label class="uk-form-label" for="form-analytics-chart">{{ 'Chart' | trans }}</label>
                 <div class="uk-form-controls">
                     <select id="form-analytics-chart" class="uk-width-1-1" v-model="widget.config.charts">
-                        <option v-for="chart in currentPreset.charts" :value="chart">{{ $trans($parent.getChart(chart).label | trans }}</option>
+                        <option v-for="chart in currentPreset.charts" :value="chart">{{ $parent.$parent.getChart(chart).label | trans }}</option>
                     </select>
                 </div>
             </div>
@@ -48,7 +48,7 @@
     </div>
 
     <div class="uk-margin-top" v-show="customOptions">
-        <div v-el="customOptions"></div>
+        <div v-el:custom-options></div>
     </div>
 
     <div class="uk-margin">
@@ -90,7 +90,7 @@
                     if (Chart.customOptions) {
                         this.$set(
                             'customOptions',
-                            this.$addChild({}, Vue.extend(Chart.customOptions)).$appendTo(this.$refs.customOptions)
+                            new Vue(_.extend({parent: this}, Chart.customOptions)).$appendTo(this.$els.customOptions)
                         );
                     }
                 },
@@ -101,44 +101,6 @@
         },
 
         computed: {
-
-            presetOptions: function () {
-//                var currentPreset = this.currentPreset;
-//                var presetOptions = {};
-//                var vm = this;
-//
-//                ['dimensions', 'metrics', 'charts'].forEach(function (key) {
-//                    if (_.isArray(currentPreset[key]) && currentPreset[key].length > 0) {
-//                        presetOptions[key] = currentPreset[key].map(function (el) {
-//                            var text;
-//
-//                            if (key != 'charts') {
-//                                text = vm.$trans(el);
-//                            } else {
-//                                text = vm.$trans(vm.$parent.getChart(el).label);
-//                            }
-//
-//                            return {
-//                                value: el,
-//                                text: text
-//                            }
-//                        });
-//
-//                        presetOptions[key].sort(function (a, b) {
-//                            if (a.text < b.text) return -1;
-//                            if (a.text > b.text) return 1;
-//                            return 0;
-//                        });
-//
-//                    } else {
-//                        presetOptions[key] = [];
-//                    }
-//                });
-//
-//                presetOptions['startDate'] = !currentPreset.realtime;
-//
-//                return presetOptions;
-            },
 
             currentPreset: function () {
                 return this.$parent.currentPreset;
@@ -154,7 +116,7 @@
 
                 ['dimensions', 'metrics', 'charts'].forEach(function (key) {
                     if (_.isArray(vm.currentPreset[key]) && vm.currentPreset[key].length > 0) {
-                        vm.widget.config.$set(key, vm.currentPreset[key][0]);
+                        vm.widget.config[key] = vm.currentPreset[key][0];
                     }
                 });
 
@@ -163,7 +125,7 @@
                 });
 
                 if (!this.currentPreset.realtime) {
-                    this.widget.config.$set('startDate', '7daysAgo');
+                    this.widget.config.startDate = '7daysAgo';
                 }
             }
         }

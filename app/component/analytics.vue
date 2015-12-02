@@ -16,21 +16,23 @@
                     <a class="pk-icon-delete pk-icon-hover" title="{{ 'Delete' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.remove()" v-confirm="'Delete widget?'"></a>
                 </li>
                 <li v-show="!editing">
-                    <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.edit()"></a>
+                    <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.edit"></a>
                 </li>
                 <li v-show="editing">
-                    <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.edit()"></a>
+                    <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.save"></a>
                 </li>
             </ul>
         </div>
 
-        <form class="pk-panel-teaser uk-form uk-form-stacked" v-if="editing" v-on="submit: $event.preventDefault()">
+        <form class="pk-panel-teaser uk-form uk-form-stacked" v-if="editing">
             <div class="uk-form-row">
                 <label class="uk-form-label" for="form-analytics-type">{{ 'Type' | trans }}</label>
 
                 <div class="uk-form-controls">
                     <select id="form-analytics-type" class="uk-width-1-1" v-model="widget.preset">
-                        <option v-for="preset in presetOptions" :value="preset.value">{{ preset.text }}</option>
+                        <optgroup v-for="group in presetOptions" :label="group.label">
+                            <option v-for="preset in group.options" :value="preset.value">{{ preset.text }}</option>
+                        </optgroup>
                     </select>
                 </div>
             </div>
@@ -99,7 +101,7 @@
             }
 
             if (this.widget.preset == undefined) {
-                this.widget.$set('preset', this.globals.presets[0].id);
+                Vue.set(this.widget, 'preset', this.globals.presets[0].id);
             }
         },
 
@@ -137,21 +139,6 @@
 
             presetOptions: function () {
                 var groups = this.globals.groups;
-
-
-                console.log(_(this.globals.presets)
-                    .groupBy('groupID')
-                    .map(function (group, id) {
-                        return {
-                            label: _.find(groups, {id: id}).label,
-                            options: _.map(group, function (preset) {
-                                return {
-                                    value: preset.id,
-                                    text: preset.label
-                                };
-                            })
-                        };
-                    }).value())
 
                 return _(this.globals.presets)
                     .groupBy('groupID')
