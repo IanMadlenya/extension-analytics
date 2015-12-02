@@ -11,9 +11,9 @@
                 <label for="form-auth-code" class="uk-form-label">{{ 'Authorization' | trans }}</label>
 
                 <div class="uk-form-controls">
-                    <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code" v-attr="disabled: disableInput">
+                    <input id="form-auth-code" class="uk-form-width-large" type="text" placeholder="{{ 'Auth code' | trans }}" v-model="code" :disabled="disableInput">
                     <p>
-                        <a class="uk-button" v-on="click: openAuthWindow">{{ 'Request code' | trans }}</a>
+                        <a class="uk-button" @click="openAuthWindow">{{ 'Request code' | trans }}</a>
                         <v-loader v-show="loading"></v-loader>
                     </p>
                 </div>
@@ -46,7 +46,10 @@
             <div class="uk-form-row" v-show="globals.connected">
                 <label for="form-profile" class="uk-form-label">{{ 'Profile' | trans }}</label>
                 <div class="uk-form-controls">
-                    <select id="form-profile" class="uk-form-width-large" options="profileOptions" v-model="profileId" v-attr="disabled: profileList.length == 0" v-attr="selected: globals.profile"></select>
+                    <select id="form-profile" class="uk-form-width-large" options="profileOptions" v-model="profileId" :disabled="profileList.length == 0" :selected="globals.profile">
+                        <option value="0">{{ 'Select profile...' | trans }}</option>
+                        <option v-for="profile in profileList" :value="profile.id">{{ profile.webPropertyId + ' - ' + profile.websiteUrl }}</option>
+                    </select>
                 </div>
             </div>
 
@@ -63,7 +66,7 @@
                 <span for="form-auth-code" class="uk-form-label">{{ 'Authorization' | trans }}</span>
 
                 <div class="uk-form-controls">
-                    <a class="uk-button" v-on="click: disconnect">{{ 'Disconnect' | trans }}</a>
+                    <a class="uk-button" @click="disconnect">{{ 'Disconnect' | trans }}</a>
 
                     <p class="uk-form-help-block">{{ 'Disconnecting from Google will affect all Analytics widgets.' |
                         trans }}</p>
@@ -84,8 +87,6 @@
         el: function () {
             return document.createElement('div');
         },
-
-        props: ['globals', 'state'],
 
         data: function () {
             return {
@@ -110,20 +111,7 @@
         },
 
         compiled: function () {
-            this.modal = UIkit.modal(this.$refs.modal);
-        },
-
-        computed: {
-            profileOptions: function () {
-                var options = [];
-
-                options.push({value: 0, text: 'Select profile...'});
-                this.profileList.forEach(function (profile) {
-                    options.push({value: profile.id, text: profile.webPropertyId + ' - ' + profile.websiteUrl});
-                });
-
-                return options;
-            }
+            this.modal = UIkit.modal(this.$els.modal);
         },
 
         methods: {

@@ -46,7 +46,7 @@
             <v-loader></v-loader>
         </div>
 
-        <div v-if="!configured">Google Analytics <a href="#" v-on="click: openSettings">authentication</a> needed.</div>
+        <div v-if="!configured">Google Analytics <a href="#" @click="openSettings">authentication</a> needed.</div>
     </div>
 
 </template>
