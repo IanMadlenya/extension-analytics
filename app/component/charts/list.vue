@@ -10,13 +10,13 @@
     <table class="uk-table" v-if="result">
         <thead>
         <tr>
-            <th v-repeat="result.dataTable.cols ">{{ label }}</th>
+            <th v-for="col in result.dataTable.cols ">{{ col.label }}</th>
         </tr>
         </thead>
 
         <tbody>
-        <tr v-repeat="result.dataTable.rows | pagination page">
-            <td v-repeat="c">{{ f || v | format $index }}</td>
+        <tr v-for="row in result.dataTable.rows | pagination page">
+            <td v-for="c in row.c">{{ c.f || c.v | format $index }}</td>
         </tr>
         </tbody>
     </table>

@@ -7,7 +7,7 @@
                     <a href="{{ gaUrl }}" target="_blank" class="pk-icon-share pk-icon-hover uk-hidden" title="{{ 'Go to Google Analytics' | trans }}" data-uk-tooltip="{delay: 500}"></a>
                 </li>
                 <li v-show="!editing && !loading && result.time">
-                    <a class="pk-icon-refresh pk-icon-hover uk-hidden" v-el="refresh" @click="configChanged(true)"></a>
+                    <a class="pk-icon-refresh pk-icon-hover uk-hidden" v-el:refresh @click="configChanged(true)"></a>
                 </li>
                 <li v-show="editing">
                     <a class="pk-icon-settings pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}" @click="openSettings"></a>

@@ -112,11 +112,11 @@
             setDefaults: function () {
                 var vm = this;
 
-                this.$set('widget.config', {});
+                Vue.set(this.widget, 'config', {});
 
                 ['dimensions', 'metrics', 'charts'].forEach(function (key) {
                     if (_.isArray(vm.currentPreset[key]) && vm.currentPreset[key].length > 0) {
-                        vm.widget.config[key] = vm.currentPreset[key][0];
+                        Vue.set(vm.widget.config, key, vm.currentPreset[key][0]);
                     }
                 });
 
@@ -125,7 +125,7 @@
                 });
 
                 if (!this.currentPreset.realtime) {
-                    this.widget.config.startDate = '7daysAgo';
+                    Vue.set(this.widget.config, 'startDate', '7daysAgo');
                 }
             }
         }
