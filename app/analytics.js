@@ -1,5 +1,3 @@
-var $ = require('jquery');
-
 var Dashboard = require('dashboard');
 var Analytics = require('./component/analytics.vue');
 var Settings = require('./component/settings.vue');
@@ -20,8 +18,6 @@ google.load('visualization', '1', {
 Dashboard.components['analytics'] = Analytics;
 
 // inject settings modal
-$(function () {
-
+Vue.ready(function () {
     window.$analytics.settingsVM = new Vue(Settings).$appendTo('body');
-
 });
