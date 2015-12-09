@@ -82,10 +82,6 @@
 
     module.exports = {
 
-        el: function () {
-            return document.createElement('div');
-        },
-
         data: function () {
             return {
                 init: false,
