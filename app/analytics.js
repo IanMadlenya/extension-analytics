@@ -3,7 +3,7 @@ var Analytics = require('./component/analytics.vue');
 var Settings = require('./component/settings.vue');
 
 Settings.http = Analytics.http = {
-    beforeSend: function (request, options) {
+    beforeSend: function (options) {
         options.url = 'admin/' + options.url;
     }
 };
