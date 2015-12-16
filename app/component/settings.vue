@@ -158,7 +158,7 @@
 
                 var request = this.$http.post('analytics/code', {code: code});
 
-                request.success(function () {
+                request.then(function () {
                     this.popup.close();
                     delete this.popup; // avoid security exception
 
@@ -167,11 +167,8 @@
                     this.loading = false;
                     this.globals.connected = true;
                     this.code = '';
-                });
+                }, function () {});
 
-                request.error(function () {
-
-                });
             },
 
             loadUser: function () {
@@ -182,7 +179,9 @@
                 var request = this.$http.get('analytics/user');
                 this.loading = true;
 
-                request.success(function (res) {
+                request.then(function (res) {
+                    res = res.data;
+
                     this.loading = false;
                     this.id = res.id;
                     this.name = res.name;
@@ -197,7 +196,9 @@
                 var request = this.$http.get('analytics/profile');
                 this.loading = true;
 
-                request.success(function (res) {
+                request.then(function (res) {
+                    res = res.data;
+
                     this.loading = false;
                     this.profileList = res.items;
                 });
@@ -221,7 +222,9 @@
                 var request = this.$http.post('analytics/profile', profile);
                 this.loading = true;
 
-                request.success(function (res) {
+                request.then(function (res) {
+                    res = res.data;
+
                     this.loading = false;
                     this.globals.profile = res.profile;
                 });
@@ -234,18 +237,14 @@
             disconnect: function () {
                 var request = this.$http.delete('analytics/disconnect');
 
-                request.success(function () {
+                request.then(function () {
                     this.globals.connected = false;
                     this.globals.profile = false;
                     this.profile = {};
                     this.profileId = 0;
                     this.id = '';
                     this.name = '';
-                });
-
-                request.error(function () {
-
-                });
+                }, function () {});
             }
         }
     };

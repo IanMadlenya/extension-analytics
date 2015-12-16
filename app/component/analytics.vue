@@ -225,13 +225,14 @@
                 this.chart.$emit('request', params);
 
                 var request = this.$http.post('analytics/api', params);
-                request.success(function (result) {
-                    utils.parseRows(result, params);
-                    utils.transCols(result);
+                request.then(function (res) {
+                    var data = res.data;
+                    utils.parseRows(data, params);
+                    utils.transCols(data);
 
                     this.$set('loading', false);
-                    this.$set('result', result);
-                    Vue.set(this.chart, 'result', result);
+                    this.$set('result', data);
+                    Vue.set(this.chart, 'result', data);
 
                     this.$nextTick(function () {
                         this.chart.$emit('render');
@@ -260,16 +261,17 @@
                 this.chart.$emit('request', params);
                 var request = this.$http.post('analytics/realtime', params);
 
-                request.success(function (result) {
-                    if (result.dataTable) {
-                        utils.parseRows(result.dataTable, params);
-                        utils.transCols(result.dataTable);
+                request.then(function (res) {
+                    var data = res.data;
+                    if (data.dataTable) {
+                        utils.parseRows(data.dataTable, params);
+                        utils.transCols(data.dataTable);
                     }
 
                     this.$set('loading', false);
-                    this.$set('result', result);
+                    this.$set('result', data);
 
-                    Vue.set(this.chart, 'result', result);
+                    Vue.set(this.chart, 'result', data);
 
                     this.$nextTick(function () {
                         this.chart.$emit('render');
