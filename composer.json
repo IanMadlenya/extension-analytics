@@ -12,6 +12,9 @@
             "homepage": "http://pagekit.com"
         }
     ],
+    "require": {
+        "lusitanian/oauth": "~0.3.5"
+    },
     "extra": {
         "icon": "icon.svg",
         "scripts": "scripts.php"
