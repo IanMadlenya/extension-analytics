@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.1 (March 1, 2016)
+
+### Added
+- Added OAuth library
+
+### Fixed
+- Fixed refresh tooltip
+
 ## 0.10.0 (December 15, 2015)
 
 ### Changed
