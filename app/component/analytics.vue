@@ -112,7 +112,7 @@
                 vm.$broadcast('resize');
             }, 10));
 
-            UIkit.tooltip(this.$refs.refresh, {
+            UIkit.tooltip(this.$els.refresh, {
                 delay: 500,
                 src: function () {
                     return vm.$trans('Refresh (%time%)', {time: vm.$relativeDate(vm.result.time * 1000)});
