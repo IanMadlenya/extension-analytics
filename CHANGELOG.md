@@ -1,6 +1,6 @@
 # Changelog
 
-## WIP
+## 0.11.0 (April 1, 2016)
 
 ### Added
 - Added drag handle
