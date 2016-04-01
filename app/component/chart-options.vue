@@ -63,7 +63,7 @@
 
     module.exports = {
 
-        props: ['widget'],
+        props: ['widget', 'currentPreset'],
 
         data: function () {
             return {
@@ -98,14 +98,6 @@
                     immediate: true
                 }
             );
-        },
-
-        computed: {
-
-            currentPreset: function () {
-                return this.$parent.currentPreset;
-            }
-
         },
 
         methods: {

@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <chart-options class="uk-form-row uk-display-block" :widget.sync="widget" :currentPreset="currentPreset"></chart-options>
+            <chart-options class="uk-form-row uk-display-block" :widget.sync="widget" :current-preset="currentPreset"></chart-options>
         </form>
 
         <div v-show="!loading && configured" v-el:chart></div>
