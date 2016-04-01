@@ -3,11 +3,11 @@
     <div>
         <div class="uk-panel-badge">
             <ul class="uk-subnav pk-subnav-icon">
-                <li v-show="!editing && gaUrl">
-                    <a href="{{ gaUrl }}" target="_blank" class="pk-icon-share pk-icon-hover uk-hidden" title="{{ 'Go to Google Analytics' | trans }}" data-uk-tooltip="{delay: 500}"></a>
-                </li>
                 <li v-show="!editing && !loading && result.time">
                     <a class="pk-icon-refresh pk-icon-hover uk-hidden" v-el:refresh @click="configChanged(true)"></a>
+                </li>
+                <li v-show="editing && gaUrl">
+                    <a href="{{ gaUrl }}" target="_blank" class="pk-icon-share pk-icon-hover" title="{{ 'Go to Google Analytics' | trans }}" data-uk-tooltip="{delay: 500}"></a>
                 </li>
                 <li v-show="editing">
                     <a class="pk-icon-settings pk-icon-hover" title="{{ 'Settings' | trans }}" data-uk-tooltip="{delay: 500}" @click="openSettings"></a>
@@ -17,6 +17,9 @@
                 </li>
                 <li v-show="!editing">
                     <a class="pk-icon-edit pk-icon-hover uk-hidden" title="{{ 'Edit' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.edit"></a>
+                </li>
+                <li v-show="!editing">
+                    <a class="pk-icon-handle pk-icon-hover uk-hidden uk-sortable-handle" title="{{ 'Drag' | trans }}" data-uk-tooltip="{delay: 500}"></a>
                 </li>
                 <li v-show="editing">
                     <a class="pk-icon-check pk-icon-hover" title="{{ 'Confirm' | trans }}" data-uk-tooltip="{delay: 500}" @click="$parent.save"></a>
