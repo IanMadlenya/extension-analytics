@@ -42,7 +42,11 @@
                 </div>
             </div>
 
-            <div class="uk-form-row" v-show="globals.connected">
+            <div class="uk-alert uk-alert-danger" v-show="globals.connected && error">
+                <p>{{ error }}</p>
+            </div>
+
+            <div class="uk-form-row" v-show="globals.connected && !error">
                 <label for="form-profile" class="uk-form-label">{{ 'Profile' | trans }}</label>
                 <div class="uk-form-controls">
                     <select id="form-profile" class="uk-form-width-large" options="profileOptions" v-model="profileId" :disabled="profileList.length == 0" :selected="globals.profile">
@@ -90,6 +94,7 @@
             return {
                 init: false,
                 loading: false,
+                error: '',
                 code: '',
                 id: '',
                 name: '',
@@ -185,6 +190,9 @@
                     this.loading = false;
                     this.id = res.id;
                     this.name = res.name;
+                }, function (err) {
+                    this.loading = false;
+                    this.error = err.data.message || this.$trans('Request failed.');
                 });
             },
 
@@ -201,6 +209,12 @@
 
                     this.loading = false;
                     this.profileList = res.items;
+                }, function (err) {
+
+                    console.log(err)
+
+                    this.loading = false;
+                    this.error = err.data.message || this.$trans('Request failed.');
                 });
             },
 
@@ -227,11 +241,11 @@
 
                     this.loading = false;
                     this.globals.profile = res.profile;
+                }, function (err) {
+                    this.loading = false;
+                    this.error = err.data.message || this.$trans('Request failed.');
                 });
 
-                request.error(function () {
-
-                });
             },
 
             disconnect: function () {
