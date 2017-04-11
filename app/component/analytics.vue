@@ -43,7 +43,9 @@
             <chart-options class="uk-form-row uk-display-block" :widget.sync="widget" :current-preset="currentPreset"></chart-options>
         </form>
 
-        <div v-show="!loading && configured" v-el:chart></div>
+        <div v-show="!loading && configured && !error" v-el:chart></div>
+
+        <div v-show="!loading && configured && error">{{ error }}</div>
 
         <div class="uk-text-center" v-if="loading && configured">
             <v-loader></v-loader>
@@ -79,6 +81,7 @@
         data: function () {
             return {
                 loading: false,
+                error: '',
                 result: {},
                 globals: window.$analytics
             };
@@ -224,10 +227,11 @@
                 }
 
                 this.$set('loading', true);
+                this.$set('error', '');
 
                 this.chart.$emit('request', params);
 
-                var request = this.$http.post('analytics/api', params);
+                var request = this.$http.get('analytics/api', params);
                 request.then(function (res) {
                     var data = res.data;
                     utils.parseRows(data, params);
@@ -240,6 +244,9 @@
                     this.$nextTick(function () {
                         this.chart.$emit('render');
                     });
+                }, function (err) {
+                    this.$set('loading', false);
+                    this.$set('error', err.data.message || this.$trans('Request failed.'));
                 });
             },
 
@@ -250,8 +257,12 @@
 
                 this.$set('loading', true);
 
-                this.refreshRealtime(invalidCache);
-                this.refreshIntervall = setInterval(this.refreshRealtime, 1000 * 30);
+                this.refreshRealtime(invalidCache).then(function () {
+                    if(!this.error) {
+                        this.refreshIntervall = setInterval(this.refreshRealtime, 1000 * 30);
+                    }
+                });
+
             },
 
             refreshRealtime: function (invalidCache) {
@@ -262,9 +273,11 @@
                 });
 
                 this.chart.$emit('request', params);
-                var request = this.$http.post('analytics/realtime', params);
+                var request = this.$http.get('analytics/realtime', params);
 
-                request.then(function (res) {
+                this.$set('error', '');
+
+                return request.then(function (res) {
                     var data = res.data;
                     if (data.dataTable) {
                         utils.parseRows(data.dataTable, params);
@@ -279,6 +292,9 @@
                     this.$nextTick(function () {
                         this.chart.$emit('render');
                     });
+                }, function (err) {
+                    this.$set('loading', false);
+                    this.$set('error', err.data.message || this.$trans('Request failed.'));
                 });
             },
 

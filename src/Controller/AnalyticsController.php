@@ -68,7 +68,7 @@ class AnalyticsController
     }
 
     /**
-     * @Route("/api", methods="POST")
+     * @Route("/api", methods="GET")
      * @Request({"metrics": "string", "dimensions":"string", "startDate":"string", "filters":"string", "invalidCache": "boolean", "sort":"string", "maxResults": "int"})
      */
     public function apiAction($metrics, $dimensions, $startDate, $filters = false, $invalidCache = false, $sort = false, $maxResults = false)
@@ -115,7 +115,7 @@ class AnalyticsController
     }
 
     /**
-     * @Route("/realtime", methods="POST")
+     * @Route("/realtime", methods="GET")
      * @Request({"metrics": "string", "dimensions":"string", "invalidCache": "boolean"})
      */
     public function realtimeAction($metrics, $dimensions, $invalidCache = false)
