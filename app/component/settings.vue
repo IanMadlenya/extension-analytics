@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <div class="uk-form-row" v-show="globals.connected && error">
+            <div class="uk-alert uk-alert-danger" v-show="globals.connected && error">
                 <p>{{ error }}</p>
             </div>
 
@@ -210,6 +210,9 @@
                     this.loading = false;
                     this.profileList = res.items;
                 }, function (err) {
+
+                    console.log(err)
+
                     this.loading = false;
                     this.error = err.data.message || this.$trans('Request failed.');
                 });
@@ -238,11 +241,11 @@
 
                     this.loading = false;
                     this.globals.profile = res.profile;
+                }, function (err) {
+                    this.loading = false;
+                    this.error = err.data.message || this.$trans('Request failed.');
                 });
 
-                request.error(function () {
-
-                });
             },
 
             disconnect: function () {
