@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 (April 11, 2017)
+
+### Fixed
+- Improved error handling
+
 ## 1.0.0 (April 13, 2016)
 
 ## 0.11.0 (April 1, 2016)
